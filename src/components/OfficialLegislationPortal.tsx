@@ -24,6 +24,7 @@ import {
   Check
 } from 'lucide-react';
 import { KNOWLEDGE_BASE_DOCS, KnowledgeDoc } from '../data/knowledgeDocs.ts';
+import planaltoBanner from '../assets/images/planalto_banner_1792361999160.jpg';
 
 export interface LegislationLink {
   id: string;
@@ -522,7 +523,7 @@ export const OfficialLegislationPortal: React.FC<OfficialLegislationPortalProps>
             {/* Architectural Photo of Planalto */}
             <div className="h-48 sm:h-60 w-full relative">
               <img
-                src="/src/assets/images/planalto_banner_1792361999160.jpg"
+                src={planaltoBanner}
                 alt="Palácio do Planalto e Congresso Nacional - Legislação Oficial"
                 className="w-full h-full object-cover object-center"
               />

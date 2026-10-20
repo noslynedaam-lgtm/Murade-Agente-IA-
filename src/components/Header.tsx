@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageSquarePlus } from 'lucide-react';
+import muradeemblemLogo from '../assets/images/murade_emblem_logo_1792252472842.jpg';
 
 interface HeaderProps {
   currentTab: 'legislacao' | 'chat' | 'knowledge' | 'simulators' | 'calendar' | 'legal';
@@ -24,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Ir para o Portal de Legislação Oficial"
             >
               <img
-                src="/src/assets/images/murade_emblem_logo_1792252472842.jpg"
+                src={muradeemblemLogo}
                 alt="Murade Emblema"
                 referrerPolicy="no-referrer"
                 className="w-9 h-9 rounded-full object-cover border-2 border-blue-400/40 shadow-xs"
