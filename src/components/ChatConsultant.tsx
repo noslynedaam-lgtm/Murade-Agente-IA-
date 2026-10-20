@@ -377,11 +377,18 @@ Como posso orientar sua demanda hoje?
 
     const buscarAudio = async (trecho: string): Promise<string | null> => {
       try {
-        const res = await fetch('/api/tts', {
+        let res = await fetch('/api/tts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: trecho, voice: 'Kore' }),
         });
+        if (!res.ok) {
+          res = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: trecho, voice: 'Kore' }),
+          });
+        }
         if (!res.ok) return null;
         const data = await res.json();
         return data.audio ? `data:${data.mimeType || 'audio/wav'};base64,${data.audio}` : null;
@@ -391,23 +398,14 @@ Como posso orientar sua demanda hoje?
       }
     };
 
-    const falarNoNavegador = (restante: string) => {
-      if (!('speechSynthesis' in window)) return;
-      const u = new SpeechSynthesisUtterance(restante);
-      u.lang = 'pt-BR';
-      u.onend = () => setSpeakingId(null);
-      u.onerror = () => setSpeakingId(null);
-      window.speechSynthesis.speak(u);
-    };
-
     try {
       let proximo = buscarAudio(trechos[0] || naturalText);
       for (let i = 0; i < trechos.length; i++) {
         const src = await proximo;
         if (i + 1 < trechos.length) proximo = buscarAudio(trechos[i + 1]);
         if (!src) {
-          // Voz humana indisponível: fala o restante com a voz do navegador para não ficar mudo.
-          falarNoNavegador(trechos.slice(i).join(' '));
+          // Sem voz robótica: se a voz humana falhar, apenas encerra (a resposta continua escrita).
+          setSpeakingId(null);
           return;
         }
         await new Promise<void>((resolve) => {
