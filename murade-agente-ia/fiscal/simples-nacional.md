@@ -1,6 +1,7 @@
 # Simples Nacional - Guia Operacional e Técnico
 
 > **Legislação Base:** Lei Complementar nº 123/2006, Resoluções CGSN nº 140/2018 e alterações posteriores.
+> **Fonte oficial:** [Perguntas e Respostas do Simples Nacional (Receita Federal)](https://www8.receita.fazenda.gov.br/simplesnacional/arquivos/manual/perguntaosn.pdf). **Conferidos em 20/10/2026:** limites de ME/EPP e regra dos 20% de excesso do sublimite; prazo da DEFIS (31 de março, [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2023/marco/prazo-para-transmissao-da-defis-termina-em-31-de-marco)). **Não reconferidos nesta revisão:** alíquotas dos anexos, Fator R e dia de vencimento do DAS — confirme no Portal do Simples Nacional antes de aplicar. A Receita divulgou novas regras de multa por atraso do PGDAS-D/DEFIS (dez/2025); verifique no portal.
 
 ---
 
@@ -15,7 +16,7 @@ O Regime Especial Unificado de Arrecadação de Tributos e Contribuições devid
 - **Microempresa (ME):** Receita bruta anual de até R$ 360.000,00.
 - **Empresa de Pequeno Porte (EPP):** Receita bruta anual superior a R$ 360.000,00 e igual ou inferior a R$ 4.800.000,00.
 - **Sublimite Estadual/Distrital (ICMS e ISS):** R$ 3.600.000,00 acumulados nos últimos 12 meses (RBT12).
-  - *Regra prática:* Ultrapassado o sublimite de R$ 3.600.000,00 (por mais de 20% ou no ano-calendário subsequente se menor que 20%), o ICMS e o ISS passam a ser recolhidos fora do Simples Nacional, pelas regras ordinárias estaduais (SPED Fiscal/GIA) e municipais (Nota Fiscal de Serviços Eletrônica).
+  - *Regra de excesso (Receita Federal — Perguntas e Respostas do Simples Nacional):* se o excesso sobre o sublimite for de **até 20%** (até R$ 4.320.000,00), a empresa fica impedida de recolher ICMS/ISS pelo Simples **a partir do ano seguinte**; se passar de 20% (R$ 4.320.000,01 a R$ 4.800.000,00), deve comunicar a exclusão, com efeitos a partir do mês seguinte ao excesso. Consulte o Portal do Simples Nacional para a regra vigente e o sublimite adotado por cada estado.
 
 ---
 
@@ -42,7 +43,7 @@ $$\text{Fator R} = \frac{\text{Folha de Salários dos últimos 12 meses (incluin
 - **Se Fator R $\ge 0,28$ (28%):** Tributa no **Anexo III** (Economia tributária substancial).
 - **Se Fator R $< 0,28$ (28%):** Tributa no **Anexo V**.
 
-> **Dica Murade:** Empresas que faturam sem funcionários formais frequentemente ajustam o valor do Pró-Labore dos sócios para atingir exatamente 28% da receita bruta mensal estimada, otimizando legalmente a carga tributária global mesmo com o recolhimento de INSS e IRRF pessoa física.
+> **Dica Murade:** Empresas que faturam sem funcionários formais frequentemente avaliam o valor do Pró-Labore dos sócios para atingir o Fator R de 28%; simule antes, pois o pró-labore também gera INSS e IRRF.
 
 ---
 

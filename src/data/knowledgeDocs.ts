@@ -71,6 +71,7 @@ export const KNOWLEDGE_BASE_DOCS: KnowledgeDoc[] = [
     content: `# Simples Nacional - Guia Operacional e Técnico
 
 > **Legislação Base:** Lei Complementar nº 123/2006, Resoluções CGSN nº 140/2018 e alterações posteriores.
+> **Fonte oficial:** [Perguntas e Respostas do Simples Nacional (Receita Federal)](https://www8.receita.fazenda.gov.br/simplesnacional/arquivos/manual/perguntaosn.pdf). **Conferidos em 20/10/2026:** limites de ME/EPP e regra dos 20% de excesso do sublimite; prazo da DEFIS (31 de março, [Receita Federal](https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2023/marco/prazo-para-transmissao-da-defis-termina-em-31-de-marco)). **Não reconferidos nesta revisão:** alíquotas dos anexos, Fator R e dia de vencimento do DAS — confirme no Portal do Simples Nacional antes de aplicar. A Receita divulgou novas regras de multa por atraso do PGDAS-D/DEFIS (dez/2025); verifique no portal.
 
 ---
 
@@ -85,7 +86,7 @@ O Regime Especial Unificado de Arrecadação de Tributos e Contribuições devid
 - **Microempresa (ME):** Receita bruta anual de até R$ 360.000,00.
 - **Empresa de Pequeno Porte (EPP):** Receita bruta anual superior a R$ 360.000,00 e igual ou inferior a R$ 4.800.000,00.
 - **Sublimite Estadual/Distrital (ICMS e ISS):** R$ 3.600.000,00 acumulados nos últimos 12 meses (RBT12).
-  - *Regra prática:* Ultrapassado o sublimite de R$ 3.600.000,00 (por mais de 20% ou no ano-calendário subsequente se menor que 20%), o ICMS e o ISS passam a ser recolhidos fora do Simples Nacional, pelas regras ordinárias estaduais (SPED Fiscal/GIA) e municipais (Nota Fiscal de Serviços Eletrônica).
+  - *Regra de excesso (Receita Federal — Perguntas e Respostas do Simples Nacional):* se o excesso sobre o sublimite for de **até 20%** (até R$ 4.320.000,00), a empresa fica impedida de recolher ICMS/ISS pelo Simples **a partir do ano seguinte**; se passar de 20% (R$ 4.320.000,01 a R$ 4.800.000,00), deve comunicar a exclusão, com efeitos a partir do mês seguinte ao excesso. Consulte o Portal do Simples Nacional para a regra vigente e o sublimite adotado por cada estado.
 
 ---
 
@@ -185,7 +186,19 @@ O Lucro Presumido é uma modalidade de tributação simplificada para determina�
 - **Alíquota PIS:** 0,65% sobre a receita bruta mensal.
 - **Alíquota COFINS:** 3,00% sobre a receita bruta mensal.
 - Total PIS/COFINS: **3,65%** sem apropriação de créditos.
-- **Vencimento:** Até o 25º dia do mês subsequente.`
+- **Vencimento:** Até o 25º dia do mês subsequente.
+
+---
+
+## 5. Distribuição de lucros — mudança a partir de 2026
+
+> **Fonte oficial:** [Lei nº 15.270/2025](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15270.htm) (art. 6º-A da Lei 9.250/1995). **Conferida em 20/10/2026.**
+
+- Lucros e dividendos pagos por uma mesma pessoa jurídica a uma mesma pessoa física residente no Brasil sofrem **retenção de 10% na fonte quando excederem R$ 50.000,00 no mês**; a alíquota incide sobre o total pago, sem deduções.
+- Não há essa retenção sobre lucros apurados até 2025 cuja distribuição tenha sido aprovada até 31/12/2025 e seja exigível pela lei civil ou empresarial.
+- Imposto mínimo (IRPFM, art. 16-A): pessoas físicas com renda anual acima de R$ 600.000,00, com alíquota de até 10% a partir de R$ 1.200.000,00.
+
+> Os coeficientes de presunção, alíquotas e prazos das seções 1 a 4 não foram reconferidos nesta revisão; confirme na Receita Federal antes de aplicar.`
   },
   {
     id: 'icms-regras',
@@ -227,8 +240,8 @@ $$\\text{DIFAL} = \\text{Alíquota Interna Destino} - \\text{Alíquota Interesta
     title: 'Reforma Tributária: IVA Dual (IBS/CBS), IS e Cronograma 2026-2033',
     summary: 'Substituição do PIS, COFINS, IPI, ICMS e ISS por CBS (Federal) e IBS (Estados/Municípios), teste de 0,9%/0,1% em 2026 e split payment.',
     tags: ['Reforma Tributária', 'EC 132/2023', 'IBS', 'CBS', 'Split Payment'],
-    lastUpdated: '2026-10-17',
-    officialLink: 'https://www.camara.leg.br/reformatributaria',
+    lastUpdated: '2026-10-20',
+    officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm',
     officialLinkLabel: 'Portal da Câmara (Reforma Tributária)',
     content: `# Reforma Tributária sobre o Consumo - Guia de Transição
 
@@ -250,12 +263,16 @@ Substitutos:
 
 ---
 
-## 2. Cronograma de Transição
+## 2. Cronograma de Transição (conferido em 20/10/2026)
 
-- **2026:** Alíquota de teste de **0,9% (CBS)** e **0,1% (IBS)**.
-- **2027:** CBS em vigor pleno; PIS/COFINS extintos; IPI a zero; início do IS.
-- **2029 a 2032:** Redução gradual de ICMS e ISS em 1/10 ao ano.
-- **2033:** Vigência definitiva e plena do novo modelo IBS/CBS.`
+> **Fontes oficiais:** [Lei Complementar nº 214/2025](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm) (regulamenta IBS, CBS e IS) e [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089-reforma-tributaria-comeca-fase-de-transicao-com-testes-de-novos-impostos-em-2026/).
+
+- **2026:** fase de testes. As notas fiscais passam a trazer CBS e IBS; os dados são registrados, mas os novos tributos ainda não são cobrados de fato (alíquotas de teste de 0,9% CBS e 0,1% IBS, conforme a LC 214/2025).
+- **2027:** começa a cobrança da CBS e do Imposto Seletivo (IS). A CBS substitui PIS, Cofins e IPI.
+- **A partir de 2029:** o IBS entra em transição, substituindo gradualmente ICMS e ISS. Os percentuais de cada ano estão nos arts. 361 a 366 e 369 da LC 214/2025 — consulte o texto antes de aplicar números.
+- **2033:** extinção total de ICMS e ISS; modelo definitivo com IBS, CBS e IS.
+
+**Não confirmei** nesta revisão, em fonte oficial acessível, a regra detalhada de compensação do teste de 2026 com PIS/Cofins nem os percentuais anuais de 2029–2032.`
   },
   {
     id: 'clt-principios',
@@ -791,16 +808,17 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     category: 'fiscal',
     categoryLabel: 'Fiscal / Tributário',
     filePath: 'fiscal/reforma-tributaria-ec132.md',
-    title: 'Reforma Tributária: Emenda Constitucional nº 132/2023 e PLP 68/2024',
+    title: 'Reforma Tributária: EC 132/2023, LC 214/2025 e LC 227/2026',
     summary: 'Novo sistema tributário brasileiro sobre o consumo: IVA Dual com CBS (Federal) e IBS (Estados e Municípios), Imposto Seletivo, Split Payment, extinção de PIS, COFINS, IPI, ICMS e ISS e cronograma 2026-2033.',
-    tags: ['Reforma Tributária', 'EC 132/2023', 'PLP 68/2024', 'IBS', 'CBS', 'Split Payment', 'IVA Dual', 'Congresso Nacional'],
-    lastUpdated: '2026-10-19',
-    officialLink: 'https://www.camara.leg.br/reformatributaria',
+    tags: ['Reforma Tributária', 'EC 132/2023', 'LC 214/2025', 'LC 227/2026', 'IBS', 'CBS', 'Split Payment', 'IVA Dual', 'Congresso Nacional'],
+    lastUpdated: '2026-10-20',
+    officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm',
     officialLinkLabel: 'Portal da Reforma Tributária (Câmara e Senado)',
     content: `# Reforma Tributária do Consumo — EC nº 132/2023 e Leis Complementares
 
 > **Fonte Oficial Governamental:** Congresso Nacional (Câmara dos Deputados e Senado Federal).
-> **Legislação Base:** Emenda Constitucional nº 132/2023, Projeto de Lei Complementar PLP nº 68/2024 e PLP nº 108/2024.
+> **Legislação Base:** Emenda Constitucional nº 132/2023; Lei Complementar nº 214, de 16/1/2025 (institui IBS, CBS e IS — originada do PLP 68/2024); Lei Complementar nº 227, de 13/1/2026 (originada do PLP 108/2024; cria o Comitê Gestor do IBS). **Conferida em 20/10/2026.**
+> **Texto oficial:** https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm
 > **Links Oficiais:** https://www.camara.leg.br/reformatributaria e https://www.senado.leg.br
 
 ---
@@ -820,18 +838,15 @@ A Reforma unifica 5 tributos vigentes em um modelo moderno de Imposto sobre Valo
 
 ---
 
-## 3. Cronograma Oficial de Transição (2026 a 2033)
-- **2026 — Período de Teste e Calibração:**
-  - Alíquota teste de **0,9% para a CBS** e **0,1% para o IBS** (compensáveis com o PIS/COFINS devido).
-- **2027 — Entrada em Vigor Plena da CBS:**
-  - Extinção definitiva do PIS e da COFINS;
-  - Redução a zero das alíquotas do IPI (exceto produtos com similar fabricado na Zona Franca de Manaus);
-  - Início da cobrança do Imposto Seletivo (IS).
-- **2029 a 2032 — Transição Gradual do ICMS e ISS para o IBS:**
-  - Redução das alíquotas de ICMS e ISS à razão de 1/10 (10%) a cada ano;
-  - Aumento proporcional e simultâneo das alíquotas do IBS.
-- **2033 — Vigência Plena do Novo Sistema:**
-  - Extinção definitiva do ICMS e do ISS. Modelo consolidado exclusivamente com IBS, CBS e Imposto Seletivo.`
+## 3. Cronograma de Transição (2026 a 2033)
+- **2026 — Testes:** notas fiscais com campos de CBS e IBS; fase de testes, sem cobrança efetiva dos novos tributos (alíquotas de teste 0,9% CBS e 0,1% IBS, LC 214/2025).
+- **2027:** início da cobrança da CBS (substitui PIS, Cofins e IPI) e do Imposto Seletivo.
+- **A partir de 2029:** transição do IBS, substituindo gradualmente ICMS e ISS (percentuais anuais: LC 214/2025, arts. 361 a 366 e 369).
+- **2033:** extinção total de ICMS e ISS.
+
+Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089-reforma-tributaria-comeca-fase-de-transicao-com-testes-de-novos-impostos-em-2026/) e [LC 214/2025](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm).
+
+> Pontos **não confirmados** nesta revisão: compensação do teste de 2026 com PIS/Cofins, tratamento do IPI após 2027 e percentuais anuais de 2029–2032. Diante de pergunta sobre esses pontos, cite o artigo da LC 214/2025 e indique o link oficial.`
   },
   {
     id: 'tributos-icms-ipi-iss',

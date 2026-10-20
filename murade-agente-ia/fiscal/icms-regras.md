@@ -31,7 +31,7 @@ $$\text{DIFAL} = \text{Alíquota Interna do Estado de Destino} - \text{Alíquota
 
 ### Cenários de Aplicação:
 1. **Consumidor Final Não Contribuinte (E-commerce / Venda Não Presencial):**
-   - Regulamentado pela **LC 190/2022** e Convênio ICMS 235/2021.
+   - Regulamentado pela **LC 190/2022**.
    - O remetente é o responsável pelo cálculo e recolhimento do DIFAL integralmente em favor do Estado de destino da mercadoria (via GNRE ou DARE antes da saída da mercadoria, ou por inscrição estadual de substituto tributário).
 2. **Consumidor Final Contribuinte (Uso, Consumo ou Ativo Imobilizado):**
    - O destinatário da mercadoria apura e recolhe o DIFAL na entrada no seu estado.

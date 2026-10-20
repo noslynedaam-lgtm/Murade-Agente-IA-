@@ -65,6 +65,8 @@ Quando a empresa optante pelo Lucro Presumido presta serviços para outras pesso
 
 ## 6. Distribuição Isenta de Lucros
 
-A distribuição de lucros aos sócios é 100% isenta de Imposto de Renda Pessoa Física (IRPF), desde que:
+> **Atenção — mudança a partir de 2026 (Lei nº 15.270/2025, [texto oficial](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/l15270.htm), conferida em 20/10/2026):** os lucros e dividendos pagos por uma mesma pessoa jurídica a uma mesma pessoa física residente no Brasil estão sujeitos a **retenção de 10% na fonte quando passarem de R$ 50.000,00 no mês**; a alíquota incide sobre o total pago, sem deduções (art. 6º-A da Lei 9.250/1995). Ficam fora da retenção os lucros apurados até o ano-calendário de 2025, cuja distribuição tenha sido aprovada até 31/12/2025 e seja exigível nos termos da lei civil ou empresarial. Há ainda imposto mínimo (IRPFM, art. 16-A) para pessoas físicas com renda anual acima de R$ 600.000,00, com alíquota de até 10% a partir de R$ 1.200.000,00. Para casos concretos, consulte as [Perguntas e Respostas da Receita sobre lucros e dividendos](https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2025/dezembro/receita-federal-lanca-perguntas-e-respostas-sobre-tributacao-de-altas-rendas-consideracoes-sobre-lucros-e-dividendos/manual_padrao_rfb_per_tributacao_sutri_v2.pdf).
+
+Até o limite de R$ 50.000,00 mensais por pagadora e beneficiário, e para os lucros do período anterior descrito acima, a distribuição não sofre essa retenção, desde que:
 1. O valor distribuído não exceda o Lucro Presumido apurado diminuído dos tributos correspondentes (IRPJ, CSLL, PIS, COFINS, ISS e ICMS); OU
 2. A empresa mantenha **escrituração contábil regular (Livro Diário e Razão)** demonstrando que o lucro contábil efetivo foi superior ao presumido. Essa é a melhor prática recomendada pela consultoria Murade.
