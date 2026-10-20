@@ -1,5 +1,7 @@
 import React from 'react';
 import { MessageSquarePlus } from 'lucide-react';
+import { CabecalhoPadrao } from './CabecalhoPadrao';
+import { useAcesso } from './AcessoGate';
 import muradeemblemLogo from '../assets/images/murade_emblem_logo_1792252472842.jpg';
 
 interface HeaderProps {
@@ -13,9 +15,36 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectTab,
   onNewConsultation,
 }) => {
+  const { usuario, empresas, empresaAtiva, escolherEmpresa, sair } = useAcesso();
   return (
     <header className="bg-[#0f2444] border-b border-[#1b3d6f] sticky top-0 z-40 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-end py-1 border-b border-[#1b3d6f]">
+      {/* Bloco padrão Murade: Usuário | Empresa | Licença | Sair */}
+      <div className="flex items-center gap-2 shrink-0">
+        {empresas.length > 1 && (
+          <select
+            value={empresaAtiva?.cnpj || ''}
+            onChange={(e) => escolherEmpresa(e.target.value)}
+            className="hidden md:block bg-white/10 text-white text-[11px] rounded px-1.5 py-0.5 border border-white/20 max-w-[180px]"
+            title="Escolher empresa"
+          >
+            {empresas.map((e) => <option key={e.cnpj} value={e.cnpj} className="text-slate-900">{e.nome}</option>)}
+          </select>
+        )}
+        <CabecalhoPadrao
+          usuario={usuario}
+          empresaNome={empresas.length > 1 ? null : empresaAtiva?.nome || null}
+          empresaCnpj={empresaAtiva?.cnpj || null}
+          buscarLicenca={async (cnpj) => {
+            const r = await fetch(`/api/licenca?cnpj=${encodeURIComponent(cnpj)}`, { credentials: 'include' });
+            const d = r.ok ? await r.json() : null;
+            return d && d.licenca ? d.licenca : null;
+          }}
+          onSair={() => void sair()}
+        />
+      </div>
+        </div>
         <div className="flex items-center justify-between gap-4 sm:gap-8 h-16">
           {/* Zone 1: Single text element wordmark with brand emblem */}
           <div className="flex items-center gap-3 shrink-0">

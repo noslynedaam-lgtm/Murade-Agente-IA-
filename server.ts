@@ -8,6 +8,7 @@ import { KNOWLEDGE_BASE_DOCS } from './src/data/knowledgeDocs.ts';
 
 dotenv.config();
 
+import { exigirAcesso, registrarRotasDeAcesso } from './src/server/acesso';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -15,6 +16,9 @@ const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 app.use(express.json({ limit: '10mb' }));
+registrarRotasDeAcesso(app);
+// Chat, voz e transcrição gastam a chave Gemini: só para usuários autenticados.
+app.use(['/api/chat', '/api/tts', '/api/transcribe'], exigirAcesso);
 
 // Initialize GoogleGenAI SDK per gemini-api skill instructions
 const apiKey = process.env.GEMINI_API_KEY;
