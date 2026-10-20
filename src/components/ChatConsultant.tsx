@@ -362,33 +362,65 @@ Como posso orientar sua demanda hoje?
 
     const naturalText = cleanTextForHumanSpeech(text);
 
-    try {
-      const res = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: naturalText.slice(0, 1000),
-          voice: 'Kore', // Exclusively the genuine human voice!
-        }),
-      });
+    // Divide a resposta inteira em trechos (por frase) para falar TUDO, sem cortar.
+    const trechos: string[] = [];
+    let atual = '';
+    for (const frase of naturalText.split(/(?<=[.!?:;])\s+/)) {
+      if ((atual + ' ' + frase).length > 700 && atual) {
+        trechos.push(atual.trim());
+        atual = frase;
+      } else {
+        atual = atual ? atual + ' ' + frase : frase;
+      }
+    }
+    if (atual.trim()) trechos.push(atual.trim());
 
-      if (res.ok) {
+    const buscarAudio = async (trecho: string): Promise<string | null> => {
+      try {
+        const res = await fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: trecho, voice: 'Kore' }),
+        });
+        if (!res.ok) return null;
         const data = await res.json();
-        if (data.audio) {
-          const audioObj = new Audio(`data:${data.mimeType || 'audio/wav'};base64,${data.audio}`);
-          audioElementRef.current = audioObj;
-          audioObj.onended = () => {
-            setSpeakingId(null);
-            audioElementRef.current = null;
-          };
-          audioObj.onerror = () => {
-            setSpeakingId(null);
-            audioElementRef.current = null;
-          };
-          await audioObj.play();
+        return data.audio ? `data:${data.mimeType || 'audio/wav'};base64,${data.audio}` : null;
+      } catch (err) {
+        console.error('TTS error:', err);
+        return null;
+      }
+    };
+
+    const falarNoNavegador = (restante: string) => {
+      if (!('speechSynthesis' in window)) return;
+      const u = new SpeechSynthesisUtterance(restante);
+      u.lang = 'pt-BR';
+      u.onend = () => setSpeakingId(null);
+      u.onerror = () => setSpeakingId(null);
+      window.speechSynthesis.speak(u);
+    };
+
+    try {
+      let proximo = buscarAudio(trechos[0] || naturalText);
+      for (let i = 0; i < trechos.length; i++) {
+        const src = await proximo;
+        if (i + 1 < trechos.length) proximo = buscarAudio(trechos[i + 1]);
+        if (!src) {
+          // Voz humana indisponível: fala o restante com a voz do navegador para não ficar mudo.
+          falarNoNavegador(trechos.slice(i).join(' '));
           return;
         }
+        await new Promise<void>((resolve) => {
+          const audioObj = new Audio(src);
+          audioElementRef.current = audioObj;
+          audioObj.onended = () => resolve();
+          audioObj.onerror = () => resolve();
+          audioObj.play().catch(() => resolve());
+        });
+        if (audioElementRef.current === null) return; // usuário interrompeu
       }
+      setSpeakingId(null);
+      audioElementRef.current = null;
     } catch (err) {
       console.error('TTS error:', err);
       setSpeakingId(null);

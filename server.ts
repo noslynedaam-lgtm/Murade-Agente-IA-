@@ -401,7 +401,7 @@ app.post('/api/tts', async (req, res) => {
       .replace(/[📌🔗⚠️⚖️🎙️🔍🏛️✅*`_]/g, '')
       .replace(/\s+/g, ' ')
       .trim()
-      .slice(0, 1000);
+      .slice(0, 1500);
 
     const validVoice = ['Kore', 'Puck', 'Zephyr', 'Fenrir', 'Charon'].includes(voice) ? voice : 'Kore';
 
