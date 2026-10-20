@@ -366,7 +366,7 @@ Como posso orientar sua demanda hoje?
     const trechos: string[] = [];
     let atual = '';
     for (const frase of naturalText.split(/(?<=[.!?:;])\s+/)) {
-      if ((atual + ' ' + frase).length > 2500 && atual) {
+      if ((atual + ' ' + frase).length > (trechos.length === 0 ? 280 : 2000) && atual) {
         trechos.push(atual.trim());
         atual = frase;
       } else {
