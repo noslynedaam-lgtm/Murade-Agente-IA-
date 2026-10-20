@@ -366,7 +366,7 @@ Como posso orientar sua demanda hoje?
     const trechos: string[] = [];
     let atual = '';
     for (const frase of naturalText.split(/(?<=[.!?:;])\s+/)) {
-      if ((atual + ' ' + frase).length > 700 && atual) {
+      if ((atual + ' ' + frase).length > 2500 && atual) {
         trechos.push(atual.trim());
         atual = frase;
       } else {
@@ -377,18 +377,11 @@ Como posso orientar sua demanda hoje?
 
     const buscarAudio = async (trecho: string): Promise<string | null> => {
       try {
-        let res = await fetch('/api/tts', {
+        const res = await fetch('/api/tts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: trecho, voice: 'Kore' }),
         });
-        if (!res.ok) {
-          res = await fetch('/api/tts', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: trecho, voice: 'Kore' }),
-          });
-        }
         if (!res.ok) return null;
         const data = await res.json();
         return data.audio ? `data:${data.mimeType || 'audio/wav'};base64,${data.audio}` : null;
