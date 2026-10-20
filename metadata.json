@@ -1,0 +1,10 @@
+{
+  "name": "Murade Agente IA - Fiscal, DP e Contábil",
+  "description": "Agente de Inteligência Artificial e base de conhecimento especializada em Fiscal (Simples Nacional, Lucro Presumido, ICMS, Reforma Tributária), Departamento Pessoal (CLT, eSocial, FGTS, INSS) e Contabilidade.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
