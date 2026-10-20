@@ -1,28 +1,32 @@
 # FGTS Digital e INSS - Regras de Apuração, Faixas Progressivas e Recolhimentos
 
-> **Legislação Base:** Lei nº 8.036/1990, Lei nº 8.212/1991, Emenda Constitucional nº 103/2019 (Reforma da Previdência), Lei nº 14.438/2022 (FGTS Digital) e Portarias Interministeriais MPS/MF.
+> **Legislação Base:** Lei nº 8.036/1990, Lei nº 8.212/1991, Emenda Constitucional nº 103/2019 (Reforma da Previdência), Lei nº 14.438/2022 (que alterou os procedimentos de recolhimento do FGTS), Portaria MTE nº 240/2024 (FGTS Digital) e Portarias Interministeriais MPS/MF.
 
 ---
 
-## 1. Tabela Progressiva do INSS (Empregado CLT e Doméstico)
+## 1. Tabela de contribuição do INSS 2026 (Empregado, doméstico e avulso)
 
-Desde a Reforma da Previdência (EC 103/2019), o desconto do INSS sobre os salários não é mais linear por faixa inteira, mas sim **progressivo** (semelhante ao Imposto de Renda), aplicando-se cada alíquota exclusivamente sobre a parcela do salário que se enquadra na respectiva faixa:
+> **Fonte oficial:** [INSS — Tabela de contribuição mensal](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal). **Base:** Portaria Interministerial MPS/MF nº 13, de 9/1/2026, vigente desde a competência janeiro/2026. **Conferida em 20/10/2026.**
 
-| Faixa Salarial (R$) | Alíquota Nominal | Parcela a Deduzir (R$) |
-| :--- | :--- | :--- |
-| **Até R$ 1.518,00** (Salário Mínimo vigente) | 7,5% | R$ 0,00 |
-| **De R$ 1.518,01 até R$ 2.793,88** | 9,0% | R$ 22,77 |
-| **De R$ 2.793,89 até R$ 4.190,83** | 12,0% | R$ 106,59 |
-| **De R$ 4.190,84 até R$ 8.157,41** (Teto Máximo RGPS) | 14,0% | R$ 190,40 |
+Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sobre a parcela do salário dentro da respectiva faixa.
 
-$$\text{Desconto INSS} = (\text{Salário de Contribuição} \times \text{Alíquota da Faixa}) - \text{Parcela a Deduzir}$$
+| Salário de contribuição (R$) | Alíquota |
+| :--- | :--- |
+| Até 1.621,00 | 7,5% |
+| De 1.621,01 até 2.902,84 | 9% |
+| De 2.902,85 até 4.354,27 | 12% |
+| De 4.354,28 até 8.475,55 | 14% |
 
-- **Teto Máximo de Desconto do Segurado Empregado:** R$ 951,64 (fixado no teto do RGPS).
-- **Pró-Labore dos Sócios e Autônomos (Contribuinte Individual):** Alíquota fixa de **11%** sobre o valor da remuneração percebida, limitada ao teto do RGPS (máximo de R$ 897,32).
+- **Teto do salário de contribuição:** R$ 8.475,55.
+- **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
+- **Contribuinte individual / pró-labore:** alíquota de 11% (plano simplificado) sobre a remuneração, limitada ao teto: no máximo R$ 932,31 em 2026 (11% de R$ 8.475,55; valor calculado a partir do teto oficial).
+- Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
 
 ## 2. Contribuição Patronal Previdenciária (CPP) e Encargos da Empresa
+
+> **Atenção:** os percentuais desta seção são regras gerais e **ainda não foram reconferidos nesta revisão** em fonte oficial; confirme na Receita Federal / RFB antes de aplicar.
 
 Empresas enquadradas no **Lucro Presumido, Lucro Real e Simples Nacional Anexo IV** arcam com a folha patronal plena:
 1. **CPP Básica:** 20,0% sobre a folha total de salários e pró-labore.
@@ -38,9 +42,9 @@ A plataforma do **FGTS Digital** (instituída pela Lei nº 14.438/2022 e Portari
 
 ### Principais Alterações em Relação à Antiga SEFIP/Conectividade Social:
 1. **Mudança do Prazo de Recolhimento Mensal:**
-   - O vencimento do FGTS mensal mudou do dia 7 para o **dia 20 do mês subsequente** ao de competência (se cair em dia não útil, antecipa-se para o primeiro dia útil anterior).
+   - O vencimento do FGTS mensal mudou do dia 7 para **até o dia 20** do mês seguinte (competência a partir de 03/2024). Se o dia 20 não for dia útil, o prazo é antecipado (exemplo oficial: competência 03/2024 venceu em 19/04/2024). A emissão antecipada da guia não antecipa a obrigação de pagamento. Fonte: [FGTS Digital](https://www.fgts.gov.br/Paginas/empregador/fgts-digital.aspx).
 2. **Meio Exclusivo de Pagamento:**
-   - Todas as guias do FGTS Digital (mensais e rescisórias) são geradas exclusivamente com **código QR do Pix**. Não existe mais código de barras tradicional. A quitação é instantânea, com baixa no sistema em tempo real.
+   - A quitação da Guia do FGTS Digital (GFD) é feita **via Pix, pelo QR Code impresso na guia** (confirmado na página oficial do FGTS Digital).
 3. **Alíquotas do FGTS:**
    - **8,0%:** Empregados em regime geral da CLT, temporários e diretores com FGTS.
    - **2,0%:** Contrato de Aprendizagem (Jovem Aprendiz, Lei 10.097/2000).

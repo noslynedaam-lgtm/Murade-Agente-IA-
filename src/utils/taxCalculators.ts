@@ -187,24 +187,25 @@ export function calcularRescisaoCLT(input: RescisaoInput): RescisaoResult {
   };
 }
 
+// Tabela oficial 2026 (Portaria Interministerial MPS/MF nº 13, de 9/1/2026, vigente desde a competência jan/2026).
+// Fonte: https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal
+// Cálculo progressivo por faixa; confira a tabela do ano na fonte oficial ao mudar a competência.
+export const FAIXAS_INSS_2026 = [
+  { ate: 1621.0, aliquota: 0.075 },
+  { ate: 2902.84, aliquota: 0.09 },
+  { ate: 4354.27, aliquota: 0.12 },
+  { ate: 8475.55, aliquota: 0.14 },
+] as const;
+
 export function calcularInssProgressivo(salario: number): number {
   if (salario <= 0) return 0;
-  // Faixas oficiais 2025/2026:
-  // 1: até 1.518,00 -> 7,5% (dedução 0)
-  // 2: 1.518,01 até 2.793,88 -> 9% (dedução 22,77)
-  // 3: 2.793,89 até 4.190,83 -> 12% (dedução 106,59)
-  // 4: 4.190,84 até 8.157,41 -> 14% (dedução 190,40)
-  // Teto RGPS: R$ 8.157,41 (desconto máx: R$ 951,64)
-
-  if (salario <= 1518.0) {
-    return salario * 0.075;
-  } else if (salario <= 2793.88) {
-    return salario * 0.09 - 22.77;
-  } else if (salario <= 4190.83) {
-    return salario * 0.12 - 106.59;
-  } else if (salario <= 8157.41) {
-    return salario * 0.14 - 190.4;
-  } else {
-    return 951.64; // Teto
+  const base = Math.min(salario, FAIXAS_INSS_2026[FAIXAS_INSS_2026.length - 1].ate);
+  let total = 0;
+  let anterior = 0;
+  for (const faixa of FAIXAS_INSS_2026) {
+    if (base <= anterior) break;
+    total += (Math.min(base, faixa.ate) - anterior) * faixa.aliquota;
+    anterior = faixa.ate;
   }
+  return Math.round(total * 100) / 100;
 }

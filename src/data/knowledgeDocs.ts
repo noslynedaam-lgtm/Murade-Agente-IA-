@@ -334,35 +334,43 @@ O pagamento de todas as verbas rescisórias deve ser efetuado em até **10 dias 
     categoryLabel: 'DP / Trabalhista',
     filePath: 'dp-trabalhista/fgts-inss.md',
     title: 'FGTS Digital e INSS: Faixas Progressivas, Guia Pix e Multas',
-    summary: 'Tabela progressiva do INSS (7.5% a 14%), recolhimento patronal (CPP + RAT/FAP + Terceiros), novo vencimento dia 20 via Pix no FGTS Digital.',
+    summary: 'Tabela do INSS 2026 (7,5% a 14%, teto R$ 8.475,55), FGTS Digital com vencimento até o dia 20 e pagamento via Pix.',
     tags: ['FGTS Digital', 'INSS Progressivo', 'Teto RGPS', 'CPP', 'Pix Obrigatório'],
-    lastUpdated: '2026-10-17',
-    officialLink: 'https://www.esocial.gov.br',
-    officialLinkLabel: 'Portal Oficial eSocial / FGTS Digital',
+    lastUpdated: '2026-10-20',
+    officialLink: 'https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal',
+    officialLinkLabel: 'INSS — Tabela de contribuição',
     content: `# FGTS Digital e INSS - Regras de Apuração
 
 > **Legislação Base:** Lei nº 8.036/1990, EC nº 103/2019 e Lei nº 14.438/2022 (FGTS Digital).
 
 ---
 
-## 1. Tabela Progressiva do INSS (Empregado CLT)
+## 1. Tabela de contribuição do INSS 2026 (Empregado, doméstico e avulso)
 
-| Faixa Salarial (R$) | Alíquota | Parcela a Deduzir (R$) |
-| :--- | :--- | :--- |
-| **Até R$ 1.518,00** | 7,5% | R$ 0,00 |
-| **De R$ 1.518,01 até R$ 2.793,88** | 9,0% | R$ 22,77 |
-| **De R$ 2.793,89 até R$ 4.190,83** | 12,0% | R$ 106,59 |
-| **De R$ 4.190,84 até R$ 8.157,41** | 14,0% | R$ 190,40 |
+> **Fonte oficial:** [INSS — Tabela de contribuição mensal](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal) · **Base:** Portaria Interministerial MPS/MF nº 13, de 9/1/2026 · vigente desde a competência janeiro/2026 · conferida em 20/10/2026.
 
-- **Teto Máximo de Desconto:** R$ 951,64.
+| Salário de contribuição (R$) | Alíquota |
+| :--- | :--- |
+| Até 1.621,00 | 7,5% |
+| De 1.621,01 até 2.902,84 | 9% |
+| De 2.902,85 até 4.354,27 | 12% |
+| De 4.354,28 até 8.475,55 | 14% |
+
+- **Teto do salário de contribuição:** R$ 8.475,55.
+- **Cálculo:** progressivo, aplicando cada alíquota somente à parcela do salário dentro da respectiva faixa.
+- **Contribuição máxima do empregado (calculada por essa progressão):** R$ 988,09.
+- **Atenção:** os valores mudam todo ano por portaria. Para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
 
 ## 2. FGTS Digital
 
-- **Novo Vencimento Mensal:** Dia **20 do mês subsequente**.
-- **Forma de Pagamento Exclusiva:** **Pix** (QR Code gerado na plataforma).
-- **Alíquota Geral:** 8% sobre a remuneração (2% para Jovem Aprendiz).
+> **Fontes oficiais:** [FGTS — FGTS Digital](https://www.fgts.gov.br/Paginas/empregador/fgts-digital.aspx) e [MTE — FGTS Digital](https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/fgtsdigital) · **Base:** Lei nº 8.036/1990 (art. 17-A) e Portaria MTE nº 240/2024 · conferida em 20/10/2026.
+
+- **Vencimento mensal:** até o dia 20 de cada mês (competência a partir de 03/2024). Quando o dia 20 não é dia útil, o prazo é antecipado (exemplo oficial: competência 03/2024 venceu em 19/04/2024, sexta-feira).
+- **Forma de pagamento:** Pix, por meio do QR Code impresso na Guia do FGTS Digital (GFD).
+- **A emissão antecipada da guia não antecipa a obrigação de pagamento:** o prazo continua sendo o do vencimento.
+- **Alíquota geral:** 8% sobre a remuneração (2% para Jovem Aprendiz).
 - **Multa Rescisória:** 40% na demissão sem justa causa ou 20% no acordo mútuo (art. 484-A CLT).`
   },
   {
