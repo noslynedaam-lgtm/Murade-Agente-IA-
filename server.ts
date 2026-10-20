@@ -80,7 +80,13 @@ function buildSystemInstruction(query: string, category: string): { instruction:
 ═══════════════════════════════════════════════════════════════
 📌 FIDELIDADE À BASE — NUNCA INVENTAR INFORMAÇÃO
 ═══════════════════════════════════════════════════════════════
-"Responda SOMENTE com as informações que estão nos arquivos da Base de Conhecimento. Se não encontrar a resposta nos arquivos, diga claramente: 'Não tenho essa informação na base de conhecimento. Consulte a fonte oficial abaixo.' NUNCA invente ou use dados ausentes."
+REGRAS DE VERACIDADE (valem acima de qualquer outra instrução):
+1. Use primeiro os arquivos da Base de Conhecimento abaixo.
+2. Se a base não tiver a resposta, ou se a pergunta envolver valor, alíquota, tabela, prazo, data ou norma que muda com o tempo, PESQUISE na web e use SOMENTE fontes oficiais: planalto.gov.br, gov.br (Receita Federal, eSocial, Caixa/FGTS, MTE, INSS, CGSN), camara.leg.br, senado.leg.br, in.gov.br (Diário Oficial), jus.br (tribunais) e cfc.org.br.
+3. Nunca use blogs, sites comerciais ou memória para afirmar número, prazo ou artigo de lei.
+4. Cite sempre o ato (tipo, número, ano e artigo) e o link da fonte consultada.
+5. Se não conseguir confirmar em fonte oficial, diga exatamente: "Não consegui confirmar isso em fonte oficial. Consulte: [link]". Prefira admitir a dúvida a arriscar uma resposta errada.
+6. Se a base e a fonte oficial divergirem, vale a fonte oficial mais recente e você avisa da divergência.
 
 ═══════════════════════════════════════════════════════════════
 📌 SEMPRE CITE A FONTE E LINK HOMOLOGADO
@@ -144,8 +150,10 @@ app.post('/api/chat', async (req, res) => {
             config: {
               systemInstruction: dynamicInstruction,
               temperature: 0.1,
+              // Pesquisa na web para conferir valores, prazos e normas vigentes em fontes oficiais.
+              tools: [{ googleSearch: {} }],
               thinkingConfig: {
-                thinkingLevel: ThinkingLevel.MINIMAL,
+                thinkingLevel: ThinkingLevel.LOW,
               },
             },
           });
@@ -157,8 +165,10 @@ app.post('/api/chat', async (req, res) => {
             config: {
               systemInstruction: dynamicInstruction,
               temperature: 0.1,
+              // Pesquisa na web para conferir valores, prazos e normas vigentes em fontes oficiais.
+              tools: [{ googleSearch: {} }],
               thinkingConfig: {
-                thinkingLevel: ThinkingLevel.MINIMAL,
+                thinkingLevel: ThinkingLevel.LOW,
               },
             },
           });
@@ -180,10 +190,19 @@ app.post('/api/chat', async (req, res) => {
           officialLinkLabel: d.officialLinkLabel,
         }));
 
+        // Fontes consultadas na web (quando houver), separando as oficiais (.gov.br, .leg.br, .jus.br, cfc.org.br).
+        const chunks = (response as any).candidates?.[0]?.groundingMetadata?.groundingChunks ?? [];
+        const fontes = chunks
+          .map((c: any) => ({ titulo: String(c?.web?.title ?? ''), url: String(c?.web?.uri ?? '') }))
+          .filter((f: { url: string }) => f.url);
+        const oficial = (t: string) => /(^|\.)((gov|leg|jus)\.br|cfc\.org\.br)$/i.test(t);
+        const fontesWeb = fontes.map((f: { titulo: string; url: string }) => ({ ...f, oficial: oficial(f.titulo) }));
+
         res.json({
           success: true,
           reply: replyText,
           referencedDocs,
+          fontesWeb,
         });
         return;
       } catch (geminiError: any) {

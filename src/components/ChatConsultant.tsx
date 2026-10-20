@@ -45,6 +45,7 @@ interface Message {
   timestamp: string;
   category?: 'fiscal' | 'dp' | 'contabil' | 'all';
   referencedDocs?: { id: string; title: string; filePath: string }[];
+  fontesWeb?: { titulo: string; url: string; oficial: boolean }[];
 }
 
 interface ChatConsultantProps {
@@ -450,6 +451,7 @@ Como posso orientar sua demanda hoje?
           content: data.reply,
           timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
           referencedDocs: data.referencedDocs,
+          fontesWeb: data.fontesWeb,
         };
         setMessages((prev) => [...prev, assistantMsg]);
 
@@ -1217,6 +1219,24 @@ Como posso orientar sua demanda hoje?
                           </a>
                         )}
                       </div>
+                    ))}
+                  </div>
+                )}
+                {/* Fontes pesquisadas na web: oficiais em verde, demais com aviso */}
+                {msg.fontesWeb && msg.fontesWeb.length > 0 && (
+                  <div className="mt-2 pt-2 border-t border-slate-200 flex flex-wrap items-center gap-2">
+                    <span className="text-[11px] font-semibold text-slate-500">Pesquisado em:</span>
+                    {msg.fontesWeb.map((f, i) => (
+                      <a
+                        key={`${f.url}-${i}`}
+                        href={f.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded border ${f.oficial ? 'bg-emerald-50 text-emerald-900 border-emerald-200' : 'bg-amber-50 text-amber-900 border-amber-200'}`}
+                        title={f.oficial ? 'Fonte oficial' : 'Fonte não oficial: confirme na fonte oficial'}
+                      >
+                        {f.oficial ? '✔' : '⚠'} {f.titulo || 'fonte'}
+                      </a>
                     ))}
                   </div>
                 )}
