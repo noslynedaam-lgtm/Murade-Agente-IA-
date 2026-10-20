@@ -391,14 +391,32 @@ Como posso orientar sua demanda hoje?
       }
     };
 
+    // Reserva SÓ para quando a voz humana estiver indisponível (cota): voz feminina pt-BR do navegador.
+    const falarNoNavegador = (restante: string) => {
+      if (!('speechSynthesis' in window)) {
+        setSpeakingId(null);
+        return;
+      }
+      const vozes = window.speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('pt'));
+      const masculina = /daniel|antonio|ant[oô]nio|felipe|ricardo|male|jorge|diego/i;
+      const feminina = /maria|francisca|luciana|camila|vit[oó]ria|thalita|female|google portugu/i;
+      const voz = vozes.find((v) => feminina.test(v.name)) || vozes.find((v) => !masculina.test(v.name));
+      const u = new SpeechSynthesisUtterance(restante);
+      u.lang = 'pt-BR';
+      if (voz) u.voice = voz;
+      u.rate = 1;
+      u.onend = () => setSpeakingId(null);
+      u.onerror = () => setSpeakingId(null);
+      window.speechSynthesis.speak(u);
+    };
+
     try {
       let proximo = buscarAudio(trechos[0] || naturalText);
       for (let i = 0; i < trechos.length; i++) {
         const src = await proximo;
         if (i + 1 < trechos.length) proximo = buscarAudio(trechos[i + 1]);
         if (!src) {
-          // Sem voz robótica: se a voz humana falhar, apenas encerra (a resposta continua escrita).
-          setSpeakingId(null);
+          falarNoNavegador(trechos.slice(i).join(' '));
           return;
         }
         await new Promise<void>((resolve) => {
