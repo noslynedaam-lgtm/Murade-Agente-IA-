@@ -113,6 +113,8 @@ $$\\text{Fator R} = \\frac{\\text{Folha de Salários dos últimos 12 meses (incl
 - **Se Fator R $\\ge 0,28$ (28%):** Tributa no **Anexo III** (Economia tributária substancial).
 - **Se Fator R $< 0,28$ (28%):** Tributa no **Anexo V**.
 
+> **Dica Murade:** Empresas que faturam sem funcionários formais frequentemente avaliam o valor do Pró-Labore dos sócios para atingir o Fator R de 28%; simule antes, pois o pró-labore também gera INSS e IRRF.
+
 ---
 
 ## 4. Fórmula do Cálculo da Alíquota Efetiva
@@ -121,13 +123,17 @@ A alíquota aplicada sobre o faturamento do mês não é a nominal, mas sim a al
 
 $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nominal}) - \\text{Parcela a Deduzir}}{\\text{RBT12}}$$
 
+Em seguida, aplicam-se os percentuais de repartição dos tributos (IRPJ, CSLL, PIS, COFINS, CPP, ICMS/ISS) conforme tabelas da LC 123/2006.
+
 ---
 
 ## 5. Prazos e Obrigações Acessórias
 
-1. **Vencimento do DAS:** Dia 20 do mês subsequente ao de competência.
-2. **PGDAS-D:** Declaração mensal obrigatória até o vencimento do DAS.
-3. **DEFIS:** Transmissão anual até 31 de março.`
+1. **Vencimento do DAS:** Dia 20 do mês subsequente ao de competência (se cair em dia não útil, prorroga-se para o primeiro dia útil seguinte).
+2. **PGDAS-D:** Declaração mensal obrigatória transmitida até o vencimento do DAS, mesmo sem faturamento (declaração zerada).
+3. **DEFIS (Declaração de Informações Socioeconômicas e Fiscais):** Entrega anual até 31 de março do ano-calendário subsequente. **ATENÇÃO:** a Receita noticiou em 11/08/2026 que, segundo as Resoluções CGSN 190 e 191/2026, a Defis será substituída por informações no PGDAS-D entre janeiro e março, com efeitos em regra a partir de 2027. Veja "Novidades de 2026" e **preciso confirmar** a data de início.
+4. **Segregação de Receitas com Substituição Tributária (ST) e Monofásicos:**
+   - Produtos sujeitos a PIS/COFINS monofásico (autopeças, farmácia, cosméticos, bebidas) ou ICMS-ST devem ser segregados no PGDAS-D para não pagar esses tributos em duplicidade.`
   },
   {
     id: 'mei-opcao-exclusao',
@@ -1400,7 +1406,7 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
     content: `# Legislação Societária, Empresarial e Jurídica na Contabilidade
 
 > **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: sumulas-temas-stf-stj). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
-> **Observações:** **Conferido (Câmara dos Deputados, 21/10/2026):** CTN art. 135 (responsabilidade pessoal por excesso de poderes ou infração de lei, contrato social ou estatuto), art. 142 (lançamento é competência privativa da autoridade administrativa; atividade vinculada e obrigatória) e art. 150, § 4º (se a lei não fixar prazo, a homologação ocorre em 5 anos da ocorrência do fato gerador, salvo dolo, fraude ou simulação). **Atenção:** a ficha da norma na Câmara informa que os arts. 156, 168 e 174 do CTN foram alterados pela LC 236/2026 (e o 174 também pela LC 208/2024), então **não use de memória a prescrição ou o prazo desses artigos**. **Não conferidos:** o texto dos arts. 173, 174 e 195 do CTN, os artigos do Código Civil e as Súmulas 430 e 435 do STJ: preciso confirmar. A Lei 13.874/2019 e a IN DREI 81/2020 também **não foram conferidas**.
+> **Observações:** **Conferido (Câmara dos Deputados, 21/10/2026):** CTN art. 135 (responsabilidade pessoal por excesso de poderes ou infração de lei, contrato social ou estatuto), art. 142 (lançamento é competência privativa da autoridade administrativa; atividade vinculada e obrigatória) e art. 150, § 4º (se a lei não fixar prazo, a homologação ocorre em 5 anos da ocorrência do fato gerador, salvo dolo, fraude ou simulação). **Atenção:** os arts. 156, 165-A, 168 e 174 do CTN foram alterados pela LC 236/2026 (e o 174 também pela LC 208/2024); veja o documento "Novidades de 2026". **Não use de memória o prazo desses artigos.** **Não conferidos:** o texto dos arts. 173, 174 e 195 do CTN, os artigos do Código Civil e as Súmulas 430 e 435 do STJ: preciso confirmar. A Lei 13.874/2019 e a IN DREI 81/2020 também **não foram conferidas**.
 
 > **Fontes Oficiais:** Presidência da República / Departamento Nacional de Registro Empresarial e Integração (DREI).
 > **Legislação Base:** Código Civil (Lei nº 10.406/2002, arts. 966 a 1.141), Lei nº 13.874/2019 (Liberdade Econômica - SLU), Código Tributário Nacional (Lei nº 5.172/1966) e Lei nº 8.137/1990.
@@ -1485,6 +1491,7 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 > - [Receita Federal, ECF Perguntas e Respostas PJ 2021, capítulo XVIII Acréscimos Legais (arquivo atualizado até 31/12/2020)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/declaracoes-e-demonstrativos/ecf/perguntas-e-respostas-pessoa-juridica-2021-arquivos/capitulo-xviii-acrescimos-legais-2021.pdf)
 > - [Lei 14.689/2023, art. 8º, que alterou o art. 44 da Lei 9.430/1996 (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14689.htm)
 > - [Lei 9.430/1996 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/l9430.htm) (a página cortou antes dos arts. 44 e 61, por isso não foram lidos diretamente)
+> - [LC 236/2026 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp236.htm), de 04/09/2026: nova regra geral do CTN (art. 113-A) que limita as multas a 75%, 100% (fraude, sonegação ou conluio dolosos) e 150% (reincidência); ver o documento "Novidades de 2026".
 > **Não conferido nesta revisão:** o texto atual dos arts. 44 (incisos e §§ 1º-B e seguintes) e 61 da Lei 9.430 no Planalto; as reduções de multa vigentes hoje; regras do Simples Nacional, de tributos municipais e estaduais e de contribuições previdenciárias. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ## 1. Multa de mora (pagamento espontâneo em atraso)
@@ -1500,7 +1507,8 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 - **Multa qualificada (sonegação, fraude ou conluio, arts. 71 a 73 da Lei 4.502/1964): 100%** após a **Lei 14.689/2023**; **150% apenas em caso de reincidência**, isto é, nova infração no prazo de 2 anos. A qualificação **não se aplica** se a conduta dolosa não for individualizada e comprovada ou se houver sentença penal de absolvição com apreciação de mérito (texto da Lei 14.689 lido no Planalto).
 - **ATENÇÃO:** a documentação da Receita lida (arquivo de 2021) ainda fala em 150%. Prevalece a lei mais nova (Lei 14.689/2023), mas **preciso confirmar** a aplicação a fatos geradores anteriores à vigência da lei.
 - **Reduções por pagamento ou parcelamento após a notificação** (50%, 40%, 30% e 20% da multa, conforme prazo e fase, segundo a Receita em 2021): **preciso confirmar** no art. 6º da Lei 8.218/1991 vigente.
-- **Majoração de 50%** por não atender intimação ou não entregar arquivos digitais (art. 44, § 2º, segundo a Receita em 2021): **preciso confirmar** a redação atual.`
+- **Majoração de 50%** por não atender intimação ou não entregar arquivos digitais (art. 44, § 2º, segundo a Receita em 2021): **preciso confirmar** a redação atual.
+- **Novo (LC 236/2026, vigente desde 04/09/2026):** o CTN passou a limitar as multas a **75%** do tributo, **100%** em fraude, sonegação ou conluio dolosos e **150%** na reincidência (art. 113-A, § 1º); multas isoladas ficam fora do limite. Esses tetos são coerentes com a Lei 14.689/2023, mas **preciso confirmar** como a Receita aplica o limite a multas já lançadas e à multa de mora.`
   },
   {
     id: 'irrf-salario-familia-2026',
@@ -1606,5 +1614,48 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 - Até a primeira etapa, a base legal continua sendo a jornada de 44 horas semanais; **a partir de 42 horas, o divisor mensal e o cálculo da hora extra mudam**. A conta aritmética (42 horas por semana em 5 dias; hora normal calculada sobre a jornada nova) não é regra oficial lida nas fontes: **preciso confirmar** com orientação do Ministério do Trabalho antes de recalcular folhas ou banco de horas.
 - O texto lido **não trata expressamente de horas extras**; o acréscimo mínimo de 50% continua no art. 7º, XVI da Constituição (conferido na Constituição atualizada).
 - Convenções coletivas com cláusulas incompatíveis perdem efeito em 2 meses: **revisar as convenções de cada cliente**.`
+  },
+  {
+    id: 'novidades-2026-cgsn-lc236',
+    category: 'fiscal',
+    categoryLabel: 'Fiscal / Tributário',
+    filePath: 'fiscal/novidades-2026-cgsn-lc236.md',
+    title: 'Novidades de 2026: LC 236 (CTN, multas e acordos) e CGSN 190/191 (Simples e CBS/IBS)',
+    summary: 'LC 236/2026 limita multas a 75%, 100% e 150% e traz mediação e arbitragem no CTN; Resoluções CGSN 190 e 191/2026 incluem CBS e IBS no Simples, com prazos de opção e fim da Defis.',
+    tags: ['LC 236/2026', 'CTN', 'Multas', 'CGSN 190', 'CGSN 191', 'Simples Nacional', 'CBS', 'IBS'],
+    lastUpdated: '2026-10-21',
+    officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp236.htm',
+    officialLinkLabel: 'LC 236/2026 - Planalto',
+    content: `# Novidades de 2026: LC 236/2026 (CTN), CGSN 190 e 191 (Simples Nacional e CBS/IBS)
+
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Lei Complementar 236/2026 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp236.htm) e [Agência Câmara sobre a lei](https://www.camara.leg.br/noticias/1303227-lei-limita-multas-e-amplia-acordos-tributarios)
+> - [Receita Federal, 11/08/2026: CGSN atualiza regras do Simples Nacional para a Reforma Tributária do Consumo](https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/cgsn-atualiza-regras-do-simples-nacional-para-adequacao-a-reforma-tributaria-do-consumo)
+> **Não conferido nesta revisão:** o texto das Resoluções CGSN 190 e 191/2026 (li só a notícia da Receita), a data de vigência da 191, o texto completo da LC 236/2026 (li o resumo da página do Planalto) e os vetos. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+
+## 1. LC 236/2026: mudanças no Código Tributário Nacional (sancionada e publicada em 04/09/2026)
+- **Ementa:** altera o CTN para tratar de normas gerais sobre solução de controvérsias, consensualidade e processo administrativo tributário e aduaneiro, e revoga um dispositivo da Lei 9.430/1996. Vigência: **na data da publicação** (art. 3º). Estados, municípios e DF têm dois anos para adaptar suas leis (Agência Câmara).
+- **Limite das multas (CTN, art. 113-A, § 1º):** sobre o tributo lançado ou o crédito afetado, a multa **não pode ultrapassar 75%**; **100%** em casos de fraude, sonegação ou conluio dolosos; **150%** em caso de reincidência. Multas isoladas, sem vínculo com valor de tributo, ficam fora desse limite. O § 2º foi vetado.
+- **Descontos para regularização (Agência Câmara):** 50% no pagamento à vista no prazo da primeira defesa; 40% no parcelamento no mesmo prazo; 30% no pagamento integral antes da inscrição em dívida ativa; 20% no parcelamento antes da inscrição. Há descontos de até 60%, 50%, 40% ou 30% para quem está em programa de conformidade. **Devedor contumaz não tem direito aos descontos.** Esses descontos são da notícia da Câmara; **preciso confirmar** em qual artigo estão e se já valem hoje.
+- **Art. 156 (extinção do crédito):** novos incisos XII (sentença arbitral favorável ao contribuinte, após o trânsito em julgado) e XIII (cumprimento do acordo de mediação).
+- **Art. 165-A:** os indébitos tributários são atualizados pelos mesmos índices aplicados aos créditos tributários.
+- **Art. 168:** o § 2º estende o direito de restituição à habilitação do indébito perante a administração; o § 3º fixa que o prazo para essa habilitação começa com a certificação do trânsito em julgado. O § 1º foi vetado. **Segundo a Agência Câmara, o prazo geral de cinco anos para restituição não foi eliminado** (o governo vetou essa proposta).
+- **Art. 174 (interrupção da prescrição):** passam a interromper a prescrição, entre outros atos, o protesto da certidão de dívida ativa (II), a instauração de procedimento de mediação (V) e a instituição da arbitragem especial (VI), além de hipóteses ligadas à execução fiscal (VII a IX). **Segundo a Agência Câmara, o governo vetou a regra que limitava a uma só interrupção, em cinco anos, o prazo de cobrança.** Para o prazo de prescrição em si (cinco anos), o art. 174 não foi lido: **preciso confirmar**.
+- **Reflexo na Lei 9.430/1996:** a LC 236 revoga um dispositivo dessa lei (não identificado na leitura). **Preciso confirmar** qual, antes de citar o art. 44 ou o art. 61.
+
+## 2. CGSN 190 e 191/2026: Simples Nacional e a Reforma Tributária (notícia da Receita de 11/08/2026)
+- Acrescentam-se à Resolução CGSN 183/2025 e continuam adaptando a Resolução CGSN 140/2018 à LC 214/2025 e à LC 227/2026.
+- **Vigência:** as mudanças da Resolução 190 produzem efeitos, em regra, a partir de **01/01/2027**. A vigência da 191 não foi informada.
+- **CBS e IBS no Simples:** passam a integrar expressamente os tributos do Simples Nacional (arrecadação, fiscalização e contencioso administrativo). A empresa pode permanecer no Simples e **recolher CBS e IBS pelo regime regular**; nesse caso esses valores deixam de ser recolhidos no DAS.
+- **Prazos de opção (conforme a notícia):**
+  - Ingresso no Simples (empresas não optantes): pedido de **1 a 30 de setembro de 2026**, com efeitos em 1º de janeiro do ano seguinte; cancelamento permitido até **30 de novembro**.
+  - Recolhimento de CBS/IBS fora do Simples no **primeiro semestre de 2027**: opção de **1 a 30 de setembro de 2026**; cancelamento até 30 de novembro, prazo que o CGSN pode prorrogar.
+  - Segundo semestre de 2027: opção de **1 a 31 de março de 2027**, com efeitos de 1º de julho a 31 de dezembro; cancelamento até 31 de maio.
+  - As opções continuam nos períodos seguintes, salvo renúncia expressa.
+- **Sublimite:** o sublimite de **R$ 3,6 milhões** passa a abranger também o IBS (além de ICMS e ISS). O limite adicional de exportação também fica em R$ 3,6 milhões, substituindo a referência anterior de R$ 1,8 milhão.
+- **Receita bruta:** CBS e IBS pagos pelo regime regular são excluídos da receita bruta para fins do Simples.
+- **Reconhecimento da receita** passa a ser ligado à emissão do documento fiscal.
+- **DEFIS:** segundo a notícia, a Defis é **substituída por informações enviadas no PGDAS-D entre janeiro e março de cada ano**. O documento "Simples Nacional" desta base ainda cita a Defis até 31 de março: **preciso confirmar** a partir de quando a mudança vale (a notícia fala em efeitos, em regra, a partir de 2027).
+- **Atenção a prazos:** a janela de 1 a 30 de setembro de 2026 já passou; o cancelamento da opção vai até **30/11/2026**.`
   }
 ];

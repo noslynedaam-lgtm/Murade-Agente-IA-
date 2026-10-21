@@ -61,6 +61,6 @@ Em seguida, aplicam-se os percentuais de repartição dos tributos (IRPJ, CSLL, 
 
 1. **Vencimento do DAS:** Dia 20 do mês subsequente ao de competência (se cair em dia não útil, prorroga-se para o primeiro dia útil seguinte).
 2. **PGDAS-D:** Declaração mensal obrigatória transmitida até o vencimento do DAS, mesmo sem faturamento (declaração zerada).
-3. **DEFIS (Declaração de Informações Socioeconômicas e Fiscais):** Entrega anual até 31 de março do ano-calendário subsequente.
+3. **DEFIS (Declaração de Informações Socioeconômicas e Fiscais):** Entrega anual até 31 de março do ano-calendário subsequente. **ATENÇÃO:** a Receita noticiou em 11/08/2026 que, segundo as Resoluções CGSN 190 e 191/2026, a Defis será substituída por informações no PGDAS-D entre janeiro e março, com efeitos em regra a partir de 2027. Veja "Novidades de 2026" e **preciso confirmar** a data de início.
 4. **Segregação de Receitas com Substituição Tributária (ST) e Monofásicos:**
    - Produtos sujeitos a PIS/COFINS monofásico (autopeças, farmácia, cosméticos, bebidas) ou ICMS-ST devem ser segregados no PGDAS-D para não pagar esses tributos em duplicidade.
