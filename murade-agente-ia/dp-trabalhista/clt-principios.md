@@ -35,7 +35,7 @@ O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacio
 
 ## 3. Jornada de Trabalho e Intervalos
 
-- **Limite Padrão:** Máximo de 8 horas diárias e 44 horas semanais (Art. 7º, XIII da CF/88).
+- **Limite Padrão (ATENÇÃO, mudou):** até a Emenda Constitucional 141/2026 (promulgada em 16/10/2026) o limite era de 8 horas diárias e 44 horas semanais. **A emenda deu nova redação ao art. 7º, XIII: 8 horas diárias e 40 semanais**, com transição: **42 horas** a partir de cerca de dois meses da publicação (a Rádio Senado informa 15/12/2026) e **40 horas** cerca de um ano depois, sem redução salarial. Veja o documento "EC 141/2026". Enquanto a transição não chega, **preciso confirmar** a jornada aplicável na data em que o agente for consultado.
 - **Horas Extras:** Limite de até 2 horas diárias, remuneradas com acréscimo de no mínimo 50% em dias úteis ou 100% em domingos e feriados (ou conforme percentual superior previsto na CCT da categoria).
 - **Banco de Horas:**
   - *Individual e Tácito/Escrito:* Compensação no mesmo mês (sem formalidade escrita) ou até 6 meses (com acordo individual escrito).

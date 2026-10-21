@@ -1,6 +1,11 @@
 # Reforma Tributária sobre o Consumo - Guia de Transição e Impactos
 
 > **Legislação Base:** Emenda Constitucional nº 132/2023, Leis Complementares regulamentadoras e Diretrizes do Comitê Gestor do IBS.
+>
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Emenda Constitucional 132/2023, ADCT arts. 124 a 133 (Planalto)](https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm)
+> - [Agência Senado, 16/12/2024: novos tributos começam a ser testados em 2026 e a transição vai até 2033](https://www12.senado.leg.br/noticias/materias/2024/12/16/novos-tributos-comecam-a-ser-testados-em-2026-e-transicao-vai-ate-2033)
+> **Conferido:** o cronograma da seção 3 (ADCT arts. 125 a 129). **Não conferido nesta revisão:** split payment, cálculo "por fora", crédito financeiro amplo e regras do Simples Nacional na LC 214/2025 (seções 1, 2 e 4): são descrições gerais, **preciso confirmar** nos artigos da LC 214/2025 antes de afirmar. Detalhes de 2029 a 2032 do IBS (alíquotas de referência fixadas por resolução do Senado, art. 130 do ADCT) também **preciso confirmar**.
 
 ---
 
@@ -28,18 +33,19 @@ Em substituição, cria-se o **IVA Dual** (Imposto sobre Valor Agregado em duas 
 
 ---
 
-## 3. Cronograma Oficial de Transição (2026 - 2033)
+## 3. Cronograma de transição (ADCT, arts. 125 a 133, conferido no Planalto em 21/10/2026)
+Os textos do ADCT falam em "imposto previsto no art. 156-A" (IBS) e "contribuição prevista no art. 195, V" (CBS). Em resumo:
 
-| Ano | CBS (Federal) | IBS (Estados / Municípios) | Tributos Antigos (PIS/COFINS, ICMS, ISS) |
-| :--- | :--- | :--- | :--- |
-| **2026** | Alíquota de teste de **0,9%** | Alíquota de teste de **0,1%** | Compensados integralmente contra o PIS/COFINS |
-| **2027** | CBS entra em vigor integral; PIS e COFINS **extintos**; IPI reduzido a zero (exceto ZFM) | Mantém 0,1% | Início da cobrança do Imposto Seletivo (IS) |
-| **2028** | Vigência plena da CBS | Mantém 0,1% | Validação das regras do Comitê Gestor do IBS |
-| **2029** | Vigência plena | Início da redução gradual do ICMS e ISS em 1/10 por ano | Redução de 10% nas alíquotas do ICMS/ISS |
-| **2030** | Vigência plena | Redução de 2/10 | Redução de 20% nas alíquotas do ICMS/ISS |
-| **2031** | Vigência plena | Redução de 3/10 | Redução de 30% nas alíquotas do ICMS/ISS |
-| **2032** | Vigência plena | Redução de 4/10 | Redução de 40% nas alíquotas do ICMS/ISS |
-| **2033** | **Sistema Novo Pleno** | **IBS em vigor integral** | ICMS, ISS e legislação antiga **100% revogados** |
+| Ano | O que diz a Constituição (ADCT) |
+| :--- | :--- |
+| **2026** (art. 125) | IBS cobrado à alíquota estadual de **0,1%** e a contribuição do art. 195, V (CBS) a **0,9%**. Os valores recolhidos são **compensados com contribuições federais**. O texto não usa a palavra "teste". A Agência Senado (16/12/2024) descreve 2026 como ano de testes, com destaque do valor na nota, sem arrecadação efetiva. |
+| **2027** (arts. 126 e 127) | Passa a ser cobrada a contribuição do art. 195, V (CBS) e são extintas algumas contribuições federais (a Agência Senado cita PIS, Cofins e IOF-seguros). **IPI com alíquota zero**, exceto na Zona Franca de Manaus. IBS: **0,05% estadual e 0,05% municipal** (2027 e 2028), e a CBS é reduzida em **0,1 ponto percentual**. A Agência Senado informa que o Imposto Seletivo passa a vigorar em 2027. |
+| **2028** (art. 127) | Mesmas alíquotas de 2027 (IBS 0,05% + 0,05%, CBS reduzida em 0,1 ponto percentual). |
+| **2029 a 2032** (art. 128) | As alíquotas do **ICMS e do ISS** passam a ser aplicadas em **9/10, 8/10, 7/10 e 6/10**, ou seja, reduzidas em 10%, 20%, 30% e 40% (2029, 2030, 2031 e 2032). O IBS cresce na mesma medida (alíquotas de referência fixadas por **resolução do Senado**, com cálculo do TCU: art. 130). |
+| **2033** (art. 129) | **ICMS e ISS extintos.** |
+
+- **Art. 131 e 132:** regras de distribuição da arrecadação do IBS (2029 a 2077) e retenção de 5% para entes com menor razão entre receita e valor apurado. **Art. 133:** tributos antigos não integram a base do IBS.
+- **Observação sobre versões anteriores:** o texto anterior dizia que em 2026 os valores seriam "compensados integralmente contra o PIS/Cofins"; o ADCT diz "contribuições federais". Prevalece o texto da Constituição.
 
 ---
 

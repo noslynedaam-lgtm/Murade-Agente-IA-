@@ -480,36 +480,62 @@ Na Substituição Tributária, a responsabilidade pelo recolhimento do ICMS de t
     lastUpdated: '2026-10-20',
     officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm',
     officialLinkLabel: 'Portal da Câmara (Reforma Tributária)',
-    content: `# Reforma Tributária sobre o Consumo - Guia de Transição
+    content: `# Reforma Tributária sobre o Consumo - Guia de Transição e Impactos
 
-> **Legislação Base:** Emenda Constitucional nº 132/2023 e Leis Complementares regulamentadoras.
+> **Legislação Base:** Emenda Constitucional nº 132/2023, Leis Complementares regulamentadoras e Diretrizes do Comitê Gestor do IBS.
+>
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Emenda Constitucional 132/2023, ADCT arts. 124 a 133 (Planalto)](https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm)
+> - [Agência Senado, 16/12/2024: novos tributos começam a ser testados em 2026 e a transição vai até 2033](https://www12.senado.leg.br/noticias/materias/2024/12/16/novos-tributos-comecam-a-ser-testados-em-2026-e-transicao-vai-ate-2033)
+> **Conferido:** o cronograma da seção 3 (ADCT arts. 125 a 129). **Não conferido nesta revisão:** split payment, cálculo "por fora", crédito financeiro amplo e regras do Simples Nacional na LC 214/2025 (seções 1, 2 e 4): são descrições gerais, **preciso confirmar** nos artigos da LC 214/2025 antes de afirmar. Detalhes de 2029 a 2032 do IBS (alíquotas de referência fixadas por resolução do Senado, art. 130 do ADCT) também **preciso confirmar**.
 
 ---
 
 ## 1. O Novo Modelo: IVA Dual e Imposto Seletivo
 
-Extinção de 5 tributos cumulativos:
-- **Federais:** PIS, COFINS e IPI.
-- **Estadual:** ICMS.
-- **Municipal:** ISS.
+A Reforma Tributária extingue cinco tributos complexos e cumulativos sobre o consumo no Brasil:
+- **Tributos Federais Extintos:** PIS, COFINS e IPI (salvo Zona Franca).
+- **Tributo Estadual Extinto:** ICMS.
+- **Tributo Municipal Extinto:** ISS.
 
-Substitutos:
-1. **CBS (Contribuição sobre Bens e Serviços):** Federal, gerida pela Receita Federal.
-2. **IBS (Imposto sobre Bens e Serviços):** Gerido pelo Comitê Gestor (Estados e Municípios).
-3. **IS (Imposto Seletivo):** Extra-fiscal para produtos prejudiciais à saúde/meio ambiente.
+Em substituição, cria-se o **IVA Dual** (Imposto sobre Valor Agregado em duas esferas), complementado pelo Imposto Seletivo:
+
+1. **CBS (Contribuição sobre Bens e Serviços):** De competência Federal, gerida pela Receita Federal do Brasil, substituindo PIS e COFINS.
+2. **IBS (Imposto sobre Bens e Serviços):** De competência Compartilhada entre Estados, Distrito Federal e Municípios, gerido pelo Comitê Gestor do IBS, substituindo ICMS e ISS.
+3. **IS (Imposto Seletivo / "Imposto do Pecado"):** De competência Federal, incidente sobre a produção, comercialização ou importação de bens e serviços prejudiciais à saúde ou ao meio ambiente (ex.: cigarros, bebidas alcoólicas, veículos poluentes, extração mineral).
 
 ---
 
-## 2. Cronograma de Transição (conferido em 20/10/2026)
+## 2. Princípios Norteadores do Novo Sistema
 
-> **Fontes oficiais:** [Lei Complementar nº 214/2025](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm) (regulamenta IBS, CBS e IS) e [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089-reforma-tributaria-comeca-fase-de-transicao-com-testes-de-novos-impostos-em-2026/).
+- **Tributação no Destino:** O imposto pertence ao Estado/Município onde ocorre o consumo efetivo do bem ou serviço, eliminando de forma definitiva a "Guerra Fiscal".
+- **Não-Cumulatividade Plena (Crédito Financeiro):** Todo e qualquer imposto pago na aquisição de bens, serviços ou intangíveis gera crédito imediato para o adquirente, salvo uso estritamente pessoal.
+- **Split Payment (Pagamento Fracionado em Tempo Real):** No ato do pagamento financeiro (via Pix, cartão ou boleto), a parcela tributária devida (IBS/CBS) é automaticamente retida e direcionada ao Fisco, restando ao fornecedor apenas o valor líquido. O adquirente só apropria o crédito do imposto efetivamente recolhido.
+- **Cálculo "Por Fora":** O imposto não compõe sua própria base de cálculo, acabando com a distorção do "tributo sobre tributo".
 
-- **2026:** fase de testes. As notas fiscais passam a trazer CBS e IBS; os dados são registrados, mas os novos tributos ainda não são cobrados de fato (alíquotas de teste de 0,9% CBS e 0,1% IBS, conforme a LC 214/2025).
-- **2027:** começa a cobrança da CBS e do Imposto Seletivo (IS). A CBS substitui PIS, Cofins e IPI.
-- **A partir de 2029:** o IBS entra em transição, substituindo gradualmente ICMS e ISS. Os percentuais de cada ano estão nos arts. 361 a 366 e 369 da LC 214/2025 — consulte o texto antes de aplicar números.
-- **2033:** extinção total de ICMS e ISS; modelo definitivo com IBS, CBS e IS.
+---
 
-**Não confirmei** nesta revisão, em fonte oficial acessível, a regra detalhada de compensação do teste de 2026 com PIS/Cofins nem os percentuais anuais de 2029–2032.`
+## 3. Cronograma de transição (ADCT, arts. 125 a 133, conferido no Planalto em 21/10/2026)
+Os textos do ADCT falam em "imposto previsto no art. 156-A" (IBS) e "contribuição prevista no art. 195, V" (CBS). Em resumo:
+
+| Ano | O que diz a Constituição (ADCT) |
+| :--- | :--- |
+| **2026** (art. 125) | IBS cobrado à alíquota estadual de **0,1%** e a contribuição do art. 195, V (CBS) a **0,9%**. Os valores recolhidos são **compensados com contribuições federais**. O texto não usa a palavra "teste". A Agência Senado (16/12/2024) descreve 2026 como ano de testes, com destaque do valor na nota, sem arrecadação efetiva. |
+| **2027** (arts. 126 e 127) | Passa a ser cobrada a contribuição do art. 195, V (CBS) e são extintas algumas contribuições federais (a Agência Senado cita PIS, Cofins e IOF-seguros). **IPI com alíquota zero**, exceto na Zona Franca de Manaus. IBS: **0,05% estadual e 0,05% municipal** (2027 e 2028), e a CBS é reduzida em **0,1 ponto percentual**. A Agência Senado informa que o Imposto Seletivo passa a vigorar em 2027. |
+| **2028** (art. 127) | Mesmas alíquotas de 2027 (IBS 0,05% + 0,05%, CBS reduzida em 0,1 ponto percentual). |
+| **2029 a 2032** (art. 128) | As alíquotas do **ICMS e do ISS** passam a ser aplicadas em **9/10, 8/10, 7/10 e 6/10**, ou seja, reduzidas em 10%, 20%, 30% e 40% (2029, 2030, 2031 e 2032). O IBS cresce na mesma medida (alíquotas de referência fixadas por **resolução do Senado**, com cálculo do TCU: art. 130). |
+| **2033** (art. 129) | **ICMS e ISS extintos.** |
+
+- **Art. 131 e 132:** regras de distribuição da arrecadação do IBS (2029 a 2077) e retenção de 5% para entes com menor razão entre receita e valor apurado. **Art. 133:** tributos antigos não integram a base do IBS.
+- **Observação sobre versões anteriores:** o texto anterior dizia que em 2026 os valores seriam "compensados integralmente contra o PIS/Cofins"; o ADCT diz "contribuições federais". Prevalece o texto da Constituição.
+
+---
+
+## 4. O Impacto no Simples Nacional
+
+- As empresas optantes pelo Simples Nacional **podem continuar no regime simplificado**.
+- **Opção facultativa:** Poderão optar por recolher a CBS e o IBS pelo regime regular fora do Simples, permitindo a transferência de **créditos integrais** aos seus clientes empresariais (B2B).
+- Se permanecerem no Simples tradicional, transferem apenas créditos correspondentes ao montante efetivamente recolhido no DAS, o que pode gerar desvantagem competitiva em cadeias industriais e de atacado.`
   },
   {
     id: 'clt-principios',
@@ -517,7 +543,7 @@ Substitutos:
     categoryLabel: 'DP / Trabalhista',
     filePath: 'dp-trabalhista/clt-principios.md',
     title: 'CLT: Princípios Trabalhistas, Jornada, Férias e Rescisões',
-    summary: 'Princípios fundamentais (in dubio pro operario, primazia da realidade), tipos contratuais, limite de 44h semanais, banco de horas e prazos rescisórios.',
+    summary: 'Princípios fundamentais (in dubio pro operario, primazia da realidade), tipos contratuais, jornada (44h até a EC 141/2026, que reduz para 42h e depois 40h), banco de horas e prazos rescisórios.',
     tags: ['CLT', 'Decreto-Lei 5.452/43', 'Jornada', 'Férias', 'Rescisão Contratual'],
     lastUpdated: '2026-10-21',
     officialLink: 'http://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
@@ -559,7 +585,7 @@ O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacio
 
 ## 3. Jornada de Trabalho e Intervalos
 
-- **Limite Padrão:** Máximo de 8 horas diárias e 44 horas semanais (Art. 7º, XIII da CF/88).
+- **Limite Padrão (ATENÇÃO, mudou):** até a Emenda Constitucional 141/2026 (promulgada em 16/10/2026) o limite era de 8 horas diárias e 44 horas semanais. **A emenda deu nova redação ao art. 7º, XIII: 8 horas diárias e 40 semanais**, com transição: **42 horas** a partir de cerca de dois meses da publicação (a Rádio Senado informa 15/12/2026) e **40 horas** cerca de um ano depois, sem redução salarial. Veja o documento "EC 141/2026". Enquanto a transição não chega, **preciso confirmar** a jornada aplicável na data em que o agente for consultado.
 - **Horas Extras:** Limite de até 2 horas diárias, remuneradas com acréscimo de no mínimo 50% em dias úteis ou 100% em domingos e feriados (ou conforme percentual superior previsto na CCT da categoria).
 - **Banco de Horas:**
   - *Individual e Tácito/Escrito:* Compensação no mesmo mês (sem formalidade escrita) ou até 6 meses (com acordo individual escrito).
@@ -1068,7 +1094,7 @@ A aplicação de qualquer interpretação legal, enquadramento fiscal, alíquota
 ---
 
 ## 3. Jornada de Trabalho, Banco de Horas e Descansos (Arts. 58 a 75 da CLT)
-- **Limite Constitucional:** 8 (oito) horas diárias e 44 (quarenta e quatro) horas semanais.
+- **Limite Constitucional (ATENÇÃO):** 44 horas semanais até a EC 141/2026 (promulgada em 16/10/2026), que passa o limite a 42 horas (cerca de dois meses da publicação) e depois a 40 horas semanais, sem redução salarial. Veja o documento "EC 141/2026".
 - **Horas Extras:** Remuneradas com acréscimo de no mínimo **50%** em dias normais e **100%** em domingos e feriados civis e religiosos.
 - **Banco de Horas Individual:** Válido por acordo individual escrito, desde que a compensação ocorra no período máximo de **6 (seis) meses**.
 - **Banco de Horas Coletivo:** Mediante acordo ou convenção coletiva, com prazo de compensação de até **1 (um) ano**.
@@ -1533,5 +1559,52 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 - **Base legal conferida (Lei 8.036/1990, [texto atualizado na Câmara](https://www2.camara.leg.br/legin/fed/lei/1990/lei-8036-11-maio-1990-365155-normaatualizada-pl.pdf)):** art. 15 (8% até o dia 20; § 7º aprendiz 2%); **art. 18, § 1º: multa de 40% do montante de todos os depósitos** na despedida sem justa causa. O percentual de **20%** (acordo do art. 484-A da CLT) **preciso confirmar** na CLT.
 - **Encargos por atraso (Lei 8.036, art. 22):** TR sobre o valor, juros de mora de 0,5% ao mês ou fração e multa; o percentual da multa e a forma de cálculo no FGTS Digital **preciso confirmar**.
 - **Guia:** desde março de 2024 o empregador usa o FGTS Digital para gerar a guia (GFD).`
+  },
+  {
+    id: 'ec-141-2026-jornada-6x1',
+    category: 'dp-trabalhista',
+    categoryLabel: 'DP / Trabalhista',
+    filePath: 'dp-trabalhista/ec-141-2026-jornada-6x1.md',
+    title: 'EC 141/2026: fim da escala 6x1 e jornada de 40 horas semanais',
+    summary: 'Emenda Constitucional 141, promulgada em 16/10/2026: jornada de 8 horas e 40 semanais, dois dias de repouso semanal, transição de 42 horas e depois 40 horas sem redução salarial, exceções e pontos a confirmar.',
+    tags: ['EC 141', 'Escala 6x1', 'Jornada 40 horas', 'Art. 7º CF', 'Repouso semanal'],
+    lastUpdated: '2026-10-21',
+    officialLink: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc141.htm',
+    officialLinkLabel: 'Emenda Constitucional 141 - Planalto',
+    content: `# Emenda Constitucional 141/2026: Fim da Escala 6x1 e Jornada de 40 Horas
+
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Emenda Constitucional 141 (Planalto)](https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc141.htm) (a página informa que o texto oficial é o do DOU de 16/10/2026, edição extra)
+> - [Agência Câmara, 16/10/2026: Congresso promulga emenda que acaba com a escala 6x1](https://www.camara.leg.br/noticias/1311797-congresso-promulga-emenda-que-acaba-com-escala-6x1-e-estabelece-jornada-maxima-de-40-horas-semanais)
+> - [Agência Senado, 16/10/2026](https://www12.senado.leg.br/noticias/materias/2026/10/16/congresso-promulga-o-fim-da-escala-6x1-e-aposentadoria-de-agentes-de-saude) e [Rádio Senado, 19/10/2026](https://www12.senado.leg.br/radio/1/noticia/2026/10/19/jornada-de-trabalho-5x2-deve-entrar-em-vigor-em-15-de-dezembro)
+> **Não conferido nesta revisão:** a data exata de início de cada etapa (a contagem depende da data de publicação no DOU), a regulamentação por lei (CLT, lei complementar para MEI e pequenas empresas), a forma de calcular o divisor da hora e as horas extras na transição, e as convenções coletivas. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+
+## 1. O que mudou (texto do Planalto)
+- **Art. 7º, XIII (nova redação):** duração normal do trabalho de até **8 horas diárias e 40 horas semanais**, facultada a compensação de horários e a redução da jornada por acordo ou convenção coletiva.
+- **Art. 7º, XV:** repouso semanal remunerado de **2 dias**, preferencialmente um deles aos domingos. Essa alteração entra em vigor **2 meses após a publicação** (art. 10, I); os demais dispositivos, na data da publicação (art. 10, II).
+- **Art. 7º, §§ 2º e 3º:** convenção ou acordo coletivo pode criar regime compensatório que assegure, na **média mensal, 2 dias de repouso, com ao menos 1 dia dentro de cada semana**. Lei pode prever regimes diferenciados, dentro dos limites dos incisos XIII a XV.
+
+## 2. Transição (arts. 2º a 9º da emenda)
+- **Sem redução salarial** de nenhuma espécie, inclusive pisos, para contratos em vigor (art. 2º e parágrafo único).
+- **Art. 3º:** após **2 meses**, perdem efeito as cláusulas de convenções e acordos coletivos incompatíveis com a emenda.
+- **Art. 4º:** não há redução proporcional para jornadas que já sejam iguais ou inferiores a 40 horas semanais.
+- **Art. 6º (progressão):** em **2 meses**, máximo de **42 horas semanais**; **1 ano depois** desse prazo (cerca de 14 meses após a publicação), máximo de **40 horas**.
+- **Art. 7º:** nesse período, convenção ou acordo coletivo pode ampliar a duração diária para distribuir as 42 horas semanais, respeitado o repouso do inciso XV.
+- **Art. 5º:** lei complementar pode criar medidas transitórias para **MEI, microempresas e empresas de pequeno porte**, condicionadas à manutenção de empregos.
+- **Art. 9º (administração pública):** contratos vigentes com mão de obra direta devem ser aditados em até 1 ano para manter o equilíbrio econômico-financeiro; terceirizados do poder público passam a ser abrangidos na data do aditamento ou ao fim desse prazo, com irredutibilidade salarial.
+
+## 3. Exceções
+- **Art. 8º:** empregado com **diploma de nível superior** e remuneração mensal igual ou superior a **2,5 vezes o limite máximo dos benefícios do RGPS** não se sujeita às regras de duração e controle de jornada, salvo liberalidade do empregador ou previsão em acordo ou convenção coletiva, respeitados o inciso XV e o § 2º do art. 7º. A Justiça do Trabalho é competente para essas ações. A Agência Senado calculou esse valor em R$ 21.188,87 (2,5 vezes o teto de R$ 8.475,55); confira em cada caso.
+- **Art. 8º, § 1º:** não se aplica a empregados públicos da administração direta e indireta de qualquer dos Poderes e entes federativos. As notícias oficiais informam que a emenda não altera a jornada de servidores públicos.
+
+## 4. Datas
+- **Promulgação:** 16/10/2026 (Congresso Nacional).
+- **42 horas e 2 dias de repouso:** "em 2 meses" da publicação. A Rádio Senado (19/10/2026) informa **15 de dezembro de 2026**; a Agência Câmara fala em cerca de dois meses após a promulgação. **Preciso confirmar** a data exata contando a partir da publicação no DOU.
+- **40 horas:** um ano depois da etapa de 42 horas (cerca de 14 meses da publicação), isto é, por volta de dezembro de 2027. **Preciso confirmar** a data exata.
+
+## 5. Efeitos práticos (cuidado)
+- Até a primeira etapa, a base legal continua sendo a jornada de 44 horas semanais; **a partir de 42 horas, o divisor mensal e o cálculo da hora extra mudam**. A conta aritmética (42 horas por semana em 5 dias; hora normal calculada sobre a jornada nova) não é regra oficial lida nas fontes: **preciso confirmar** com orientação do Ministério do Trabalho antes de recalcular folhas ou banco de horas.
+- O texto lido **não trata expressamente de horas extras**; o acréscimo mínimo de 50% continua no art. 7º, XVI da Constituição (conferido na Constituição atualizada).
+- Convenções coletivas com cláusulas incompatíveis perdem efeito em 2 meses: **revisar as convenções de cada cliente**.`
   }
 ];
