@@ -41,6 +41,6 @@
 - **FGTS rescisório:** vence em **até dez dias** do término do contrato (Lei 8.036/1990, art. 18, § 3º, combinado com o art. 477, § 6º, da CLT). Se esse dia não for útil, o manual diz que o prazo vai para o **dia útil anterior**.
 - **O que é cada tipo:** mensal são as verbas devidas mensalmente (salário, 1ª e 2ª parcelas do 13º); rescisório são as verbas devidas em razão da rescisão pelo empregador (saldo de salário, aviso prévio, 13º). **Pedido de demissão:** todas as verbas, inclusive as da rescisão, são do tipo mensal, vencendo no dia 20 do mês seguinte.
 - **Alíquotas (manual, item 5.1.4):** **8%** para a maioria das categorias; **2%** para aprendiz e contratos Verde e Amarelo (códigos 103, 107 e 108).
-- **Multa rescisória de 40% ou 20%:** o manual cita esses percentuais, mas **não detalha a regra**; **preciso confirmar** na Lei 8.036/1990, art. 18, e na CLT, art. 484-A.
-- **Encargos por atraso:** o manual diz que incidem encargos até a data de vencimento da guia, mas **não traz os percentuais**: preciso confirmar.
+- **Base legal conferida (Lei 8.036/1990, [texto atualizado na Câmara](https://www2.camara.leg.br/legin/fed/lei/1990/lei-8036-11-maio-1990-365155-normaatualizada-pl.pdf)):** art. 15 (8% até o dia 20; § 7º aprendiz 2%); **art. 18, § 1º: multa de 40% do montante de todos os depósitos** na despedida sem justa causa. O percentual de **20%** (acordo do art. 484-A da CLT) **preciso confirmar** na CLT.
+- **Encargos por atraso (Lei 8.036, art. 22):** TR sobre o valor, juros de mora de 0,5% ao mês ou fração e multa; o percentual da multa e a forma de cálculo no FGTS Digital **preciso confirmar**.
 - **Guia:** desde março de 2024 o empregador usa o FGTS Digital para gerar a guia (GFD).

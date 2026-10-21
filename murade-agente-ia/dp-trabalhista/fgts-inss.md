@@ -19,7 +19,7 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 - **Teto do salário de contribuição:** R$ 8.475,55.
 - **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
-- **Contribuinte individual, facultativo e MEI (INSS, mesma página, conferida em 21/10/2026):** sobre base de R$ 1.621,00, **5%** (exclusiva do facultativo de baixa renda e do MEI) = R$ 81,05; **11%** (exclusiva do plano simplificado) = R$ 178,31; **20%** entre o salário mínimo e o teto, ou seja, de R$ 324,20 a R$ 1.695,11. Na página, o **13º salário não entra na soma** para enquadrar a faixa e tem a alíquota aplicada separadamente. Com vínculos concomitantes, as remunerações são somadas, respeitando o teto. **A retenção de 11% que a empresa faz sobre o pró-labore e sobre autônomos NÃO consta dessa página**: preciso confirmar na Lei 8.212/1991 (art. 21 e art. 4º da Lei 10.666/2003) antes de afirmar.
+- **Contribuinte individual, facultativo e MEI (INSS, mesma página, conferida em 21/10/2026):** sobre base de R$ 1.621,00, **5%** (exclusiva do facultativo de baixa renda e do MEI) = R$ 81,05; **11%** (exclusiva do plano simplificado) = R$ 178,31; **20%** entre o salário mínimo e o teto, ou seja, de R$ 324,20 a R$ 1.695,11. Na página, o **13º salário não entra na soma** para enquadrar a faixa e tem a alíquota aplicada separadamente. Com vínculos concomitantes, as remunerações são somadas, respeitando o teto. **Retenção pela empresa (Lei 10.666/2003, art. 4º, conferida na [publicação da Câmara dos Deputados](https://www2.camara.leg.br/legin/fed/lei/2003/lei-10666-8-maio-2003-496649-publicacaooriginal-1-pl.html), texto de 2003):** a empresa é obrigada a **arrecadar a contribuição do contribuinte individual a seu serviço, descontando-a da remuneração**, e a recolhê-la com a contribuição a seu cargo; o artigo **não traz percentual** e, na redação original, fala em recolhimento até o dia 2 do mês seguinte, prazo que **pode ter mudado** (preciso confirmar hoje, com a DCTFWeb). O percentual de 11% aplicado na retenção: **preciso confirmar** na Lei 8.212/1991, art. 21 e art. 4º da Lei 10.666.
 - Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
@@ -42,6 +42,8 @@ O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
 > Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial (a faixa do FAP, de 0,5 a 2,0, **foi depois confirmada** em fonte oficial; ver acima). Foram **retirados** por não estarem confirmados.
 
 ---
+
+> **Lei 8.036/1990 conferida em 21/10/2026** ([texto atualizado na Câmara dos Deputados](https://www2.camara.leg.br/legin/fed/lei/1990/lei-8036-11-maio-1990-365155-normaatualizada-pl.pdf)): **art. 15**: depósito de 8% da remuneração **até o dia 20 de cada mês** em conta vinculada; **§ 7º**: contratos de aprendizagem com alíquota de **2%**; **art. 18, § 1º**: na despedida sem justa causa, o empregador deposita importância igual a **40% do montante de todos os depósitos** realizados na conta vinculada; **art. 22**: quem não deposita responde pela **TR** sobre o valor, **juros de mora de 0,5% ao mês** ou fração e multa (§ 1º; o percentual da multa **não foi lido**: preciso confirmar); **art. 26**: a Justiça do Trabalho é competente para os litígios entre trabalhadores e empregadores sobre a lei.
 
 ## 3. FGTS Digital - O Novo Paradigma Operacional
 
