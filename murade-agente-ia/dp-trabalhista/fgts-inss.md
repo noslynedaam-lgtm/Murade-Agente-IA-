@@ -19,7 +19,7 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 - **Teto do salário de contribuição:** R$ 8.475,55.
 - **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
-- **Contribuinte individual / pró-labore:** a alíquota de **11%** com teto de R$ 8.475,55 (máximo de R$ 932,31 em 2026, cálculo feito a partir do teto oficial) **não foi reconferida** em fonte oficial nesta revisão: **preciso confirmar** a regra do contribuinte individual (retenção de 11% pela empresa e plano simplificado de 11% sobre o salário mínimo são regras diferentes).
+- **Contribuinte individual, facultativo e MEI (INSS, mesma página, conferida em 21/10/2026):** sobre base de R$ 1.621,00, **5%** (exclusiva do facultativo de baixa renda e do MEI) = R$ 81,05; **11%** (exclusiva do plano simplificado) = R$ 178,31; **20%** entre o salário mínimo e o teto, ou seja, de R$ 324,20 a R$ 1.695,11. Na página, o **13º salário não entra na soma** para enquadrar a faixa e tem a alíquota aplicada separadamente. Com vínculos concomitantes, as remunerações são somadas, respeitando o teto. **A retenção de 11% que a empresa faz sobre o pró-labore e sobre autônomos NÃO consta dessa página**: preciso confirmar na Lei 8.212/1991 (art. 21 e art. 4º da Lei 10.666/2003) antes de afirmar.
 - Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---

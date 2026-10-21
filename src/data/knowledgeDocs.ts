@@ -640,7 +640,7 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 - **Teto do salário de contribuição:** R$ 8.475,55.
 - **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
-- **Contribuinte individual / pró-labore:** a alíquota de **11%** com teto de R$ 8.475,55 (máximo de R$ 932,31 em 2026, cálculo feito a partir do teto oficial) **não foi reconferida** em fonte oficial nesta revisão: **preciso confirmar** a regra do contribuinte individual (retenção de 11% pela empresa e plano simplificado de 11% sobre o salário mínimo são regras diferentes).
+- **Contribuinte individual, facultativo e MEI (INSS, mesma página, conferida em 21/10/2026):** sobre base de R$ 1.621,00, **5%** (exclusiva do facultativo de baixa renda e do MEI) = R$ 81,05; **11%** (exclusiva do plano simplificado) = R$ 178,31; **20%** entre o salário mínimo e o teto, ou seja, de R$ 324,20 a R$ 1.695,11. Na página, o **13º salário não entra na soma** para enquadrar a faixa e tem a alíquota aplicada separadamente. Com vínculos concomitantes, as remunerações são somadas, respeitando o teto. **A retenção de 11% que a empresa faz sobre o pró-labore e sobre autônomos NÃO consta dessa página**: preciso confirmar na Lei 8.212/1991 (art. 21 e art. 4º da Lei 10.666/2003) antes de afirmar.
 - Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
@@ -1024,7 +1024,7 @@ A aplicação de qualquer interpretação legal, enquadramento fiscal, alíquota
     content: `# Simples Nacional — Lei Complementar nº 123/2006 Consolidada
 
 > **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: simples-nacional, mei-opcao-exclusao). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
-> **Observações:** Os limites de ME/EPP, o sublimite e a regra do excesso foram conferidos no documento "simples-nacional". Tabelas de alíquotas por anexo e Fator R **não foram reconferidas aqui**: preciso confirmar na LC 123/2006 e na Resolução CGSN 140/2018.
+> **Observações:** Os limites de ME/EPP, o sublimite e a regra do excesso foram conferidos no documento "simples-nacional". **Fator R conferido** (21/10/2026) no texto compilado da LC 123/2006, art. 18, § 5º-J: atividades dos §§ 5º-I são tributadas pelo **Anexo III quando a razão entre a folha de salários e a receita bruta é igual ou superior a 28%**; abaixo disso, certas atividades vão para o **Anexo V** (§§ 5º-K e 5º-M tratam do cálculo, com os 12 meses anteriores). Fonte: [LC 123/2006 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm). **As tabelas numéricas dos Anexos I a V (faixas, alíquotas e parcelas a deduzir) NÃO foram conferidas**: as páginas oficiais dos anexos não abriram. **Preciso confirmar** na LC 123/2006 (anexos) e na Resolução CGSN 140/2018 antes de calcular qualquer DAS; não use os valores abaixo como definitivos.
 
 > **Fonte Oficial Governamental:** Comitê Gestor do Simples Nacional (CGSN) / Receita Federal do Brasil.
 > **Legislação Base:** Lei Complementar nº 123/2006, Resolução CGSN nº 140/2018 e alterações posteriores.
@@ -1099,7 +1099,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     content: `# eSocial e FGTS Digital — Manual de Operação e Prazos Oficiais
 
 > **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: eSocial-prazos, fgts-inss). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
-> **Observações:** Pontos duvidosos: o prazo de S-2230 (dia 15) e de S-2210 (CAT) **não foram conferidos**; a citação da "Portaria Conjunta MTE/RFB nº 33/2023" e da "Lei nº 14.438/2022" como base do FGTS Digital **não foi confirmada**: preciso confirmar. Admissão (dia anterior) e desligamento (10 dias) conferem com o MOS S-1.3.
+> **Observações:** Pontos duvidosos: o prazo de S-2230 (dia 15) e de S-2210 (CAT) **não foram conferidos**; a "Lei nº 14.438/2022" **foi confirmada** pelo Ministério do Trabalho como a lei que fixou o vencimento mensal do FGTS no dia 20; a "Portaria Conjunta MTE/RFB nº 33/2023" **não foi confirmada**: preciso confirmar. Admissão (dia anterior) e desligamento (10 dias) conferem com o MOS S-1.3.
 
 > **Fonte Oficial Governamental:** Ministério do Trabalho e Emprego (MTE) e Receita Federal do Brasil (RFB).
 > **Legislação Base:** Decreto nº 8.373/2014, Portaria Conjunta MTE/RFB nº 33/2023, Lei nº 14.438/2022 (FGTS Digital).
@@ -1401,5 +1401,63 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 - **ATENÇÃO:** a documentação da Receita lida (arquivo de 2021) ainda fala em 150%. Prevalece a lei mais nova (Lei 14.689/2023), mas **preciso confirmar** a aplicação a fatos geradores anteriores à vigência da lei.
 - **Reduções por pagamento ou parcelamento após a notificação** (50%, 40%, 30% e 20% da multa, conforme prazo e fase, segundo a Receita em 2021): **preciso confirmar** no art. 6º da Lei 8.218/1991 vigente.
 - **Majoração de 50%** por não atender intimação ou não entregar arquivos digitais (art. 44, § 2º, segundo a Receita em 2021): **preciso confirmar** a redação atual.`
+  },
+  {
+    id: 'irrf-salario-familia-2026',
+    category: 'dp-trabalhista',
+    categoryLabel: 'DP / Trabalhista',
+    filePath: 'dp-trabalhista/irrf-salario-familia-2026.md',
+    title: 'Valores de 2026 para a Folha: IRRF, redução da Lei 15.270, salário-família e FGTS Digital',
+    summary: 'Tabela mensal do IRRF 2026 (Lei 15.191), redução até R$ 5.000 e R$ 7.350 (Lei 15.270), dedução por dependente, salário-família R$ 67,54, teto do INSS e prazos do FGTS Digital (dia 20 e dez dias), com fonte oficial.',
+    tags: ['IRRF 2026', 'Lei 15.270', 'Salário-família', 'FGTS Digital', 'Folha de pagamento'],
+    lastUpdated: '2026-10-21',
+    officialLink: 'https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026',
+    officialLinkLabel: 'Receita Federal - Tabelas 2026',
+    content: `# Valores de 2026 para a Folha: IRRF, Salário-Família, Salário Mínimo e FGTS
+
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Receita Federal, tabelas de tributação de 2026](https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda/tabelas/2026) (página publicada em 12/09/2025 e atualizada em 27/04/2026): Lei 15.191/2025 e Lei 15.270/2025
+> - [INSS, tabela de contribuição mensal](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal) (Portaria Interministerial MPS/MF nº 13, de 09/01/2026)
+> - [INSS, valor limite do salário-família](https://www.gov.br/inss/pt-br/direitos-e-deveres/salario-familia/valor-limite-para-direito-ao-salario-familia)
+> - [Ministério do Trabalho, FGTS Digital: verbas mensais e rescisórias e prazo de recolhimento](https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/fgtsdigital/comunicados/do-enquadramento-das-verbas-remuneratorias-em-tipo-mensal-e-tipo-rescisorio-prazo-de-recolhimento)
+> - [Manual de Orientação do FGTS Digital, versão 1.60 (05/05/2026)](https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/fgtsdigital/manual-e-documentacao-tecnica/manual-de-orientacao-do-fgts-digital-versao-1-60-05-05-2026.pdf)
+> **Não conferido nesta revisão:** a ordem exata do cálculo do IRRF mensal (base, INSS, dependentes, desconto simplificado e redução da Lei 15.270), o IRRF sobre 13º, férias, PLR e rendimentos acima de R$ 50 mil, e o Decreto que fixa o salário mínimo. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+
+## 1. Tabela mensal do IRRF a partir de janeiro de 2026 (Lei 15.191/2025)
+| Base de cálculo mensal | Alíquota | Parcela a deduzir |
+| :--- | :--- | :--- |
+| Até R$ 2.428,80 | isento | - |
+| De R$ 2.428,81 até R$ 2.826,65 | 7,5% | R$ 182,16 |
+| De R$ 2.826,66 até R$ 3.751,05 | 15,0% | R$ 394,16 |
+| De R$ 3.751,06 até R$ 4.664,68 | 22,5% | R$ 675,49 |
+| Acima de R$ 4.664,68 | 27,5% | R$ 908,73 |
+
+- **Dedução mensal por dependente:** R$ 189,59.
+- **Desconto simplificado (limite mensal):** R$ 607,20.
+- **Rendimentos previdenciários isentos para maiores de 65 anos:** R$ 1.903,98 (parcela isenta).
+
+## 2. Redução mensal do imposto (Lei 15.270/2025), vigente desde janeiro de 2026
+| Rendimentos tributáveis mensais | Redução do imposto |
+| :--- | :--- |
+| Até R$ 5.000,00 | Até R$ 312,89, de modo que o imposto devido seja **zero** |
+| De R$ 5.000,01 até R$ 7.350,00 | R$ 978,62 menos (0,133145 x rendimentos tributáveis do mês) |
+| A partir de R$ 7.350,00 | sem redução (a redução diminui linearmente até zero) |
+
+- A tabela **anual** (exercício 2027, ano-calendário 2026) não se aplica à retenção mensal.
+- **Preciso confirmar:** a página lida não detalha a ordem do cálculo (por exemplo, se a redução incide sobre o imposto calculado pela tabela progressiva após as deduções). Use o exemplo oficial da Receita antes de implementar.
+
+## 3. Salário mínimo, teto e salário-família (2026)
+- **Salário mínimo:** R$ 1.621,00. A página do INSS usa R$ 1.621,00 como piso de contribuição e R$ 324,20 (20% desse valor) como mínimo do plano de 20%. O decreto que fixa o valor não foi aberto aqui, mas o documento do MEI desta base cita o Decreto 12.797/2025.
+- **Teto do salário de contribuição:** R$ 8.475,55 (reajuste de 3,9%, segundo o INSS).
+- **Salário-família:** cota de **R$ 67,54** por dependente para quem tem remuneração mensal de até **R$ 1.980,38** (Portaria Interministerial MPS/MF nº 13/2026). Acima do limite, não há direito.
+
+## 4. FGTS Digital: alíquotas e prazos (Ministério do Trabalho)
+- **FGTS mensal:** vence até o **dia 20 do mês seguinte** ao da remuneração (alterado pela Lei 14.438/2022), a partir do início da arrecadação pelo FGTS Digital. Antes disso o vencimento era dia 7.
+- **FGTS rescisório:** vence em **até dez dias** do término do contrato (Lei 8.036/1990, art. 18, § 3º, combinado com o art. 477, § 6º, da CLT). Se esse dia não for útil, o manual diz que o prazo vai para o **dia útil anterior**.
+- **O que é cada tipo:** mensal são as verbas devidas mensalmente (salário, 1ª e 2ª parcelas do 13º); rescisório são as verbas devidas em razão da rescisão pelo empregador (saldo de salário, aviso prévio, 13º). **Pedido de demissão:** todas as verbas, inclusive as da rescisão, são do tipo mensal, vencendo no dia 20 do mês seguinte.
+- **Alíquotas (manual, item 5.1.4):** **8%** para a maioria das categorias; **2%** para aprendiz e contratos Verde e Amarelo (códigos 103, 107 e 108).
+- **Multa rescisória de 40% ou 20%:** o manual cita esses percentuais, mas **não detalha a regra**; **preciso confirmar** na Lei 8.036/1990, art. 18, e na CLT, art. 484-A.
+- **Encargos por atraso:** o manual diz que incidem encargos até a data de vencimento da guia, mas **não traz os percentuais**: preciso confirmar.
+- **Guia:** desde março de 2024 o empregador usa o FGTS Digital para gerar a guia (GFD).`
   }
 ];
