@@ -1,6 +1,9 @@
 # Lucro Presumido - Manual Técnico e Apuração
 
 > **Legislação Base:** Lei nº 9.718/1998, Decreto nº 9.580/2018 (RIR/2018) e Instrução Normativa RFB nº 1.700/2017.
+>
+> **Fonte oficial conferida em 21/10/2026:** [Lei 9.249/1995 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/l9249.htm), arts. 3º, 10, 15 e 20. **Conferido:** alíquota de 15% do IRPJ e adicional de 10% sobre o lucro que exceder R$ 20.000 por mês (art. 3º, § 1º); presunção do IRPJ de 8% (regra geral, art. 15), 1,6% para revenda de combustíveis, álcool e gás natural, 16% para transporte exceto de carga, 32% para serviços em geral, locação de bens e factoring (art. 15, § 1º); presunção da CSLL de 12% (regra geral) e 32% para as atividades de 32% (art. 20); lucros e dividendos sem retenção de IR na fonte e fora da base do beneficiário (art. 10, em regra).
+> **Não conferido nesta revisão:** o limite de receita de R$ 78 milhões, a alíquota de 9% da CSLL (art. 3º da Lei 7.689), o 8% para serviços hospitalares, os prazos e as alíquotas de PIS/Cofins cumulativos e de retenções na fonte (RIR/2018 e Lei 10.833/2003, art. 30), e o crédito do art. 10-A (tributação de lucros acima de determinado valor, que a página lida cita). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ---
 
@@ -20,6 +23,7 @@ A base de cálculo estimada dos tributos federais sobre o lucro decorre da aplic
 
 | Segmento de Atividade | Presunção IRPJ | Presunção CSLL |
 | :--- | :--- | :--- |
+| **Revenda de combustíveis, álcool e gás natural** | 1,6% | 12,0% |
 | **Comércio e Indústria em geral** | 8,0% | 12,0% |
 | **Transporte de Cargas** | 8,0% | 12,0% |
 | **Transporte de Passageiros** | 16,0% | 12,0% |
