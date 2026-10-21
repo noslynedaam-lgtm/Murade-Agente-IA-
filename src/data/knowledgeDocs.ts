@@ -429,36 +429,83 @@ Substitutos:
     title: 'CLT: Princípios Trabalhistas, Jornada, Férias e Rescisões',
     summary: 'Princípios fundamentais (in dubio pro operario, primazia da realidade), tipos contratuais, limite de 44h semanais, banco de horas e prazos rescisórios.',
     tags: ['CLT', 'Decreto-Lei 5.452/43', 'Jornada', 'Férias', 'Rescisão Contratual'],
-    lastUpdated: '2026-10-17',
+    lastUpdated: '2026-10-21',
     officialLink: 'http://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
     officialLinkLabel: 'CLT - Presidência da República',
-    content: `# Princípios Trabalhistas da CLT e Rotinas de DP
+    content: `# Princípios Trabalhistas da CLT e Rotinas de Departamento Pessoal
 
-> **Legislação Base:** CLT (Decreto-Lei nº 5.452/1943) e Lei nº 13.467/2017.
-
----
-
-## 1. Princípios Basilares
-
-- **Princípio da Proteção:** *In dubio pro operario*, aplicação da norma mais favorável e condição mais benéfica.
-- **Primazia da Realidade:** Fatos reais prevalecem sobre formalidades contratuais.
-- **Irrenunciabilidade:** Direitos trabalhistas mínimos cogentes não podem ser renunciados.
-- **Inalterabilidade Contratual Lesiva (Art. 468 CLT):** Proibidas alterações contratuais unilaterais ou prejudiciais.
+> **Legislação Base:** Decreto-Lei nº 5.452/1943 (CLT), Lei nº 13.467/2017 (Reforma Trabalhista), Súmulas e OJs do TST.
+>
+> **Fonte oficial conferida em 21/10/2026:** [Lei 12.506/2011, aviso prévio proporcional (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12506.htm).
+> **Não conferido nesta revisão:** os artigos da CLT citados abaixo (a página do Planalto entrou em redirecionamento e não carregou), a Lei 13.467/2017 e as súmulas do TST. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo na [CLT no Planalto](https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm).**
+>
+> **Pontos que exigem cuidado:** (1) o adicional de **100%** em domingos e feriados **não consta** do art. 59 nem da Constituição citados aqui; ele vem de lei específica, súmulas ou da convenção coletiva: **preciso confirmar** antes de afirmar. (2) O aviso prévio da tabela de rescisão deve ser lido junto com a seção 5-A abaixo.
 
 ---
 
-## 2. Jornada, Horas Extras e Intervalos
+## 1. Princípios Basilares do Direito do Trabalho
 
-- **Jornada Padrão:** 8 horas diárias e 44 horas semanais.
-- **Horas Extras:** Acréscimo mínimo de 50% em dias úteis ou 100% em domingos e feriados.
-- **Intervalo Intrajornada:** Mínimo de 1 hora para jornadas superiores a 6 horas (podendo ser reduzido para 30 min por acordo coletivo).
-- **Intervalo Interjornada:** Mínimo de 11 horas consecutivas entre jornadas diárias.
+O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacionais em estrita observância aos princípios tutelares do Direito do Trabalho:
+1. **Princípio da Proteção:** Subdivide-se em:
+   - *In dubio pro operario:* Havendo dúvida fundada na interpretação de norma jurídica, aplica-se a que melhor atenda ao trabalhador.
+   - *Aplicação da norma mais favorável:* O trabalhador tem direito à norma que lhe for mais benéfica no confronto entre Lei, CCT e Contrato, ressalvadas as hipóteses do art. 611-A da CLT.
+   - *Condição mais benéfica:* Cláusulas contratuais mais vantajosas incorporam-se ao patrimônio jurídico do empregado (Súmula 51 do TST).
+2. **Primazia da Realidade sobre a Forma:** A verdade real dos fatos operacionais no ambiente de trabalho sobrepõe-se a documentos formalmente assinados que não correspondam à prática diária.
+3. **Irrenunciabilidade de Direitos:** O trabalhador não pode abrir mão de direitos cogentes mínimos garantidos pela legislação (ex.: férias, 13º, salário mínimo legal ou piso convencional).
+4. **Inalterabilidade Contratual Lesiva (Art. 468 da CLT):** É nula qualquer alteração unilateral ou bilateral nas condições de trabalho que resulte em prejuízos diretos ou indiretos ao empregado.
 
 ---
 
-## 3. Prazos Rescisórios (Art. 477, § 6º CLT)
+## 2. Modalidades de Contrato de Trabalho
 
-O pagamento de todas as verbas rescisórias deve ser efetuado em até **10 dias corridos** após o término do contrato, sob pena de multa de 1 salário do empregado.`
+- **Prazo Indeterminado:** Regra geral do ordenamento jurídico brasileiro.
+- **Prazo Determinado (Art. 443 da CLT):** Válido para serviços de natureza transitória, atividades empresariais de caráter transitório ou Contrato de Experiência (prazo máximo de 90 dias, com no máximo uma prorrogação).
+- **Trabalho Intermitente (Art. 452-A da CLT):** Prestação de serviços com subordinação, não contínua, com alternância de períodos de prestação de serviços e de inatividade. O empregador convoca com no mínimo 3 dias corridos de antecedência; a cada período, paga-se imediatamente a remuneração, férias proporcionais com 1/3, 13º proporcional e DSR.
+- **Teletrabalho / Home Office (Art. 75-A da CLT):** Deve constar expressamente em aditivo contratual individual, discriminando o fornecimento e manutenção dos equipamentos e a infraestrutura tecnológica.
+
+---
+
+## 3. Jornada de Trabalho e Intervalos
+
+- **Limite Padrão:** Máximo de 8 horas diárias e 44 horas semanais (Art. 7º, XIII da CF/88).
+- **Horas Extras:** Limite de até 2 horas diárias, remuneradas com acréscimo de no mínimo 50% em dias úteis ou 100% em domingos e feriados (ou conforme percentual superior previsto na CCT da categoria).
+- **Banco de Horas:**
+  - *Individual e Tácito/Escrito:* Compensação no mesmo mês (sem formalidade escrita) ou até 6 meses (com acordo individual escrito).
+  - *Anual:* Exige negociação coletiva formal (Acordo ou Convenção Coletiva de Trabalho).
+- **Intervalo Intrajornada (Almoço/Repouso):**
+  - Jornada superior a 6 horas: Mínimo de 1 hora (podendo ser reduzido para até 30 minutos mediante Acordo ou CCT, art. 611-A, III).
+  - Jornada entre 4 e 6 horas: Intervalo obrigatório de 15 minutos.
+- **Intervalo Interjornada:** Mínimo de 11 horas consecutivas de descanso entre o término de uma jornada diária e o início da seguinte (Art. 66 da CLT).
+
+---
+
+## 4. Férias Individuais e Coletivas
+
+- **Período Aquisitivo e Concessivo:** A cada 12 meses de vigência contratual (período aquisitivo), o empregado adquire direito a 30 dias de férias, que devem ser concedidas pelo empregador nos 12 meses subsequentes (período concessivo), sob pena de pagamento em dobro (Art. 137 da CLT).
+- **Fracionamento (Art. 134, § 1º):** Desde que haja concordância do empregado, as férias podem ser usufruídas em até 3 períodos:
+  - Um período não poderá ser inferior a 14 dias corridos;
+  - Os demais não poderão ser inferiores a 5 dias corridos cada.
+- **Início das Férias:** Vedado o início nos dois dias que antecedem feriado ou repouso semanal remunerado (RSR) - ou seja, não pode iniciar em quinta ou sexta-feira para quem descansa no fim de semana.
+- **Abono Pecuniário ("Vender 10 dias"):** Faculdade exclusiva do empregado requerer a conversão de 1/3 das férias em dinheiro, solicitado com até 15 dias de antecedência do vencimento do período aquisitivo.
+
+---
+
+## 5. Modalidades de Rescisão Contratual
+
+| Tipo de Rescisão | Saldo Salário | Aviso Prévio | 13º Proporcional | Férias Vencidas + 1/3 | Férias Proporcionais + 1/3 | Saque FGTS | Multa Rescisória FGTS | Seguro-Desemprego |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Sem Justa Causa** | Sim | Sim (Trab./Inden.) | Sim | Sim | Sim | Sim | 40% | Sim |
+| **Pedido de Demissão** | Sim | Cumpre ou Indeniza | Sim | Sim | Sim | Não | Não | Não |
+| **Acordo Mútuo (Art. 484-A)** | Sim | 50% se indenizado | Sim | Sim | Sim | Sim (até 80%) | 20% | Não |
+| **Demissão por Justa Causa (Art. 482)** | Sim | Não | Não | Sim | Não | Não | Não | Não |
+| **Rescisão Indireta (Falta grave patronal)**| Sim | Sim | Sim | Sim | Sim | Sim | 40% | Sim |
+
+### 5-A. Aviso prévio proporcional (Lei 12.506/2011, **conferida no Planalto**)
+- O aviso prévio é de **30 dias** para o empregado com **até 1 ano de serviço** na mesma empresa (art. 1º).
+- **Acrescentam-se 3 dias por ano de serviço** na mesma empresa, **até o máximo de 60 dias de acréscimo, perfazendo no máximo 90 dias** (parágrafo único).
+- Exemplo (aplicação da regra acima): 5 anos de serviço = 30 + (3 x 5) = **45 dias**. A contagem de anos incompletos e a aplicação ao pedido de demissão **não constam da lei**: **preciso confirmar** na jurisprudência do TST antes de afirmar.
+
+> **Prazo Legal de Pagamento da Rescisão (Art. 477, § 6º da CLT):** Até **10 dias corridos** contados do término do contrato de trabalho, independentemente do tipo de aviso prévio (trabalhado ou indenizado). O descumprimento gera a multa de 1 salário do empregado (art. 477, § 8º).`
   },
   {
     id: 'eSocial-prazos',
@@ -468,29 +515,78 @@ O pagamento de todas as verbas rescisórias deve ser efetuado em até **10 dias 
     title: 'eSocial: Calendário de Eventos, Prazos Oficiais e DCTFWeb',
     summary: 'Tabela de eventos periódicos e não periódicos (S-2190, S-2200, S-2210, S-2220, S-2240, S-2299, S-1200) e transmissão para DCTFWeb.',
     tags: ['eSocial', 'DCTFWeb', 'S-2200 Admissão', 'S-2299 Desligamento', 'Prazos'],
-    lastUpdated: '2026-10-17',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.esocial.gov.br',
     officialLinkLabel: 'Portal Oficial do eSocial',
-    content: `# eSocial - Calendário Oficial e Prazos de Eventos
+    content: `# eSocial - Calendário Oficial, Prazos de Eventos e DCTFWeb
 
-> **Legislação Base:** Portarias Conjuntas MTE/RFB e Manual de Orientação do eSocial (MOS).
-
----
-
-## 1. Prazos dos Eventos Não Periódicos
-
-- **S-2190 / S-2200 (Admissão):** Até o final do dia imediatamente anterior ao início do trabalho.
-- **S-2210 (CAT - Acidente de Trabalho):** Até o 1º dia útil seguinte ao acidente (ou imediatamente em óbito).
-- **S-2220 (ASO / Saúde do Trabalhador):** Até dia 15 do mês subsequente à emissão.
-- **S-2240 (Condições Ambientais - SST):** Até dia 15 do mês seguinte ao início da exposição aos riscos.
-- **S-2299 (Desligamento):** Até **10 dias corridos** do término do vínculo.
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Manual de Orientação do eSocial (MOS) S-1.3, consolidado até a NO S-1.3-07/2026 (gov.br)](https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-s-1-3-consolidada-ate-a-no-s-1-3-07-2026.pdf), itens 10.3.2 e 10.3.4.1
+> - [Nota Orientativa 2019.18, prazo de envio de eventos (gov.br)](https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/nota-orientativa-018-2019-prazo-de-envio-de-eventos.pdf)
+> - [Notícia oficial do Comitê Gestor sobre o prazo (gov.br, 04/06/2019)](https://www.gov.br/esocial/pt-br/noticias/comite-gestor-confirma-que-havera-mudanca-no-prazo-de-envio-do-fechamento-de-folha)
+> **Não conferido nesta revisão:** prazos de S-2205, S-2206, S-2210, S-2220, S-2230, S-2240 e S-2300 (o capítulo III do MOS, que traz o prazo de cada evento, não veio no texto lido); seção da DCTFWeb; qualquer regra para empregador doméstico. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o MOS.**
 
 ---
 
-## 2. Eventos Periódicos (Folha de Pagamento)
+## 1. Classificação dos Eventos do eSocial
 
-- **S-1200 / S-1210 / S-1299:** Fechamento da folha mensal até o **dia 15 do mês seguinte**.
-- **DCTFWeb (DARF Previdenciário):** Transmitida após fechamento da folha, com vencimento no **dia 20 do mês subsequente**.`
+O Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas (eSocial) padroniza a transmissão de dados do trabalhador e da empresa em três macrocategorias de eventos:
+
+### A. Eventos Iniciais e de Tabelas
+- **S-1000:** Informações do Empregador / Contribuinte (dados cadastrais, classificação tributária, indicativo de desoneração, indicativo de cooperativa ou produtor rural).
+- **S-1005:** Tabela de Estabelecimentos, Obras de Construção Civil ou Unidades de Órgãos Públicos (CNAE preponderante, alíquota RAT, FAP aplicável).
+- **S-1010:** Tabela de Rubricas (natureza da rubrica, incidência de INSS, FGTS, IRRF e Contribuição Sindical).
+- **S-1020:** Tabela de Lotações Tributárias (código FPAS e código de Terceiros/Outras Entidades).
+- **S-1070:** Tabela de Processos Administrativos / Judiciais que suspendem exigibilidade de tributos ou FGTS.
+
+### B. Eventos Não Periódicos (Fatos Ocorridos na Relação de Emprego)
+São os eventos disparados por atos pontuais da rotina trabalhista. **Conferidos em fonte oficial (MOS S-1.3 e Nota Orientativa 2019.18):**
+
+| Código | Descrição do Evento | Prazo oficial |
+| :--- | :--- | :--- |
+| **S-2190** | Registro Preliminar de Admissão | Informado **até o dia anterior ao início da prestação dos serviços** (Nota Orientativa 2019.18). |
+| **S-2200** | Cadastramento Inicial e Admissão de Trabalhador | **Até o dia anterior ao início da prestação dos serviços** (Nota Orientativa 2019.18 e notícia oficial do Comitê Gestor). |
+| **S-2299** | Desligamento / Rescisão Contratual | **Até o 10º dia após a data da rescisão** (Nota Orientativa 2019.18 e notícia oficial). |
+
+**Prazos NÃO conferidos nesta revisão** (informação da versão anterior, mantida só como referência; **preciso confirmar no MOS, capítulo III**):
+
+| Código | Descrição do Evento | Prazo informado antes (não conferido) |
+| :--- | :--- | :--- |
+| S-2205 | Alteração de Dados Cadastrais | Dia 15 do mês seguinte (regra geral da Nota Orientativa 2019.18; o evento não é citado nominalmente). |
+| S-2206 | Alteração de Contrato de Trabalho | Dia 15 do mês seguinte (regra geral; não citado nominalmente). |
+| S-2210 | Comunicação de Acidente de Trabalho (CAT) | Primeiro dia útil seguinte à ocorrência; imediato em caso de morte (não conferido). |
+| S-2220 | Monitoramento da Saúde do Trabalhador (ASO) | Dia 15 do mês seguinte (não conferido). |
+| S-2230 | Afastamento Temporário | A Nota Orientativa diz apenas que valem os prazos próprios do evento: **preciso confirmar**. |
+| S-2240 | Condições Ambientais do Trabalho | Dia 15 do mês seguinte (regra geral; não citado nominalmente). |
+| S-2300 | Trabalhador Sem Vínculo (diretor não empregado, estagiário etc.) | Dia 15 do mês seguinte (regra geral; não citado nominalmente). |
+
+> **Correção desta revisão:** a versão anterior dizia que o S-2200 podia ser enviado até o dia 15 do mês seguinte se houvesse S-2190. Essa regra **não foi confirmada**; o prazo oficial lido é **até o dia anterior ao início da prestação**.
+
+---
+
+### C. Eventos Periódicos (Folha de Pagamento Mensal)
+- **S-1200:** Remuneração do Trabalhador vinculado ao Regime Geral de Previdência Social (proventos, descontos, horas extras, adicionais).
+- **S-1210:** Pagamentos de Rendimentos do Trabalho.
+- **S-1299:** Fechamento dos Eventos Periódicos.
+- **S-1298:** Reabertura de Eventos Periódicos.
+
+**Prazos oficiais (MOS S-1.3, itens 10.3.2 e 10.3.4.1):**
+- **S-1200 e S-1299:** transmitir e fechar **até o dia 15 do mês seguinte** ao do período de apuração. **Se o dia 15 não for dia útil, o prazo passa para o próximo dia útil** (texto do MOS S-1.3; a versão anterior deste documento dizia "antecipa", o que **não é** o que o MOS atual diz). O S-1200 deve ser enviado antes do S-1299.
+- **S-1200 de desligamento:** exceção prevista no MOS: o evento periódico do trabalhador desligado vence **em até 10 dias após o desligamento**.
+- **S-1210:** **até o dia 15 do mês seguinte ou até o fechamento da folha do mês, o que ocorrer primeiro**.
+- **13º salário (apuração anual):** o MOS manda enviar S-1200 e S-1299 **entre 1º e 20 de dezembro**; a Nota Orientativa 2019.18 (de 2019) fala em "dia 20 de dezembro" e, sem expediente bancário, **antecipação** para o dia útil anterior. Há diferença de redação entre as duas fontes: para o 13º, **preciso confirmar** a regra do dia não útil.
+- **Não mudam com o prazo do eSocial:** os prazos legais de recolhimento de tributos e do FGTS (a notícia oficial do Comitê Gestor e a Nota Orientativa dizem isso) e os prazos do empregador doméstico.
+
+---
+
+## 2. A Integração com DCTFWeb e Fechamento Previdenciário
+
+> **Seção não reconferida nesta revisão** (as páginas oficiais consultadas exigiam login ou não traziam o texto): **preciso confirmar** na Receita Federal (Manual da DCTFWeb e IN RFB 2.005/2021) antes de afirmar prazos.
+
+Informação da versão anterior, mantida como referência:
+1. A transmissão do fechamento (S-1299) no eSocial, junto com os eventos da EFD-Reinf, alimenta a **DCTFWeb**.
+2. O **DARF previdenciário** gerado na DCTFWeb substituiu a GPS.
+3. Vencimento informado antes: **dia 20 do mês seguinte**, com antecipação se o dia não for útil. **Não conferido**: confirme na Receita.`
   },
   {
     id: 'fgts-inss',
@@ -500,18 +596,20 @@ O pagamento de todas as verbas rescisórias deve ser efetuado em até **10 dias 
     title: 'FGTS Digital e INSS: Faixas Progressivas, Guia Pix e Multas',
     summary: 'Tabela do INSS 2026 (7,5% a 14%, teto R$ 8.475,55), FGTS Digital com vencimento até o dia 20 e pagamento via Pix.',
     tags: ['FGTS Digital', 'INSS Progressivo', 'Teto RGPS', 'CPP', 'Pix Obrigatório'],
-    lastUpdated: '2026-10-20',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal',
     officialLinkLabel: 'INSS — Tabela de contribuição',
-    content: `# FGTS Digital e INSS - Regras de Apuração
+    content: `# FGTS Digital e INSS - Regras de Apuração, Faixas Progressivas e Recolhimentos
 
-> **Legislação Base:** Lei nº 8.036/1990, EC nº 103/2019 e Lei nº 14.438/2022 (FGTS Digital).
+> **Legislação Base:** Lei nº 8.036/1990, Lei nº 8.212/1991, Emenda Constitucional nº 103/2019 (Reforma da Previdência), Lei nº 14.438/2022 (que alterou os procedimentos de recolhimento do FGTS), Portaria MTE nº 240/2024 (FGTS Digital) e Portarias Interministeriais MPS/MF.
 
 ---
 
 ## 1. Tabela de contribuição do INSS 2026 (Empregado, doméstico e avulso)
 
-> **Fonte oficial:** [INSS — Tabela de contribuição mensal](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal) · **Base:** Portaria Interministerial MPS/MF nº 13, de 9/1/2026 · vigente desde a competência janeiro/2026 · conferida em 20/10/2026.
+> **Fonte oficial:** [INSS — Tabela de contribuição mensal](https://www.gov.br/inss/pt-br/direitos-e-deveres/inscricao-e-contribuicao/tabela-de-contribuicao-mensal). **Base:** Portaria Interministerial MPS/MF nº 13, de 9/1/2026, vigente desde a competência janeiro/2026. **Conferida em 20/10/2026.**
+
+Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sobre a parcela do salário dentro da respectiva faixa.
 
 | Salário de contribuição (R$) | Alíquota |
 | :--- | :--- |
@@ -521,21 +619,48 @@ O pagamento de todas as verbas rescisórias deve ser efetuado em até **10 dias 
 | De 4.354,28 até 8.475,55 | 14% |
 
 - **Teto do salário de contribuição:** R$ 8.475,55.
-- **Cálculo:** progressivo, aplicando cada alíquota somente à parcela do salário dentro da respectiva faixa.
-- **Contribuição máxima do empregado (calculada por essa progressão):** R$ 988,09.
-- **Atenção:** os valores mudam todo ano por portaria. Para outra competência, confira a tabela do ano na fonte oficial.
+- **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
+- **Contribuinte individual / pró-labore:** a alíquota de **11%** com teto de R$ 8.475,55 (máximo de R$ 932,31 em 2026, cálculo feito a partir do teto oficial) **não foi reconferida** em fonte oficial nesta revisão: **preciso confirmar** a regra do contribuinte individual (retenção de 11% pela empresa e plano simplificado de 11% sobre o salário mínimo são regras diferentes).
+- Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
 
-## 2. FGTS Digital
+## 2. Contribuição Patronal Previdenciária (CPP), RAT e Terceiros
 
-> **Fontes oficiais:** [FGTS — FGTS Digital](https://www.fgts.gov.br/Paginas/empregador/fgts-digital.aspx) e [MTE — FGTS Digital](https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/fgtsdigital) · **Base:** Lei nº 8.036/1990 (art. 17-A) e Portaria MTE nº 240/2024 · conferida em 20/10/2026.
+> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** FAP (faixa e forma de cálculo), percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
 
-- **Vencimento mensal:** até o dia 20 de cada mês (competência a partir de 03/2024). Quando o dia 20 não é dia útil, o prazo é antecipado (exemplo oficial: competência 03/2024 venceu em 19/04/2024, sexta-feira).
-- **Forma de pagamento:** Pix, por meio do QR Code impresso na Guia do FGTS Digital (GFD).
-- **A emissão antecipada da guia não antecipa a obrigação de pagamento:** o prazo continua sendo o do vencimento.
-- **Alíquota geral:** 8% sobre a remuneração (2% para Jovem Aprendiz).
-- **Multa Rescisória:** 40% na demissão sem justa causa ou 20% no acordo mútuo (art. 484-A CLT).`
+O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
+1. **Inciso I, contribuição da empresa sobre a folha:** **20%** sobre o total das remunerações pagas, devidas ou creditadas a qualquer título, durante o mês, aos segurados empregados e trabalhadores avulsos.
+2. **Inciso II, RAT (financia aposentadoria especial e benefícios por incapacidade decorrentes de riscos ambientais):** **1%** para empresa cujo risco de acidentes do trabalho é considerado **leve**, **2%** para **médio** e **3%** para **grave**, sobre as remunerações de empregados e avulsos.
+3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP** (fator multiplicador): o FAP é regulado por norma posterior e **preciso confirmar** a faixa e a forma de cálculo antes de afirmar qualquer número.
+4. **Inciso III:** **20%** sobre o total das remunerações pagas ou creditadas a **contribuintes individuais** que prestem serviço à empresa (por exemplo, autônomos e pró-labore de sócios).
+5. **Inciso IV:** o texto do Planalto indica que a **execução está suspensa pela Resolução do Senado nº 10/2016**. Não aplique esse inciso sem confirmar.
+
+**Outras entidades e fundos (Terceiros: Sistema S, Salário-Educação, INCRA e outros):** o percentual varia conforme a **atividade da empresa (código FPAS)**. Os percentuais e a tabela **não foram conferidos** em fonte oficial nesta revisão: **preciso confirmar** a tabela de Terceiros vigente na Receita Federal antes de calcular.
+
+**Quem paga a CPP sobre a folha:** empresas do Lucro Presumido e do Lucro Real recolhem a CPP e o RAT sobre a folha. Para o **Simples Nacional**, a regra depende do anexo (no Anexo IV a contribuição patronal sai do DAS); essa regra **não foi reconferida** aqui, **preciso confirmar** na LC 123/2006 antes de afirmar.
+
+> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial. Foram **retirados** por não estarem confirmados.
+
+---
+
+## 3. FGTS Digital - O Novo Paradigma Operacional
+
+A plataforma do **FGTS Digital** (instituída pela Lei nº 14.438/2022 e Portaria MTE nº 240/2024) unificou a arrecadação do FGTS diretamente a partir dos eventos de remuneração (S-1200) e desligamento (S-2299) do eSocial.
+
+### Principais Alterações em Relação à Antiga SEFIP/Conectividade Social:
+1. **Mudança do Prazo de Recolhimento Mensal:**
+   - O vencimento do FGTS mensal mudou do dia 7 para **até o dia 20** do mês seguinte (competência a partir de 03/2024). Se o dia 20 não for dia útil, o prazo é antecipado (exemplo oficial: competência 03/2024 venceu em 19/04/2024). A emissão antecipada da guia não antecipa a obrigação de pagamento. Fonte: [FGTS Digital](https://www.fgts.gov.br/Paginas/empregador/fgts-digital.aspx).
+2. **Meio Exclusivo de Pagamento:**
+   - A quitação da Guia do FGTS Digital (GFD) é feita **via Pix, pelo QR Code impresso na guia** (confirmado na página oficial do FGTS Digital).
+3. **Alíquotas do FGTS:**
+   - **8,0%:** Empregados em regime geral da CLT, temporários e diretores com FGTS.
+   - **2,0%:** Contrato de Aprendizagem (Jovem Aprendiz, Lei 10.097/2000).
+   - **11,2% (8% mensal + 3,2% rescisório compulsório):** Empregados Domésticos (recolhido no DAE/eSocial Doméstico).
+
+### FGTS Rescisório e Multa de 40%:
+- Na demissão sem justa causa ou rescisão indireta, o empregador gera a guia rescisória (GRFGTS) calculando **40% sobre o saldo histórico consolidado da conta vinculada do trabalhador** (inclusive valores depositados no mês da rescisão).
+- No acordo entre empregado e empregador (art. 484-A da CLT), a multa rescisória do FGTS é de **20%**, e o empregado tem direito a sacar até **80%** do saldo da conta.`
   },
   {
     id: 'cct-normas',

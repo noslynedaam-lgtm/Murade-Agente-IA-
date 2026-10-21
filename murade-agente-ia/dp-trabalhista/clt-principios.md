@@ -1,6 +1,11 @@
 # Princípios Trabalhistas da CLT e Rotinas de Departamento Pessoal
 
-> **Legislação Base:** Decreto-Lei nº 5.452/1943 (Consolidação das Leis do Trabalho - CLT), Lei nº 13.467/2017 (Reforma Trabalhista), Súmulas e OJs do TST.
+> **Legislação Base:** Decreto-Lei nº 5.452/1943 (CLT), Lei nº 13.467/2017 (Reforma Trabalhista), Súmulas e OJs do TST.
+>
+> **Fonte oficial conferida em 21/10/2026:** [Lei 12.506/2011, aviso prévio proporcional (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12506.htm).
+> **Não conferido nesta revisão:** os artigos da CLT citados abaixo (a página do Planalto entrou em redirecionamento e não carregou), a Lei 13.467/2017 e as súmulas do TST. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo na [CLT no Planalto](https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm).**
+>
+> **Pontos que exigem cuidado:** (1) o adicional de **100%** em domingos e feriados **não consta** do art. 59 nem da Constituição citados aqui; ele vem de lei específica, súmulas ou da convenção coletiva: **preciso confirmar** antes de afirmar. (2) O aviso prévio da tabela de rescisão deve ser lido junto com a seção 5-A abaixo.
 
 ---
 
@@ -60,5 +65,10 @@ O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacio
 | **Acordo Mútuo (Art. 484-A)** | Sim | 50% se indenizado | Sim | Sim | Sim | Sim (até 80%) | 20% | Não |
 | **Demissão por Justa Causa (Art. 482)** | Sim | Não | Não | Sim | Não | Não | Não | Não |
 | **Rescisão Indireta (Falta grave patronal)**| Sim | Sim | Sim | Sim | Sim | Sim | 40% | Sim |
+
+### 5-A. Aviso prévio proporcional (Lei 12.506/2011, **conferida no Planalto**)
+- O aviso prévio é de **30 dias** para o empregado com **até 1 ano de serviço** na mesma empresa (art. 1º).
+- **Acrescentam-se 3 dias por ano de serviço** na mesma empresa, **até o máximo de 60 dias de acréscimo, perfazendo no máximo 90 dias** (parágrafo único).
+- Exemplo (aplicação da regra acima): 5 anos de serviço = 30 + (3 x 5) = **45 dias**. A contagem de anos incompletos e a aplicação ao pedido de demissão **não constam da lei**: **preciso confirmar** na jurisprudência do TST antes de afirmar.
 
 > **Prazo Legal de Pagamento da Rescisão (Art. 477, § 6º da CLT):** Até **10 dias corridos** contados do término do contrato de trabalho, independentemente do tipo de aviso prévio (trabalhado ou indenizado). O descumprimento gera a multa de 1 salário do empregado (art. 477, § 8º).

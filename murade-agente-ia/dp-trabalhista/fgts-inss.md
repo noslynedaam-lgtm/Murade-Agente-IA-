@@ -19,20 +19,27 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 - **Teto do salário de contribuição:** R$ 8.475,55.
 - **Contribuição máxima do empregado (calculada pela progressão acima):** R$ 988,09.
-- **Contribuinte individual / pró-labore:** alíquota de 11% (plano simplificado) sobre a remuneração, limitada ao teto: no máximo R$ 932,31 em 2026 (11% de R$ 8.475,55; valor calculado a partir do teto oficial).
+- **Contribuinte individual / pró-labore:** a alíquota de **11%** com teto de R$ 8.475,55 (máximo de R$ 932,31 em 2026, cálculo feito a partir do teto oficial) **não foi reconferida** em fonte oficial nesta revisão: **preciso confirmar** a regra do contribuinte individual (retenção de 11% pela empresa e plano simplificado de 11% sobre o salário mínimo são regras diferentes).
 - Os valores mudam todo ano por portaria; para outra competência, confira a tabela do ano na fonte oficial.
 
 ---
 
-## 2. Contribuição Patronal Previdenciária (CPP) e Encargos da Empresa
+## 2. Contribuição Patronal Previdenciária (CPP), RAT e Terceiros
 
-> **Atenção:** os percentuais desta seção são regras gerais e **ainda não foram reconferidos nesta revisão** em fonte oficial; confirme na Receita Federal / RFB antes de aplicar.
+> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** FAP (faixa e forma de cálculo), percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
 
-Empresas enquadradas no **Lucro Presumido, Lucro Real e Simples Nacional Anexo IV** arcam com a folha patronal plena:
-1. **CPP Básica:** 20,0% sobre a folha total de salários e pró-labore.
-2. **RAT (Risco Ambiental do Trabalho):** 1,0%, 2,0% ou 3,0%, multiplicado pelo **FAP (Fator Acidentário de Prevenção)** da empresa (que varia de 0,5000 a 2,0000 conforme índice de sinistralidade e acidentes).
-3. **Outras Entidades e Terceiros (Sistema S):** Varia de 4,5% a 5,8% conforme o código FPAS da atividade (ex.: SESI, SENAI, SESC, SENAC, INCRA, SEBRAE).
-- *Total Patronal Típico:* Varia entre **26,5% e 31,8%** sobre a folha de pagamento bruta.
+O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
+1. **Inciso I, contribuição da empresa sobre a folha:** **20%** sobre o total das remunerações pagas, devidas ou creditadas a qualquer título, durante o mês, aos segurados empregados e trabalhadores avulsos.
+2. **Inciso II, RAT (financia aposentadoria especial e benefícios por incapacidade decorrentes de riscos ambientais):** **1%** para empresa cujo risco de acidentes do trabalho é considerado **leve**, **2%** para **médio** e **3%** para **grave**, sobre as remunerações de empregados e avulsos.
+3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP** (fator multiplicador): o FAP é regulado por norma posterior e **preciso confirmar** a faixa e a forma de cálculo antes de afirmar qualquer número.
+4. **Inciso III:** **20%** sobre o total das remunerações pagas ou creditadas a **contribuintes individuais** que prestem serviço à empresa (por exemplo, autônomos e pró-labore de sócios).
+5. **Inciso IV:** o texto do Planalto indica que a **execução está suspensa pela Resolução do Senado nº 10/2016**. Não aplique esse inciso sem confirmar.
+
+**Outras entidades e fundos (Terceiros: Sistema S, Salário-Educação, INCRA e outros):** o percentual varia conforme a **atividade da empresa (código FPAS)**. Os percentuais e a tabela **não foram conferidos** em fonte oficial nesta revisão: **preciso confirmar** a tabela de Terceiros vigente na Receita Federal antes de calcular.
+
+**Quem paga a CPP sobre a folha:** empresas do Lucro Presumido e do Lucro Real recolhem a CPP e o RAT sobre a folha. Para o **Simples Nacional**, a regra depende do anexo (no Anexo IV a contribuição patronal sai do DAS); essa regra **não foi reconferida** aqui, **preciso confirmar** na LC 123/2006 antes de afirmar.
+
+> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial. Foram **retirados** por não estarem confirmados.
 
 ---
 
