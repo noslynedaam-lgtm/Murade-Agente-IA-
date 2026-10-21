@@ -33,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
           </select>
         )}
         <CabecalhoPadrao
+          urlGerenciarLicenca="https://murade-dp.onrender.com"
           usuario={usuario}
           empresaNome={empresas.length > 1 ? null : empresaAtiva?.nome || null}
           empresaCnpj={empresaAtiva?.cnpj || null}

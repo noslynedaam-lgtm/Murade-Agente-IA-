@@ -99,5 +99,17 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   }
 
   const empresaAtiva = sessao.empresas.find((e) => e.cnpj === cnpjAtivo) || null;
-  return <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>{children}</AcessoContext.Provider>;
+  const urlDP = 'https://murade-dp.onrender.com';
+  return (
+    <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>
+      <div className="sticky top-0 z-[100] flex min-h-10 flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-1.5 text-xs text-white">
+        <span>Conta: <strong>{sessao.usuario}</strong> · {sessao.empresas.length} empresa(s) autorizada(s)</span>
+        <div className="flex gap-2">
+          <a href={urlDP} target="_blank" rel="noopener noreferrer" title="Usuários, convites e licenças são gerenciados no Murade DP" className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e licenças</a>
+          <button type="button" onClick={() => void sair()} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Sair</button>
+        </div>
+      </div>
+      {children}
+    </AcessoContext.Provider>
+  );
 };
