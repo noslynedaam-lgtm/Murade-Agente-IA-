@@ -729,36 +729,60 @@ Obrigatório pela NBC TG: receitas e despesas devem ser registradas no período 
     title: 'Livros Contábeis Obrigatórios e Guarda de Documentos',
     summary: 'Livro Diário, Razão, Caixa, elaboração das demonstrações (BP, DRE, DMPL, DFC) e tabela de prazos prescricionais de guarda (5 a 30 anos).',
     tags: ['Livro Diário', 'Livro Razão', 'DRE', 'Balanço Patrimonial', 'Prazos Prescricionais'],
-    lastUpdated: '2026-10-17',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.cfc.org.br',
     officialLinkLabel: 'Conselho Federal de Contabilidade (CFC)',
-    content: `# Livros Contábeis e Demonstrações Financeiras
+    content: `# Livros Contábeis Obrigatórios, Demonstrações Financeiras e Guarda de Documentos
 
-> **Legislação Base:** Código Civil (Lei nº 10.406/2002, arts. 1.179 a 1.195) e Lei nº 6.404/1976.
-
----
-
-## 1. Livros Obrigatórios
-
-- **Livro Diário:** Registro contínuo, cronológico e obrigatório de todos os atos e fatos. Deve conter Termos de Abertura e Encerramento com assinatura do Contador (CRC ativo) e Administrador.
-- **Livro Razão:** Demonstrativo sistemático do saldo individualizado de cada conta.
+> **Legislação Base:** Código Civil Brasileiro (Lei nº 10.406/2002, arts. 1.179 a 1.195), Lei nº 6.404/1976, NBC TG 1000 e Resoluções do CFC.
+>
+> **Fontes oficiais indicadas:** [Código Civil (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm) e [Lei 6.404/1976 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/l6404consol.htm).
+> **Não conferido nesta revisão (21/10/2026):** a página do Código Civil no Planalto só carregou até o art. 232, então **nenhum artigo deste documento foi reconferido**. Também não foram conferidos: os prazos de guarda da seção 3, o Tema 608 do STF citado e a Súmula 362 do TST (ver bloco de súmulas e temas), e a obrigatoriedade da DFC. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo.**
+> **Pontos duvidosos:** o prazo de guarda de "contratos e livro de registro de empregados: vitalício" e de "LTCAT/PCMSO/PPP: 20 anos" são práticas usuais, não texto de lei conferido; a guarda do FGTS por "30 anos/5 anos" deve ser conferida contra o Tema 608 (que trata de prescrição do FGTS), sem afirmar que é "prazo de guarda".
 
 ---
 
-## 2. Demonstrações Obrigatórias
+## 1. Livros Contábeis Obrigatórios e Facultativos
 
-- Balanço Patrimonial (BP);
-- Demonstração do Resultado do Exercício (DRE);
-- Demonstração das Mutações do Patrimônio Líquido (DMPL);
-- Notas Explicativas (NE).
+O artigo 1.179 do Código Civil estabelece que o empresário e a sociedade empresária são obrigados a seguir um sistema de contabilidade e a levantar anualmente o balanço patrimonial e o de resultado econômico (exceto o Microempreendedor Individual - MEI).
+
+### Principais Livros:
+1. **Livro Diário:**
+   - **Natureza:** Obrigatório a todas as pessoas jurídicas empresárias.
+   - **Características:** Indivisível, cronológico, sem rasuras ou borrões. Registra dia a dia todos os fatos que modifiquem o patrimônio da empresa.
+   - **Formalidades Extrínsecas:** Deve conter Termo de Abertura e Termo de Encerramento devidamente assinados pelo administrador da sociedade e pelo profissional contábil legalmente habilitado com CRC ativo, além de autenticação na Junta Comercial competente (ou via SPED/ECD).
+2. **Livro Razão:**
+   - **Natureza:** Obrigatório para a apuração sistemática do saldo individualizado de cada conta contábil.
+   - Permite a visualização detalhada do histórico de lançamentos a débito e crédito que culminaram no saldo patrimonial final.
+3. **Livro Caixa:**
+   - Obrigatório para empresas que optam pelo recolhimento de impostos pelo regime de caixa (ou facultativo para entidades com escrituração contábil completa). Registra as entradas e saídas de recursos financeiros.
 
 ---
 
-## 3. Prazos de Guarda de Documentos
+## 2. Demonstrações Contábeis de Elaboração Obrigatória
 
-- **Documentos Fiscais e SPED:** 5 anos (Art. 173 CTN).
-- **FGTS e Folha de Pagamento:** 30 anos (fatos até 2014) ou 5 anos modulados (Tema 608 STF).
-- **Contratos e Ficha de Registro de Empregados:** Guarda vitalícia/indeterminada.`
+Ao final de cada exercício social (usualmente coincidente com o ano civil em 31 de dezembro), a entidade deve elaborar as seguintes demonstrações contábeis:
+
+1. **Balanço Patrimonial (BP):** Quadro estático da posição financeira e patrimonial em determinada data, equilibrando o Ativo total com o Passivo + Patrimônio Líquido.
+2. **Demonstração do Resultado do Exercício (DRE):** Apresentação vertical e ordenada das receitas operacionais, deduções tributárias, custos, margem bruta, despesas operacionais e resultado líquido final (lucro ou prejuízo).
+3. **Demonstração das Mutações do Patrimônio Líquido (DMPL):** Evidencia a movimentação de todas as contas que compõem o PL (reservas, lucros acumulados, aumentos de capital).
+4. **Demonstração dos Fluxos de Caixa (DFC):** Obrigatória para companhias abertas, sociedades de grande porte ou entidades sob a NBC TG 1000, detalhando os fluxos operacionais, de investimento e de financiamento.
+5. **Notas Explicativas (NE):** Parte integrante obrigatória das demonstrações, esclarecendo critérios contábeis adotados, contingências fiscais e trabalhistas, partes relacionadas e eventos subsequentes.
+
+---
+
+## 3. Prazos Prescricionais e Guarda de Documentos
+
+O descarte precipitado de documentos fiscais e trabalhistas pode acarretar penalidades severas e condenações em autuações:
+
+| Tipo de Documento | Prazo Recomendado de Guarda | Fundamentação Legal |
+| :--- | :--- | :--- |
+| **Notas Fiscais, Livros Fiscais e SPED** | **5 anos** (contados do primeiro dia do exercício seguinte àquele em que o lançamento poderia ter sido efetuado) | Art. 173 do Código Tributário Nacional (CTN) |
+| **Recibos de Entrega de ECD e ECF** | **5 anos** (ou até julgamento final de processo fiscal pendente) | Legislação da Receita Federal |
+| **Comprovantes de Recolhimento de FGTS** | **30 anos** (para fatos anteriores a 13/11/2014) ou **5 anos** com modulação pelo STF (ARE 709.212) | STF Tema 608 / Súmula 362 do TST |
+| **Contratos de Trabalho, Livro de Registro de Empregados e Acordos** | **Indeterminado / Vitalício** | Comprovação previdenciária de aposentadoria junto ao INSS |
+| **LTCAT, PCMSO, PPRA e PPP (SST)** | **20 anos** | Normas Regulamentadoras MTE e INSS |
+| **Recibos de Férias, 13º e Cartões de Ponto** | **5 anos** (durante o contrato) e até **2 anos** após rescisão | Art. 7º, XXIX da Constituição Federal |`
   },
   {
     id: 'ecd-ecf',
@@ -766,30 +790,79 @@ Obrigatório pela NBC TG: receitas e despesas devem ser registradas no período 
     categoryLabel: 'Contábil',
     filePath: 'contabil/ecd-ecf.md',
     title: 'ECD e ECF: Escrituração Digital do SPED e Prazos',
-    summary: 'SPED Contábil (ECD até último dia útil de maio) e SPED Fiscal (ECF até último dia útil de julho), blocos principais e malha fiscal da RFB.',
+    summary: 'SPED Contábil (ECD até último dia útil de junho segundo o gov.br, a confirmar na IN 2.003/2021) e SPED Fiscal (ECF até último dia útil de julho), blocos principais e malha fiscal da RFB.',
     tags: ['ECD', 'ECF', 'SPED', 'e-LALUR', 'Malha Fina RFB'],
-    lastUpdated: '2026-10-17',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.receita.fazenda.gov.br',
     officialLinkLabel: 'Receita Federal - SPED',
     content: `# ECD e ECF - Obrigações do SPED Contábil e Fiscal
 
-> **Legislação Base:** Instruções Normativas RFB nº 2.003/2021 e 2.004/2021.
+> **Legislação Base:** Instrução Normativa RFB nº 2.003/2021 (ECD), Instrução Normativa RFB nº 2.004/2021 (ECF) e Manual de Orientação do Leiaute SPED.
+>
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Serviço "Entregar ECD" (gov.br)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-digital)
+> - [Serviço "Entregar ECF" (gov.br)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-fiscal)
+> - Textos das IN: [IN RFB 2.003/2021](https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=114965&visao=anotado) e [IN RFB 2.004/2021](https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=114966) (a página não exibiu o texto na leitura automática; **não conferi os artigos**).
+>
+> **O que foi conferido:** apenas o que as páginas de serviço do gov.br dizem sobre prazo e quem entrega (resumido abaixo).
+> **Não conferido nesta revisão:** a lista completa de obrigados e dispensados (itens 1.A e 2.A), as regras de assinatura digital, multas por atraso, prorrogações, blocos e cruzamentos da seção 3. Tudo isso é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a IN RFB 2.003/2021 (ECD) ou 2.004/2021 (ECF).**
+>
+> **ATENÇÃO, prazo da ECD:** o serviço do gov.br informa **último dia útil de JUNHO** do ano seguinte; a versão anterior deste documento dizia **maio**. Prevalece a fonte oficial lida (junho), mas **preciso confirmar** no art. da IN 2.003/2021 e em eventuais prorrogações do ano.
+>
+> **Prazo da ECF (gov.br):** último dia útil de **julho** do ano seguinte ao ano-calendário. A ECF é entregue **de forma centralizada pela matriz**.
 
 ---
 
-## 1. ECD (Escrituração Contábil Digital)
+## 1. ECD (Escrituração Contábil Digital - SPED Contábil)
 
-- **Obrigatoriedade:** Empresas no Lucro Real, e Lucro Presumido com distribuição de lucros isentos acima da presunção legal.
-- **Prazo:** Último dia útil de **maio** do ano seguinte.
-- **Assinatura:** Certificado digital do Contador (CRC) e do Representante Legal da empresa.
+A ECD substitui a emissão e encadernação em papel dos livros contábeis tradicionais perante as Juntas Comerciais e Cartórios de Registro Civil de Pessoas Jurídicas.
+
+### A. Quem está Obrigado a Entregar:
+1. Pessoas jurídicas sujeitas à tributação do Imposto de Renda com base no **Lucro Real**;
+2. Pessoas jurídicas tributadas com base no **Lucro Presumido** que distribuírem lucros isentos em valor superior à presunção legal sem retenção do IRRF;
+3. Pessoas jurídicas Imunes e Isentas que auferirem receitas ou doações em valor superior aos limites fixados pela RFB;
+4. Sociedades em Conta de Participação (SCP) como livros próprios vinculados à sócia ostensiva.
+- *Empresas do Simples Nacional:* Desobrigadas da ECD perante a Receita Federal, salvo se necessitarem para comprovação de distribuição de lucros isentos ou licitações públicas.
+
+### B. Prazo de Transmissão:
+- **Regra Geral (gov.br):** até o **último dia útil do mês de junho** do ano seguinte ao da escrituração (a versão anterior dizia maio; **preciso confirmar** na IN RFB 2.003/2021). Prorrogações extraordinárias são publicadas pela RFB e devem ser consultadas a cada ano.
+- **Assinatura Digital Obrigatória:** Exige dois certificados digitais modelo e-PJ ou e-CPF:
+  1. Certificado digital do **Contabilista / Responsável Técnico** (com procuração ou CRC ativo);
+  2. Certificado digital do **Representante Legal da Empresa** (e-PJ ou e-CPF do procurador).
 
 ---
 
 ## 2. ECF (Escrituração Contábil Fiscal)
 
-- **Obrigatoriedade:** Todas as pessoas jurídicas (Lucro Real, Presumido e Arbitrado). Dispensadas empresas do Simples Nacional.
-- **Prazo:** Último dia útil de **julho** do ano seguinte.
-- **Principais Blocos:** Bloco L (Balanço), Bloco M (e-LALUR/e-LACS Lucro Real) e Bloco P (Apuração Lucro Presumido).`
+A ECF é a obrigação acessória mais complexa do ecossistema SPED, substituindo a antiga DIPJ (Declaração de Informações Econômico-Fiscais da Pessoa Jurídica). Ela interliga os saldos contábeis recuperados da ECD com a memória de cálculo do IRPJ e da CSLL.
+
+### A. Quem está Obrigado:
+- Todas as pessoas jurídicas instaladas no Brasil (imunes, isentas, Lucro Real, Lucro Presumido e Lucro Arbitrado).
+- **Dispensadas:** Pessoas jurídicas optantes pelo Simples Nacional, órgãos públicos, autarquias e fundações públicas, e pessoas jurídicas inativas.
+
+### B. Prazo de Transmissão:
+- **Regra Geral:** Até o **último dia útil do mês de julho** do ano-calendário subsequente ao ano da escrituração.
+
+### C. Estrutura dos Principais Blocos da ECF:
+- **Bloco 0:** Abertura, identificação e parâmetros de tributação (forma de apuração, dados cadastrais).
+- **Bloco C:** Recuperação de dados da ECD do mesmo período (importação automática do Balanço e DRE).
+- **Bloco E:** Recuperação de dados da ECF anterior e cálculo fiscal.
+- **Bloco J:** Plano de Contas e Mapeamento para o Plano de Contas Referencial.
+- **Bloco K:** Saldos das Contas Contábeis e Referenciais.
+- **Bloco L:** Balanço Patrimonial e DRE do Lucro Real.
+- **Bloco M:** e-LALUR (Livro de Apuração do Lucro Real) e e-LACS (Livro de Apuração da CSLL): adições, exclusões e compensações de prejuízos fiscais.
+- **Bloco P:** Apuração do IRPJ e CSLL das empresas do **Lucro Presumido** (receitas trimestrais, presunções, retenções e cálculo do adicional de 10%).
+- **Bloco X:** Informações econômicas (operações no exterior, sócios, rendimentos de dirigentes).
+- **Bloco Y:** Informações gerais (discriminação de receitas, doações, royalties, incentivos fiscais).
+
+---
+
+## 3. Riscos de Inconsistências e Cruzamentos da RFB
+
+A malha fina corporativa da Receita Federal processa automaticamente os cruzamentos entre:
+1. **ECD $\\leftrightarrow$ ECF:** Divergências entre o saldo final das contas de resultado e o DRE da ECF geram notificação imediata.
+2. **ECF $\\leftrightarrow$ DCTFWeb / EFD-Contribuições:** Diferenças entre o faturamento declarado na ECF e as bases de cálculo de PIS/COFINS e CPRB.
+3. **ECF $\\leftrightarrow$ DIMOF / e-Financeira:** Confronto entre o volume financeiro movimentado em contas bancárias e a receita bruta operacional escriturada.`
   },
   {
     id: 'aviso-legal',
@@ -1206,5 +1279,48 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 ## 3. Crimes Contra a Ordem Tributária (Lei nº 8.137/1990)
 - Constitui crime contra a ordem tributária suprimir ou reduzir tributo mediante omissão de informação, declaração falsa às autoridades fazendárias, falsificação de notas fiscais ou emissão de documento fiscal inexato.
 - **Súmula Vinculante 24 do STF:** O processo penal por crime material contra a ordem tributária somente pode ser instaurado após o lançamento definitivo do tributo na esfera administrativa fiscal.`
+  },
+  {
+    id: 'sumulas-temas-stf-stj',
+    category: 'contabil',
+    categoryLabel: 'Contábil',
+    filePath: 'contabil/sumulas-temas-stf-stj.md',
+    title: 'Teses do STF e do STJ: ICMS na base de PIS/Cofins, FGTS e insumos',
+    summary: 'Tema 69 do STF (ICMS fora da base de PIS/Cofins, marco 15/03/2017), Tema 608 do STF (FGTS prescreve em 5 anos) e Tema 779 do STJ (insumo: essencialidade ou relevância), com fonte oficial e pontos a confirmar.',
+    tags: ['STF', 'STJ', 'Tema 69', 'Tema 608', 'Tema 779', 'Jurisprudência'],
+    lastUpdated: '2026-10-21',
+    officialLink: 'https://portal.stf.jus.br/jurisprudenciaRepercussao/verAndamentoProcesso.asp?incidente=2585258&numeroProcesso=574706&classeProcesso=RE&numeroTema=69',
+    officialLinkLabel: 'STF - Tema 69',
+    content: `# Teses do STF e do STJ de Interesse Fiscal, Contábil e Trabalhista
+
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [STF, Tema 69 de repercussão geral (RE 574.706)](https://portal.stf.jus.br/jurisprudenciaRepercussao/verAndamentoProcesso.asp?incidente=2585258&numeroProcesso=574706&classeProcesso=RE&numeroTema=69) e [notícia do STF de 23/10/2023](https://noticias.stf.jus.br/postsnoticias/stf-define-alcance-de-decisao-sobre-exclusao-do-icms-da-base-de-calculo-de-pis-cofins/)
+> - [STF, Tema 608 (ARE 709.212)](https://portal.stf.jus.br/jurisprudenciaRepercussao/verAndamentoProcesso.asp?incidente=4294417&numeroProcesso=709212&classeProcesso=ARE&numeroTema=608) e [notícia do STF de 16/03/2017](https://noticias.stf.jus.br/postsnoticias/plenario-conclui-julgamento-sobre-prazo-prescricional-para-cobranca-de-valores-de-fgts/)
+> - [STJ, notícia de 10/05/2018 sobre o conceito de insumo (REsp 1.221.170, Tema 779)](https://www.stj.jus.br/sites/portalp/Paginas/Comunicacao/Noticias-antigas/2018/2018-05-10_06-51_Primeira-Secao-define-conceito-de-insumo-para-creditamento-de-PIS-e-Cofins.aspx)
+>
+> **Limite desta revisão:** foram conferidas somente as três teses abaixo, e apenas pelas notícias oficiais dos tribunais. **O texto formal de cada tese (redação do acórdão) não foi lido**: consulte os links de andamento do tema. Súmulas do TST, súmulas do STJ e a Súmula Vinculante 24 já citadas em outros documentos desta base **não foram reconferidas**. **Diante de qualquer dúvida, o agente deve dizer "preciso confirmar".**
+
+---
+
+## 1. STF, Tema 69: ICMS na base do PIS e da Cofins (RE 574.706)
+- O STF decidiu que o **ICMS não integra a base de cálculo do PIS e da Cofins**.
+- **Modulação:** o marco é **15/03/2017** (data do julgamento do mérito). Em 2021, o STF acolheu em parte embargos e limitou os efeitos da decisão a essa data. Segundo a notícia do STF de 23/10/2023, a tese do Tema 1.279 (RE 1.452.421) repete o marco: não cabe restituição ou compensação de fato gerador anterior a 15/03/2017, salvo ação judicial ou procedimento administrativo ajuizado até essa data.
+- **Preciso confirmar:** se o ICMS excluído é o **destacado** na nota ou o **pago**. A notícia lida não trata dessa distinção; veja o acórdão de embargos antes de afirmar. Também **preciso confirmar** a redação exata do Tema 1.279.
+
+## 2. STF, Tema 608: prescrição do FGTS (ARE 709.212)
+- Em novembro de 2014, o Plenário alterou de **30 para 5 anos** o prazo de prescrição para a cobrança de valores de FGTS não depositados (notícia do STF de 16/03/2017).
+- A notícia lida **não menciona modulação**. **Preciso confirmar** a regra de transição (fatos anteriores a 13/11/2014) no acórdão antes de afirmar.
+- Esse tema trata de **prescrição da cobrança**, e não de prazo de guarda de documentos.
+
+## 3. STJ, Tema 779: conceito de insumo para créditos de PIS/Cofins (REsp 1.221.170)
+- A Primeira Seção fixou que o conceito de insumo se analisa pelos critérios de **essencialidade ou relevância**, considerando a imprescindibilidade ou a importância do bem ou serviço para a atividade econômica do contribuinte (notícia do STJ de 10/05/2018; acórdão de 24/04/2018).
+- **Preciso confirmar:** a redação formal da tese, como a Receita aplica o conceito (parecer normativo) e a aplicação a cada despesa concreta.
+
+---
+
+## 4. Como o agente deve usar este documento
+1. Citar o número do tema e o link oficial.
+2. Dizer que a leitura foi da notícia oficial e que a redação do acórdão deve ser conferida.
+3. Para outras súmulas ou temas não listados aqui, responder "preciso confirmar" e indicar a busca no portal do STF, do STJ ou do TST.`
   }
 ];

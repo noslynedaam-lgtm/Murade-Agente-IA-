@@ -1,6 +1,18 @@
 # ECD e ECF - Obrigações do SPED Contábil e Fiscal
 
 > **Legislação Base:** Instrução Normativa RFB nº 2.003/2021 (ECD), Instrução Normativa RFB nº 2.004/2021 (ECF) e Manual de Orientação do Leiaute SPED.
+>
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Serviço "Entregar ECD" (gov.br)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-digital)
+> - [Serviço "Entregar ECF" (gov.br)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-fiscal)
+> - Textos das IN: [IN RFB 2.003/2021](https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=114965&visao=anotado) e [IN RFB 2.004/2021](https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=114966) (a página não exibiu o texto na leitura automática; **não conferi os artigos**).
+>
+> **O que foi conferido:** apenas o que as páginas de serviço do gov.br dizem sobre prazo e quem entrega (resumido abaixo).
+> **Não conferido nesta revisão:** a lista completa de obrigados e dispensados (itens 1.A e 2.A), as regras de assinatura digital, multas por atraso, prorrogações, blocos e cruzamentos da seção 3. Tudo isso é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a IN RFB 2.003/2021 (ECD) ou 2.004/2021 (ECF).**
+>
+> **ATENÇÃO, prazo da ECD:** o serviço do gov.br informa **último dia útil de JUNHO** do ano seguinte; a versão anterior deste documento dizia **maio**. Prevalece a fonte oficial lida (junho), mas **preciso confirmar** no art. da IN 2.003/2021 e em eventuais prorrogações do ano.
+>
+> **Prazo da ECF (gov.br):** último dia útil de **julho** do ano seguinte ao ano-calendário. A ECF é entregue **de forma centralizada pela matriz**.
 
 ---
 
@@ -16,7 +28,7 @@ A ECD substitui a emissão e encadernação em papel dos livros contábeis tradi
 - *Empresas do Simples Nacional:* Desobrigadas da ECD perante a Receita Federal, salvo se necessitarem para comprovação de distribuição de lucros isentos ou licitações públicas.
 
 ### B. Prazo de Transmissão:
-- **Regra Geral:** Até o **último dia útil do mês de maio** do ano-calendário subsequente ao da escrituração (salvo prorrogações extraordinárias publicadas pela RFB).
+- **Regra Geral (gov.br):** até o **último dia útil do mês de junho** do ano seguinte ao da escrituração (a versão anterior dizia maio; **preciso confirmar** na IN RFB 2.003/2021). Prorrogações extraordinárias são publicadas pela RFB e devem ser consultadas a cada ano.
 - **Assinatura Digital Obrigatória:** Exige dois certificados digitais modelo e-PJ ou e-CPF:
   1. Certificado digital do **Contabilista / Responsável Técnico** (com procuração ou CRC ativo);
   2. Certificado digital do **Representante Legal da Empresa** (e-PJ ou e-CPF do procurador).

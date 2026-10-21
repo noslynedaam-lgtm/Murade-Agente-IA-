@@ -1,6 +1,10 @@
 # Livros Contábeis Obrigatórios, Demonstrações Financeiras e Guarda de Documentos
 
 > **Legislação Base:** Código Civil Brasileiro (Lei nº 10.406/2002, arts. 1.179 a 1.195), Lei nº 6.404/1976, NBC TG 1000 e Resoluções do CFC.
+>
+> **Fontes oficiais indicadas:** [Código Civil (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm) e [Lei 6.404/1976 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/l6404consol.htm).
+> **Não conferido nesta revisão (21/10/2026):** a página do Código Civil no Planalto só carregou até o art. 232, então **nenhum artigo deste documento foi reconferido**. Também não foram conferidos: os prazos de guarda da seção 3, o Tema 608 do STF citado e a Súmula 362 do TST (ver bloco de súmulas e temas), e a obrigatoriedade da DFC. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo.**
+> **Pontos duvidosos:** o prazo de guarda de "contratos e livro de registro de empregados: vitalício" e de "LTCAT/PCMSO/PPP: 20 anos" são práticas usuais, não texto de lei conferido; a guarda do FGTS por "30 anos/5 anos" deve ser conferida contra o Tema 608 (que trata de prescrição do FGTS), sem afirmar que é "prazo de guarda".
 
 ---
 
