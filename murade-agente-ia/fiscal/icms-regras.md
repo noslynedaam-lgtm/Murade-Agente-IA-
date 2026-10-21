@@ -1,8 +1,22 @@
 # ICMS - Regras Fundamentais, DIFAL e Substituição Tributária
 
-> **Status de conferência (21/10/2026):** Nada deste documento foi reconferido em fonte oficial (LC 87/1996, EC 87/2015, LC 190/2022, Convênios do CONFAZ). Fórmulas de DIFAL, MVA e base dupla: **preciso confirmar** na legislação do estado de destino. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Status de conferência (21/10/2026):** conferido o que está na seção 0 abaixo (LC 87/1996 no Planalto e alíquotas interestaduais no portal DIFAL das SEFAZ). **Não foram reconferidos:** o restante deste documento (EC 87/2015, LC 190/2022, fórmulas de DIFAL, MVA e base dupla) nem a alíquota interna de Goiás. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
 
 > **Legislação Base:** Lei Complementar nº 87/1996 (Lei Kandir), Emenda Constitucional nº 87/2015, Lei Complementar nº 190/2022 e Convênios ICMS / CONFAZ.
+
+## 0. Conferido em fonte oficial (21/10/2026)
+**LC 87/1996 (Lei Kandir), [texto no Planalto](https://planalto.gov.br/ccivil_03/leis/lcp/lcp87.htm?origin=instituicao)** (a página foi lida até o art. 33):
+- **Art. 2º, fatos geradores:** circulação de mercadorias (inclusive alimentos e bebidas em bares e restaurantes), transporte interestadual e intermunicipal, comunicação onerosa; o § 1º estende o imposto a importações e a serviços iniciados no exterior.
+- **Art. 3º, não incidência:** livros, jornais, periódicos e o papel para sua impressão; operações que destinem ao exterior mercadorias e serviços (exportação); entre outras hipóteses listadas no artigo.
+- **Art. 12:** o fato gerador ocorre, por exemplo, na saída da mercadoria do estabelecimento (inciso I), no início do transporte (V) e no desembaraço aduaneiro (IX). **§ 4º:** não há fato gerador na transferência entre estabelecimentos do mesmo titular, mantendo-se os créditos anteriores. **Preciso confirmar** a redação atual desse § 4º, porque o STF e a LC 204/2023 trataram desse tema; não afirme a regra sem conferir.
+- **Art. 20, crédito:** o contribuinte tem direito ao crédito do imposto anteriormente cobrado; não há crédito de bens e serviços alheios à atividade ou ligados a operações isentas ou não tributadas (§§ 1º e 3º); o crédito do ativo permanente é apropriado em 1/48 por mês (§ 5º), com regras de limite e cancelamento que variam por versão do texto.
+- **Art. 21, estorno:** o crédito deve ser estornado quando a mercadoria ou o serviço for usado em operação posterior isenta ou não tributada, utilizado em fim alheio à atividade, ou perecer, deteriorar-se ou for extraviado.
+
+**Alíquotas interestaduais, [portal DIFAL das SEFAZ](https://dfe-portal.svrs.rs.gov.br/Difal/aliquotas):**
+- **4%:** operações interestaduais com bens e mercadorias importados (ou com conteúdo importado superior a 40%).
+- **7%:** saídas das regiões Sul e Sudeste (exceto Espírito Santo) para Centro-Oeste, Norte, Nordeste e Espírito Santo.
+- **12%:** saídas do Centro-Oeste, Norte, Nordeste e Espírito Santo para os demais estados, e entre Sul e Sudeste (exceto ES). Goiás está no Centro-Oeste, então suas saídas interestaduais são, em regra, de 12% (exceto importados, a 4%): confirme a regra do produto.
+- A página não traz a data de atualização nem a alíquota interna de Goiás: **preciso confirmar** a alíquota interna na Lei 11.651/1991 (art. 27). A Lei estadual 19.925/2017, lida na Casa Civil de Goiás, **não fixa 17% nem 19%**; ela trata de itens como 23% (inciso IX do art. 27), 14% para óleo diesel e um acréscimo de dois pontos percentuais para o fundo Protege Goiás em certos produtos e serviços.
 
 ---
 
