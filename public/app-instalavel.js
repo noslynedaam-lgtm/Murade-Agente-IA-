@@ -39,15 +39,24 @@
   }, true);
 
   var evento = null;
-  window.addEventListener('beforeinstallprompt', function (e) {
-    e.preventDefault(); evento = e;
-    if (document.getElementById('murade-instalar')) return;
+  function criarBotao() {
     var b = document.createElement('button');
     b.id = 'murade-instalar'; b.type = 'button';
     b.textContent = 'Instalar aplicativo no computador';
     b.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:2147483000;background:#0f2444;color:#fff;border:1px solid #F2D26E;border-radius:10px;padding:10px 14px;font:600 13px system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)';
-    b.onclick = function () { if (!evento) return; evento.prompt(); evento.userChoice.finally(function () { b.remove(); evento = null; }); };
+    b.onclick = function () {
+      if (!evento) { b.textContent = 'No menu do navegador (⋮ ou ⋯), escolha “Instalar Murade Agente IA”'; b.style.maxWidth = '280px'; b.style.textAlign = 'left'; return; }
+      evento.prompt(); evento.userChoice.finally(function () { b.remove(); evento = null; });
+    };
     document.body.appendChild(b);
+  }
+  function jaInstalado() { try { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) { return false; } }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); evento = e;
+    if (document.getElementById('murade-instalar')) return;
+    criarBotao();
   });
+  // Se o navegador não avisar que pode instalar, o botão aparece mesmo assim, com a instrução do menu.
+  setTimeout(function () { if (!evento && !jaInstalado() && !document.getElementById('murade-instalar') && document.body) criarBotao(); }, 2500);
   window.addEventListener('appinstalled', function () { var b = document.getElementById('murade-instalar'); if (b) b.remove(); });
 })();
