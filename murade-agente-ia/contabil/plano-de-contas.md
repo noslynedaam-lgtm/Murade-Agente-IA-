@@ -1,5 +1,7 @@
 # Plano de Contas, Escrituração e Princípios Contábeis
 
+> **Status de conferência (21/10/2026):** Documento de estrutura contábil não reconferido nas NBC/CPC do CFC: **preciso confirmar** antes de citar norma. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+
 > **Legislação Base:** Lei nº 6.404/1976 (Lei das Sociedades por Ações), Lei nº 11.638/2007, Normas Brasileiras de Contabilidade (NBC TG 1000 e NBC TG 26 / CPC 00 e CPC 26).
 
 ---

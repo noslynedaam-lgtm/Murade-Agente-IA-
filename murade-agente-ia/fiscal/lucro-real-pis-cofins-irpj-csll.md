@@ -6,7 +6,8 @@
 > - [Lei 9.718/1998, texto compilado (Planalto)](https://planalto.gov.br/ccivil_03/leis/L9718compilada.htm)
 > - [Lei 10.637/2002, compilada (PIS)](https://www.planalto.gov.br/ccivil_03/leis/2002/l10637compilado.htm) e [Lei 10.833/2003 (Cofins)](https://planalto.gov.br/ccivil_03/leis/2003/l10.833.htm)
 > - [IRPJ (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/IRPJ) e [CSLL (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/CSLL)
-> **Não conferido nesta revisão:** multa de ofício (art. 44 da Lei 9.430) e multa de mora (art. 61), porque o Planalto cortou a página antes desses artigos; art. 10 da Lei 10.833 a partir do inciso VII; e o efeito das alterações da LC 214/2025 sobre PIS/Cofins (as páginas listam alterações). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+> **Multas e juros:** ver o documento "Multas e juros sobre tributos federais" (conferido em 21/10/2026; a multa qualificada passou a 100% pela Lei 14.689/2023, com 150% só na reincidência).
+> **Não conferido nesta revisão:** art. 10 da Lei 10.833 a partir do inciso VII; e o efeito das alterações da LC 214/2025 sobre PIS/Cofins (as páginas listam alterações). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ## 1. Quem é obrigado ao Lucro Real (Lei 9.718/1998, art. 14)
 - Receita total no ano-calendário anterior **superior a R$ 78.000.000,00** (ou proporcional ao número de meses, se o período for menor que 12).

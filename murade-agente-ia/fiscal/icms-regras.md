@@ -1,5 +1,7 @@
 # ICMS - Regras Fundamentais, DIFAL e Substituição Tributária
 
+> **Status de conferência (21/10/2026):** Nada deste documento foi reconferido em fonte oficial (LC 87/1996, EC 87/2015, LC 190/2022, Convênios do CONFAZ). Fórmulas de DIFAL, MVA e base dupla: **preciso confirmar** na legislação do estado de destino. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+
 > **Legislação Base:** Lei Complementar nº 87/1996 (Lei Kandir), Emenda Constitucional nº 87/2015, Lei Complementar nº 190/2022 e Convênios ICMS / CONFAZ.
 
 ---

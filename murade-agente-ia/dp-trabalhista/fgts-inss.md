@@ -26,12 +26,12 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 ## 2. Contribuição Patronal Previdenciária (CPP), RAT e Terceiros
 
-> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** FAP (faixa e forma de cálculo), percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
+> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
 
 O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
 1. **Inciso I, contribuição da empresa sobre a folha:** **20%** sobre o total das remunerações pagas, devidas ou creditadas a qualquer título, durante o mês, aos segurados empregados e trabalhadores avulsos.
 2. **Inciso II, RAT (financia aposentadoria especial e benefícios por incapacidade decorrentes de riscos ambientais):** **1%** para empresa cujo risco de acidentes do trabalho é considerado **leve**, **2%** para **médio** e **3%** para **grave**, sobre as remunerações de empregados e avulsos.
-3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP** (fator multiplicador): o FAP é regulado por norma posterior e **preciso confirmar** a faixa e a forma de cálculo antes de afirmar qualquer número.
+3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP**. **FAP conferido em 21/10/2026** no [Ministério da Previdência](https://www.gov.br/previdencia/pt-br/assuntos/previdencia-social/saude-e-seguranca-do-trabalhador/fap) e na [notícia do FAP 2027, de 30/09/2026](https://www.gov.br/previdencia/pt-br/noticias/2026/setembro/fator-acidentario-de-prevencao-fap-com-vigencia-para-2027-esta-disponivel-para-consulta-a-partir-desta-quarta-feira-30): o FAP é um multiplicador de **0,5000 a 2,0000**, calculado **por estabelecimento** com base nos acidentes e doenças do trabalho dos últimos dois anos, e **multiplica as alíquotas de 1%, 2% ou 3%**. Abaixo de 1,0 reduz a contribuição (até a metade); acima de 1,0 aumenta (até o dobro). Muda **todo ano**. A contestação do FAP 2027 pode ser feita de 01 a 30/11/2026 (notícia oficial). A consulta é feita no serviço do gov.br; o valor de cada empresa **preciso confirmar** caso a caso.
 4. **Inciso III:** **20%** sobre o total das remunerações pagas ou creditadas a **contribuintes individuais** que prestem serviço à empresa (por exemplo, autônomos e pró-labore de sócios).
 5. **Inciso IV:** o texto do Planalto indica que a **execução está suspensa pela Resolução do Senado nº 10/2016**. Não aplique esse inciso sem confirmar.
 
@@ -39,7 +39,7 @@ O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
 
 **Quem paga a CPP sobre a folha:** empresas do Lucro Presumido e do Lucro Real recolhem a CPP e o RAT sobre a folha. Para o **Simples Nacional**, a regra depende do anexo (no Anexo IV a contribuição patronal sai do DAS); essa regra **não foi reconferida** aqui, **preciso confirmar** na LC 123/2006 antes de afirmar.
 
-> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial. Foram **retirados** por não estarem confirmados.
+> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial (a faixa do FAP, de 0,5 a 2,0, **foi depois confirmada** em fonte oficial; ver acima). Foram **retirados** por não estarem confirmados.
 
 ---
 

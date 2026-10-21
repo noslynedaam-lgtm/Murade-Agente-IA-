@@ -586,9 +586,9 @@ export const OfficialLegislationPortal: React.FC<OfficialLegislationPortalProps>
               >
                 {/* Accent top stripe */}
                 <div className={`h-1 w-full absolute top-0 inset-x-0 ${
-                  link.category === 'trabalhista'
+                  link.category === 'trabalhista' || link.category === 'esocial'
                     ? 'bg-amber-500'
-                    : link.category === 'fiscal'
+                    : link.category === 'tributos' || link.category === 'simples'
                     ? 'bg-blue-600'
                     : link.category === 'reforma'
                     ? 'bg-purple-600'

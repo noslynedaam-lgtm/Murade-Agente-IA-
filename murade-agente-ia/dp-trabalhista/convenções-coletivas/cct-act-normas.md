@@ -1,5 +1,7 @@
 # Convenções Coletivas (CCT) e Acordos Coletivos (ACT) no Departamento Pessoal
 
+> **Status de conferência (21/10/2026):** Nada deste documento foi reconferido (CLT arts. 611 e seguintes e 611-A, Súmulas do TST). Cada convenção coletiva deve ser lida no Sistema Mediador do Ministério do Trabalho: **preciso confirmar**. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+
 > **Legislação Base:** CLT (Decreto-Lei nº 5.452/1943, arts. 611 a 625 com redação da Lei nº 13.467/2017) e Precedentes Normativos do TST.
 
 ---

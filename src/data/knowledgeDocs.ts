@@ -188,7 +188,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'Lucro Real, IRPJ, CSLL e PIS/Cofins não cumulativo',
     summary: 'Obrigatoriedade do Lucro Real (R$ 78 milhões), IRPJ 15% + adicional 10%, apuração e prazos, CSLL 9%/15%, PIS 1,65% e Cofins 7,6% com créditos e exclusões (fontes Planalto e Receita Federal).',
     tags: ['Lucro Real', 'IRPJ', 'CSLL', 'PIS', 'Cofins', 'não cumulativo', 'Lei 9.430/1996', 'Lei 9.249/1995', 'JCP'],
-    lastUpdated: '2026-10-20',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/IRPJ',
     officialLinkLabel: 'IRPJ (Receita Federal)',
     content: `# Lucro Real, IRPJ, CSLL e PIS/Cofins não cumulativo
@@ -199,7 +199,8 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 > - [Lei 9.718/1998, texto compilado (Planalto)](https://planalto.gov.br/ccivil_03/leis/L9718compilada.htm)
 > - [Lei 10.637/2002, compilada (PIS)](https://www.planalto.gov.br/ccivil_03/leis/2002/l10637compilado.htm) e [Lei 10.833/2003 (Cofins)](https://planalto.gov.br/ccivil_03/leis/2003/l10.833.htm)
 > - [IRPJ (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/IRPJ) e [CSLL (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/CSLL)
-> **Não conferido nesta revisão:** multa de ofício (art. 44 da Lei 9.430) e multa de mora (art. 61), porque o Planalto cortou a página antes desses artigos; art. 10 da Lei 10.833 a partir do inciso VII; e o efeito das alterações da LC 214/2025 sobre PIS/Cofins (as páginas listam alterações). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+> **Multas e juros:** ver o documento "Multas e juros sobre tributos federais" (conferido em 21/10/2026; a multa qualificada passou a 100% pela Lei 14.689/2023, com 150% só na reincidência).
+> **Não conferido nesta revisão:** art. 10 da Lei 10.833 a partir do inciso VII; e o efeito das alterações da LC 214/2025 sobre PIS/Cofins (as páginas listam alterações). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ## 1. Quem é obrigado ao Lucro Real (Lei 9.718/1998, art. 14)
 - Receita total no ano-calendário anterior **superior a R$ 78.000.000,00** (ou proporcional ao número de meses, se o período for menor que 12).
@@ -227,8 +228,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 - **PIS: 1,65%** (Lei 10.637, art. 2º) e **Cofins: 7,6%** (Lei 10.833, art. 2º) sobre o total das receitas do mês.
 - **Créditos** (art. 3º de ambas): bens para revenda; bens e serviços usados como insumo; energia elétrica e térmica; aluguéis de prédios, máquinas e equipamentos pagos a pessoa jurídica; arrendamento mercantil de pessoa jurídica; máquinas e equipamentos do ativo imobilizado; edificações e benfeitorias; devoluções; armazenagem e frete na venda (Cofins); vale-transporte, refeição, alimentação e fardamento em empresas de limpeza e conservação (inciso X).
 - **Ficam no regime cumulativo (fora do não cumulativo):** Lucro Presumido ou Arbitrado, optantes do Simples, entidades imunes, órgãos públicos e fundações, cooperativas (exceto as de produção agropecuária), entre outros (Lei 10.833, art. 10; Lei 10.637, art. 8º). As alíquotas do cumulativo (0,65% e 3%) estão na Lei 9.718 e **não foram reconferidas aqui**.
-- A **Reforma Tributária** prevê a substituição de PIS/Cofins pela CBS; veja o documento da Reforma para o cronograma.
-`
+- A **Reforma Tributária** prevê a substituição de PIS/Cofins pela CBS; veja o documento da Reforma para o cronograma.`
   },
   {
     id: 'iss-ipi',
@@ -238,7 +238,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'ISS (LC 116/2003) e IPI: incidência, base, alíquotas e prazos',
     summary: 'ISS: fato gerador, não incidência, local, base de cálculo, alíquotas de 2% a 5% e retenção (LC 116). IPI: fato gerador, contribuintes, apuração mensal e prazos dia 25 e dia 10 (Receita Federal e RIPI).',
     tags: ['ISS', 'LC 116/2003', 'IPI', 'Tipi', 'RIPI', 'Decreto 7.212/2010', 'retenção ISS', 'alíquota mínima 2%'],
-    lastUpdated: '2026-10-20',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp116.htm',
     officialLinkLabel: 'LC 116/2003 (Planalto)',
     content: `# ISS (LC 116/2003) e IPI (Receita Federal e RIPI)
@@ -248,12 +248,21 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 > - [IPI, orientação tributária (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/tributos/ipi)
 > - [Tipi, tabela de incidência do IPI (Receita Federal)](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/legislacao/tipi-tabela-de-incidencia-do-imposto-sobre-produtos-industrializados)
 > - [Regulamento do IPI, Decreto 7.212/2010 (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2010/decreto/d7212.htm)
-> **Não conferido nesta revisão:** lista de serviços anexa à LC 116 (itens e subitens); art. 8º-B da LC 116 (redução de alíquotas 2029 a 2032, incluído pela LC 214/2025); leis municipais de ISS (alíquotas, prazos e retenção de cada município, inclusive Goiânia); alíquotas de produtos na Tipi (número do decreto vigente da Tipi); código de DARF do IPI; base de cálculo e art. 122 do RIPI (a página do Planalto foi cortada). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+> **Conferido em 21/10/2026 na mesma página da LC 116:** os 40 itens da lista de serviços (títulos), o art. 7º, o art. 8º (máximo 5%), o art. 8º-A (mínimo 2%) e o art. 8º-B (ver seção 1-A); Decreto 11.158/2022 (Tipi) e Decreto 12.665/2025 (ver seção 3-A).
+> **Conferido em 21/10/2026:** códigos de receita do IPI (seção 3-B).
+> **Não conferido nesta revisão:** subitens da lista de serviços; leis municipais de ISS (alíquotas, prazos e retenção de cada município, inclusive Goiânia); alíquotas de produtos na Tipi; base de cálculo e art. 122 do RIPI (a página do Planalto foi cortada). **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ## 1. ISS: incidência (LC 116/2003)
 - **Fato gerador (art. 1º):** prestação de serviços **constantes da lista anexa**, ainda que não seja a atividade principal do prestador; vale também para serviço vindo do exterior (§ 1º).
 - **Não incide (art. 2º):** exportação de serviços para o exterior (inciso I); serviços de relação de emprego (II); intermediação de títulos, depósitos bancários e principal e juros de operações de crédito (III). Serviço executado no Brasil não é exportação mesmo que o pagamento venha de residente no exterior (parágrafo único).
 - **Local do imposto (art. 3º):** em regra, o **estabelecimento do prestador** (ou o domicílio, se não houver estabelecimento). Há exceções listadas nos incisos I a XXV, em que o imposto é do local da execução ou do tomador (por exemplo, certos serviços de construção). O texto no Planalto mostra versões antigas e novas juntas: confira o inciso aplicável antes de afirmar.
+
+## 1-A. Lista de serviços, base de cálculo e alíquotas (LC 116/2003, conferido no Planalto em 21/10/2026)
+- **Base de cálculo (art. 7º):** o **preço do serviço**; o material fornecido pelo prestador nos itens 7.02 e 7.05 fica fora da base.
+- **Alíquota máxima (art. 8º, II):** **5%** para os demais serviços. **Alíquota mínima (art. 8º-A):** **2%**; benefícios que reduzam abaixo disso são vedados, salvo itens 7.02, 7.05 e 16.01 (conforme o texto lido).
+- **Art. 8º-B:** para fatos geradores de 2029 a 2032, as alíquotas são reduzidas em 10% (2029), 20% (2030), 30% (2031) e 40% (2032) em relação às vigentes em 31/12/2028. **Preciso confirmar** a redação exata no texto consolidado antes de aplicar.
+- **Os 40 itens da lista (títulos):** 1 informática; 2 pesquisa e desenvolvimento; 3 locação e cessão de direito de uso; 4 saúde e assistência médica; 5 medicina veterinária; 6 cuidados pessoais, estética e atividades físicas; 7 engenharia, arquitetura, construção civil, limpeza, saneamento; 8 educação e ensino; 9 hospedagem e turismo; 10 intermediação; 11 guarda, estacionamento, vigilância; 12 diversões e lazer; 13 fonografia, fotografia, cinematografia, reprografia; 14 bens de terceiros; 15 setor bancário ou financeiro; 16 transporte municipal; 17 apoio técnico, administrativo, jurídico, contábil e comercial; 18 regulação de sinistros e seguros; 19 loterias e apostas; 20 serviços portuários e aeroportuários; 21 registros públicos, cartorários e notariais; 22 exploração de rodovia; 23 programação e comunicação visual; 24 chaveiros, carimbos, placas; 25 funerários; 26 coleta e entrega de correspondências, courier; 27 assistência social; 28 avaliação de bens e serviços; 29 biblioteconomia; 30 biologia, biotecnologia e química; 31 serviços técnicos em edificações, eletrônica e telecomunicações; 32 desenhos técnicos; 33 desembaraço aduaneiro e despachantes; 34 investigações particulares; 35 reportagem, assessoria de imprensa e relações públicas; 36 meteorologia; 37 artistas, atletas e modelos; 38 museologia; 39 ourivesaria e lapidação; 40 obras de arte sob encomenda.
+- **Serviços contábeis:** estão no item 17 (apoio técnico, administrativo, jurídico, contábil). O **subitem exato** e a alíquota do município (Goiânia, por exemplo) **não foram conferidos**: **preciso confirmar** na lei municipal.
 
 ## 2. ISS: base de cálculo, alíquotas e retenção
 - **Base de cálculo (art. 7º):** o **preço do serviço**. Não entram na base os **materiais fornecidos pelo prestador** nos itens **7.02 e 7.05** (art. 7º, § 2º, I).
@@ -265,7 +274,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 - **Fato gerador (Receita Federal, item 1.1):** (1) **desembaraço aduaneiro** de produto de procedência estrangeira; (2) **saída do produto do estabelecimento industrial** ou equiparado a industrial. O RIPI traz o fato gerador no **art. 35** (existem duas versões no texto, a alterada pelo Decreto 10.668/2021 é a que vale).
 - **Industrialização (RIPI, art. 4º):** qualquer operação que **modifique a natureza, o funcionamento, o acabamento, a apresentação ou a finalidade** do produto (o texto lista cinco modalidades, I a V).
 - **Contribuintes (art. 24 do RIPI e Receita Federal, item 2.1):** o **importador** (no desembaraço); o **industrial** (nas saídas); o **equiparado a industrial**; e quem consome ou usa papel destinado a livros, jornais e periódicos fora da imunidade. **Cada estabelecimento é contribuinte autônomo** para cada fato gerador.
-- **Alíquotas:** variam conforme o produto e estão na **Tipi**. A Receita não traz as alíquotas na página do IPI, e a página da Tipi não informa o número do decreto: **preciso confirmar o decreto e a alíquota do produto** antes de calcular.
+- **Alíquotas:** variam conforme o produto e estão na **Tipi**. A Receita não traz as alíquotas na página do IPI, e a página da Tipi não informa o número do decreto: a Tipi vigente foi aprovada pelo Decreto 11.158/2022 (ver seção 3-A); **preciso confirmar a alíquota do produto** (código NCM) na Tipi atualizada antes de calcular.
 
 ## 4. IPI: apuração e prazo (Receita Federal, itens 5 e 6)
 - **Período de apuração:** **mensal** para as saídas de estabelecimento industrial ou equiparado. Não vale para IPI na importação.
@@ -274,7 +283,15 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
   - **Produtos do código 2402.20.00 da Tipi:** até o **dia 10 do mês seguinte** ao fato gerador.
   - **Demais produtos:** até o **dia 25 do mês seguinte** ao fato gerador.
   - Se o dia não for útil, o prazo **antecipa** para o dia útil anterior.
-`
+
+## 3-A. Tipi vigente (conferido no Planalto em 21/10/2026)
+- O **Decreto 11.158, de 29/07/2022**, aprovou a Tipi (art. 1º), com efeitos desde **01/08/2022**, e revogou os Decretos 10.923/2021 e 11.055/2022.
+- O **Decreto 12.665, de 10/10/2025** alterou a Tipi para instituir **ex-tarifários** de 6,75% (canudos e copos, pratos e itens descartáveis de plástico e papel), com efeitos tributários a partir de 01/02/2026 segundo a página lida.
+- Há outras alterações posteriores da Tipi (por exemplo, o Decreto 12.549/2025 apareceu na busca, mas **não foi lido**): **preciso confirmar** a Tipi atualizada na Receita Federal antes de aplicar qualquer alíquota.
+- Fontes: [Decreto 11.158/2022](https://planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/d11158.htm), [Decreto 12.665/2025](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/decreto/d12665.htm).
+
+## 3-B. Códigos de receita do IPI (Receita Federal, página atualizada em 27/07/2023, lida em 21/10/2026)
+Todos com periodicidade **mensal**. Principais: **0668** IPI sobre bebidas do capítulo 22; **0676** IPI sobre veículos das posições 87.03 e 87.06; **0821** cervejas e **0838** demais bebidas (bebidas frias); **1020** cigarros com tabaco (a variação /06 é o regime especial do código 2402.20.00); **1097** máquinas, aparelhos e material de transporte; **5110** charutos, cigarrilhas e cigarros sem tabaco; **5123** demais produtos; **2401** e **2410** operações intra-orçamentárias. Variações /16 são para perda de benefício fiscal. Fonte: [IPI, tabelas de códigos (Receita Federal)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/declaracoes-e-demonstrativos/dctf/tabelas-de-codigos-extensoes/ipi). O **prazo de recolhimento por código** não foi confirmado nesta fonte: **preciso confirmar** no calendário da Receita.`
   },
   {
     id: 'lucro-presumido',
@@ -360,6 +377,8 @@ O Lucro Presumido é uma modalidade de tributação simplificada para determina�
     officialLinkLabel: 'SEFAZ Goiás — Consulta NFe',
     content: `# ICMS - Regras Fundamentais, DIFAL e Substituição Tributária
 
+> **Status de conferência (21/10/2026):** Nada deste documento foi reconferido em fonte oficial (LC 87/1996, EC 87/2015, LC 190/2022, Convênios do CONFAZ). Fórmulas de DIFAL, MVA e base dupla: **preciso confirmar** na legislação do estado de destino. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+
 > **Legislação Base:** Lei Complementar nº 87/1996 (Lei Kandir), EC nº 87/2015, LC nº 190/2022 e Convênios ICMS / CONFAZ.
 
 ---
@@ -437,7 +456,8 @@ Substitutos:
 > **Legislação Base:** Decreto-Lei nº 5.452/1943 (CLT), Lei nº 13.467/2017 (Reforma Trabalhista), Súmulas e OJs do TST.
 >
 > **Fonte oficial conferida em 21/10/2026:** [Lei 12.506/2011, aviso prévio proporcional (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12506.htm).
-> **Não conferido nesta revisão:** os artigos da CLT citados abaixo (a página do Planalto entrou em redirecionamento e não carregou), a Lei 13.467/2017 e as súmulas do TST. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo na [CLT no Planalto](https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm).**
+> **Conferido em 21/10/2026 na [Lei 13.467/2017 (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2017/lei/l13467.htm), que dá nova redação à CLT:** art. 58-A (tempo parcial: até 30 horas semanais; horas suplementares com acréscimo de 50% sobre o salário-hora); art. 59 (duas horas extras por dia; § 5º banco de horas por acordo individual escrito com compensação em até seis meses; § 6º compensação por acordo individual, tácito ou escrito); art. 59-A (12x36 por acordo, com a remuneração abrangendo o descanso semanal e os feriados); art. 59-B (horas extras habituais não descaracterizam o acordo de compensação); art. 134 (férias em até três períodos, um com pelo menos 14 dias corridos; vedado iniciar nos dois dias que antecedem feriado ou repouso semanal); art. 477 (§ 6º: pagamento das verbas e entrega dos documentos em até **dez dias** contados do término do contrato; § 4º: pagamento em dinheiro, depósito ou cheque visado, e só em dinheiro ou depósito para analfabeto); art. 611-A (negociado prevalece sobre o legislado em temas como jornada, observados os limites constitucionais, e intervalo mínimo de 30 minutos para jornadas acima de 6 horas).
+> **Não conferido nesta revisão:** os demais artigos da CLT citados abaixo (a página compilada do Planalto não carregou inteira), a multa do art. 477, § 8º, e as súmulas do TST. O conteúdo é a versão anterior, mantida como referência. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o artigo na [CLT no Planalto](https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452compilado.htm).**
 >
 > **Pontos que exigem cuidado:** (1) o adicional de **100%** em domingos e feriados **não consta** do art. 59 nem da Constituição citados aqui; ele vem de lei específica, súmulas ou da convenção coletiva: **preciso confirmar** antes de afirmar. (2) O aviso prévio da tabela de rescisão deve ser lido junto com a seção 5-A abaixo.
 
@@ -627,12 +647,12 @@ Desde a EC 103/2019 o desconto é **progressivo**: cada alíquota incide só sob
 
 ## 2. Contribuição Patronal Previdenciária (CPP), RAT e Terceiros
 
-> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** FAP (faixa e forma de cálculo), percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
+> **Fonte oficial (conferida em 21/10/2026):** [Lei 8.212/1991, art. 22, texto compilado (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/L8212compilado.htm). **Não conferido nesta revisão:** percentuais e códigos de Terceiros/FPAS, regra do Simples Nacional Anexo IV, desoneração da folha (Lei 14.973/2024 e Reforma Tributária). **Diante de dúvida sobre esses itens, o agente deve dizer "preciso confirmar".**
 
 O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
 1. **Inciso I, contribuição da empresa sobre a folha:** **20%** sobre o total das remunerações pagas, devidas ou creditadas a qualquer título, durante o mês, aos segurados empregados e trabalhadores avulsos.
 2. **Inciso II, RAT (financia aposentadoria especial e benefícios por incapacidade decorrentes de riscos ambientais):** **1%** para empresa cujo risco de acidentes do trabalho é considerado **leve**, **2%** para **médio** e **3%** para **grave**, sobre as remunerações de empregados e avulsos.
-3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP** (fator multiplicador): o FAP é regulado por norma posterior e **preciso confirmar** a faixa e a forma de cálculo antes de afirmar qualquer número.
+3. **§ 3º:** o Ministério competente pode **alterar o enquadramento** das empresas (leve, médio, grave) com base em estatísticas de acidentes, para estimular a prevenção. O texto do Planalto **não traz o FAP**. **FAP conferido em 21/10/2026** no [Ministério da Previdência](https://www.gov.br/previdencia/pt-br/assuntos/previdencia-social/saude-e-seguranca-do-trabalhador/fap) e na [notícia do FAP 2027, de 30/09/2026](https://www.gov.br/previdencia/pt-br/noticias/2026/setembro/fator-acidentario-de-prevencao-fap-com-vigencia-para-2027-esta-disponivel-para-consulta-a-partir-desta-quarta-feira-30): o FAP é um multiplicador de **0,5000 a 2,0000**, calculado **por estabelecimento** com base nos acidentes e doenças do trabalho dos últimos dois anos, e **multiplica as alíquotas de 1%, 2% ou 3%**. Abaixo de 1,0 reduz a contribuição (até a metade); acima de 1,0 aumenta (até o dobro). Muda **todo ano**. A contestação do FAP 2027 pode ser feita de 01 a 30/11/2026 (notícia oficial). A consulta é feita no serviço do gov.br; o valor de cada empresa **preciso confirmar** caso a caso.
 4. **Inciso III:** **20%** sobre o total das remunerações pagas ou creditadas a **contribuintes individuais** que prestem serviço à empresa (por exemplo, autônomos e pró-labore de sócios).
 5. **Inciso IV:** o texto do Planalto indica que a **execução está suspensa pela Resolução do Senado nº 10/2016**. Não aplique esse inciso sem confirmar.
 
@@ -640,7 +660,7 @@ O que o **art. 22 da Lei 8.212/1991** diz (lido no Planalto):
 
 **Quem paga a CPP sobre a folha:** empresas do Lucro Presumido e do Lucro Real recolhem a CPP e o RAT sobre a folha. Para o **Simples Nacional**, a regra depende do anexo (no Anexo IV a contribuição patronal sai do DAS); essa regra **não foi reconferida** aqui, **preciso confirmar** na LC 123/2006 antes de afirmar.
 
-> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial. Foram **retirados** por não estarem confirmados.
+> Observação de revisão: a versão anterior deste documento trazia faixas de FAP (0,5 a 2,0), de Terceiros (4,5% a 5,8%) e um "total patronal típico" (26,5% a 31,8%) sem fonte oficial (a faixa do FAP, de 0,5 a 2,0, **foi depois confirmada** em fonte oficial; ver acima). Foram **retirados** por não estarem confirmados.
 
 ---
 
@@ -675,6 +695,8 @@ A plataforma do **FGTS Digital** (instituída pela Lei nº 14.438/2022 e Portari
     officialLinkLabel: 'CLT - Presidência da República (Art. 611-A)',
     content: `# Convenções Coletivas (CCT) e Acordos Coletivos (ACT)
 
+> **Status de conferência (21/10/2026):** Nada deste documento foi reconferido (CLT arts. 611 e seguintes e 611-A, Súmulas do TST). Cada convenção coletiva deve ser lida no Sistema Mediador do Ministério do Trabalho: **preciso confirmar**. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+
 > **Legislação Base:** CLT, arts. 611 a 625 e Lei nº 13.467/2017.
 
 ---
@@ -702,6 +724,8 @@ A plataforma do **FGTS Digital** (instituída pela Lei nº 14.438/2022 e Portari
     officialLink: 'https://www.cfc.org.br',
     officialLinkLabel: 'Conselho Federal de Contabilidade (CFC)',
     content: `# Plano de Contas e Escrituração Contábil
+
+> **Status de conferência (21/10/2026):** Documento de estrutura contábil não reconferido nas NBC/CPC do CFC: **preciso confirmar** antes de citar norma. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
 
 > **Legislação Base:** Lei nº 6.404/1976 e Normas Brasileiras de Contabilidade (NBC TG 1000 / CPC 00).
 
@@ -941,10 +965,13 @@ A aplicação de qualquer interpretação legal, enquadramento fiscal, alíquota
     title: 'CLT e Legislação Trabalhista Integral (Planalto - Decreto-Lei nº 5.452/1943)',
     summary: 'Compilação completa da CLT atualizada (Lei 13.467/17): rescisões e prazos (Art. 477), jornada e banco de horas (Arts. 58-75), férias (Arts. 129-153), equiparação (Art. 461), FGTS (Lei 8.036/90) e Aviso Prévio (Lei 12.506/11).',
     tags: ['CLT Integral', 'Planalto', 'Decreto-Lei 5.452/43', 'Reforma Trabalhista', 'Prazos Rescisórios', 'Aviso Prévio', 'Jornada'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'http://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm',
     officialLinkLabel: 'CLT - Presidência da República / Planalto',
     content: `# Legislação Trabalhista Integral — CLT e Leis Conexas do Planalto
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: clt-principios, fgts-inss, eSocial-prazos). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** Pontos duvidosos: o adicional de **100%** em domingos e feriados **não foi confirmado** em lei (preciso confirmar); a multa do art. 477, § 8º, o banco de horas coletivo de até 1 ano, o art. 488 e as regras de abono e pagamento de férias **não foram reconferidos**. Já foram conferidos no Planalto (Lei 13.467/2017): art. 477, § 6º (dez dias), art. 59, §§ 5º e 6º, art. 134 (três períodos, um com 14 dias) e a Lei 12.506/2011 (aviso prévio).
 
 > **Fonte Oficial Governamental:** Presidência da República / Casa Civil — Subchefia de Assuntos Jurídicos.
 > **Texto Legal:** Decreto-Lei nº 5.452/1943 compilado com as Leis nº 13.467/2017 (Reforma Trabalhista), nº 12.506/2011 (Aviso Prévio), nº 8.036/1990 (FGTS) e nº 4.090/1962 (13º Salário).
@@ -991,10 +1018,13 @@ A aplicação de qualquer interpretação legal, enquadramento fiscal, alíquota
     title: 'Simples Nacional: Lei Complementar nº 123/2006 e Resolução CGSN nº 140/2018',
     summary: 'Manual integral do regime unificado do Simples Nacional: Anexos I a V com tabelas de alíquotas e parcelas a deduzir, apuração do Fator R (28%), sublimite estadual de ICMS/ISS (R$ 3,6M), MEI e PGDAS-D.',
     tags: ['Simples Nacional', 'LC 123/2006', 'CGSN 140/2018', 'Anexos I a V', 'Fator R', 'PGDAS-D', 'MEI', 'Sublimite'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www8.receita.fazenda.gov.br/SimplesNacional',
     officialLinkLabel: 'Portal do Simples Nacional (Receita Federal)',
     content: `# Simples Nacional — Lei Complementar nº 123/2006 Consolidada
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: simples-nacional, mei-opcao-exclusao). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** Os limites de ME/EPP, o sublimite e a regra do excesso foram conferidos no documento "simples-nacional". Tabelas de alíquotas por anexo e Fator R **não foram reconferidas aqui**: preciso confirmar na LC 123/2006 e na Resolução CGSN 140/2018.
 
 > **Fonte Oficial Governamental:** Comitê Gestor do Simples Nacional (CGSN) / Receita Federal do Brasil.
 > **Legislação Base:** Lei Complementar nº 123/2006, Resolução CGSN nº 140/2018 e alterações posteriores.
@@ -1063,10 +1093,13 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'eSocial & FGTS Digital: Manual MOS S-1.3, Prazos de Eventos e DCTFWeb',
     summary: 'Manual oficial do eSocial (Decreto nº 8.373/2014) e do FGTS Digital (Lei nº 14.438/2022): admissão S-2200, demissão S-2299, fechamento S-1299, DARF Previdenciário DCTFWeb e recolhimento via Pix no dia 20.',
     tags: ['eSocial', 'FGTS Digital', 'Pix', 'DCTFWeb', 'S-2200', 'S-2299', 'S-1200', 'MOS S-1.3'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.esocial.gov.br',
     officialLinkLabel: 'Portal Oficial do eSocial (Governo Federal)',
     content: `# eSocial e FGTS Digital — Manual de Operação e Prazos Oficiais
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: eSocial-prazos, fgts-inss). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** Pontos duvidosos: o prazo de S-2230 (dia 15) e de S-2210 (CAT) **não foram conferidos**; a citação da "Portaria Conjunta MTE/RFB nº 33/2023" e da "Lei nº 14.438/2022" como base do FGTS Digital **não foi confirmada**: preciso confirmar. Admissão (dia anterior) e desligamento (10 dias) conferem com o MOS S-1.3.
 
 > **Fonte Oficial Governamental:** Ministério do Trabalho e Emprego (MTE) e Receita Federal do Brasil (RFB).
 > **Legislação Base:** Decreto nº 8.373/2014, Portaria Conjunta MTE/RFB nº 33/2023, Lei nº 14.438/2022 (FGTS Digital).
@@ -1110,10 +1143,13 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'Normas Contábeis (CFC), NBCs, Lei das S.A. 6.404/76 e Livros Obrigatórios',
     summary: 'Conselho Federal de Contabilidade (Decreto-Lei nº 9.295/1946): Normas Brasileiras de Contabilidade (NBC TG 1000 PME e CPC 00 R2), escrituração no Livro Diário e Razão (Código Civil arts. 1.179 a 1.195), DRE, Balanço e SPED ECD/ECF.',
     tags: ['CFC', 'Normas Contábeis', 'NBC TG', 'Lei 6.404/76', 'Livro Diário', 'SPED ECD', 'DRE', 'Balanço Patrimonial'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.cfc.org.br',
     officialLinkLabel: 'Conselho Federal de Contabilidade (CFC)',
     content: `# Normas Brasileiras de Contabilidade (CFC) e Legislação Societária
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: livros-obrigacoes). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** Os artigos 1.179 a 1.195 do Código Civil **não foram reconferidos** (o Planalto cortou a página). A afirmação de que o Livro Caixa é "facultativo e simplificado para optantes do Simples" **não foi confirmada**: preciso confirmar.
 
 > **Fonte Oficial:** Conselho Federal de Contabilidade (CFC) e Comitê de Pronunciamentos Contábeis (CPC).
 > **Legislação Base:** Decreto-Lei nº 9.295/1946, Lei nº 6.404/1976 (Lei das S.A.), Código Civil (Lei nº 10.406/2002, arts. 1.179 a 1.195) e NBC TG 1000 (R1).
@@ -1156,10 +1192,13 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'Reforma Tributária: EC 132/2023, LC 214/2025 e LC 227/2026',
     summary: 'Novo sistema tributário brasileiro sobre o consumo: IVA Dual com CBS (Federal) e IBS (Estados e Municípios), Imposto Seletivo, Split Payment, extinção de PIS, COFINS, IPI, ICMS e ISS e cronograma 2026-2033.',
     tags: ['Reforma Tributária', 'EC 132/2023', 'LC 214/2025', 'LC 227/2026', 'IBS', 'CBS', 'Split Payment', 'IVA Dual', 'Congresso Nacional'],
-    lastUpdated: '2026-10-20',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp214.htm',
     officialLinkLabel: 'Portal da Reforma Tributária (Câmara e Senado)',
     content: `# Reforma Tributária do Consumo — EC nº 132/2023 e Leis Complementares
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: reforma-tributaria). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** O conteúdo sobre IBS, CBS, IS e split payment é descritivo e **não teve cada artigo da LC 214/2025 reconferido**; datas de transição devem ser lidas no documento "reforma-tributaria", que tem a revisão de 20/10/2026.
 
 > **Fonte Oficial Governamental:** Congresso Nacional (Câmara dos Deputados e Senado Federal).
 > **Legislação Base:** Emenda Constitucional nº 132/2023; Lei Complementar nº 214, de 16/1/2025 (institui IBS, CBS e IS — originada do PLP 68/2024); Lei Complementar nº 227, de 13/1/2026 (originada do PLP 108/2024; cria o Comitê Gestor do IBS). **Conferida em 20/10/2026.**
@@ -1201,10 +1240,13 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
     title: 'ICMS, IPI, ISS, PIS/COFINS e Tributos Federais (Receita Federal & SEFAZ GO)',
     summary: 'Regulamento do ICMS (LC 87/96 Lei Kandir, LC 190/22 DIFAL e SEFAZ GO RCTE Lei 11.651/91), IPI (Decreto 7.212/10), ISS municipal (LC 116/03), PIS/COFINS cumulativo/não-cumulativo e IRPJ/CSLL no Lucro Presumido e Real.',
     tags: ['ICMS', 'IPI', 'ISS', 'SEFAZ GO', 'Receita Federal', 'DIFAL', 'Lucro Presumido', 'PIS/COFINS'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.receita.fazenda.gov.br',
     officialLinkLabel: 'Receita Federal & SEFAZ Goiás',
     content: `# Tributos Indiretos e Federais — ICMS, IPI, ISS e Lucro Presumido
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: iss-ipi, multas-juros-tributos-federais). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** A **alíquota modal de 19% do ICMS em Goiás** e o DIFAL **não foram conferidos** em fonte oficial: preciso confirmar na SEFAZ-GO. ISS (LC 116) e IPI (Tipi, Decreto 11.158/2022) estão conferidos no documento "iss-ipi".
 
 > **Fontes Oficiais:** Receita Federal do Brasil (RFB) e Secretaria de Estado da Economia de Goiás (SEFAZ-GO).
 > **Legislação Base:** Lei Complementar nº 87/1996 (Kandir), LC nº 190/2022 (DIFAL), Lei nº 11.651/1991 (CTE-GO), Decreto nº 7.212/2010 (RIPI), LC nº 116/2003 (ISS) e Decreto nº 9.580/2018 (RIR/2018).
@@ -1252,10 +1294,13 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
     title: 'Legislação Jurídica Empresarial, Societária e Tributária (Código Civil & DREI)',
     summary: 'Direito Societário para contabilidade: Sociedades Limitadas (arts. 1.052 a 1.087 CC), Sociedade Limitada Unipessoal (SLU), Instruções DREI, responsabilidade tributária dos sócios (Art. 135 CTN) e crimes tributários (Lei 8.137/90).',
     tags: ['Direito Societário', 'Código Civil', 'SLU', 'DREI', 'Responsabilidade Tributária', 'Art 135 CTN', 'Crimes Fiscais'],
-    lastUpdated: '2026-10-19',
+    lastUpdated: '2026-10-21',
     officialLink: 'https://www.planalto.gov.br/legislacao',
     officialLinkLabel: 'Presidência da República / DREI',
     content: `# Legislação Societária, Empresarial e Jurídica na Contabilidade
+
+> **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: sumulas-temas-stf-stj). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Observações:** Artigos do CC e do CTN (inclusive art. 135) e as Súmulas 430 e 435 do STJ **não foram reconferidos**: preciso confirmar. A Lei 13.874/2019 e a IN DREI 81/2020 também **não foram conferidas**.
 
 > **Fontes Oficiais:** Presidência da República / Departamento Nacional de Registro Empresarial e Integração (DREI).
 > **Legislação Base:** Código Civil (Lei nº 10.406/2002, arts. 966 a 1.141), Lei nº 13.874/2019 (Liberdade Econômica - SLU), Código Tributário Nacional (Lei nº 5.172/1966) e Lei nº 8.137/1990.
@@ -1322,5 +1367,39 @@ Fonte: [Agência Câmara, 06/01/2026](https://www.camara.leg.br/noticias/1237089
 1. Citar o número do tema e o link oficial.
 2. Dizer que a leitura foi da notícia oficial e que a redação do acórdão deve ser conferida.
 3. Para outras súmulas ou temas não listados aqui, responder "preciso confirmar" e indicar a busca no portal do STF, do STJ ou do TST.`
+  },
+  {
+    id: 'multas-juros-tributos-federais',
+    category: 'fiscal',
+    categoryLabel: 'Fiscal / Tributário',
+    filePath: 'fiscal/multas-juros-tributos-federais.md',
+    title: 'Multas e Juros sobre Tributos Federais (mora, Selic e multa de ofício)',
+    summary: 'Multa de mora de 0,33% ao dia limitada a 20%, juros Selic, multa de ofício de 75% e multa qualificada de 100% (150% só na reincidência) após a Lei 14.689/2023, com fontes oficiais e pontos a confirmar.',
+    tags: ['Multa de mora', 'Selic', 'Multa de ofício', 'Lei 9.430', 'Lei 14.689'],
+    lastUpdated: '2026-10-21',
+    officialLink: 'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14689.htm',
+    officialLinkLabel: 'Lei 14.689/2023 - Planalto',
+    content: `# Multas e Juros sobre Tributos Federais em Atraso ou Lançados de Ofício
+
+> **Fontes oficiais (conferidas em 21/10/2026):**
+> - [Receita Federal, ECF Perguntas e Respostas PJ 2021, capítulo XVIII Acréscimos Legais (arquivo atualizado até 31/12/2020)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/declaracoes-e-demonstrativos/ecf/perguntas-e-respostas-pessoa-juridica-2021-arquivos/capitulo-xviii-acrescimos-legais-2021.pdf)
+> - [Lei 14.689/2023, art. 8º, que alterou o art. 44 da Lei 9.430/1996 (Planalto)](https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14689.htm)
+> - [Lei 9.430/1996 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/l9430.htm) (a página cortou antes dos arts. 44 e 61, por isso não foram lidos diretamente)
+> **Não conferido nesta revisão:** o texto atual dos arts. 44 (incisos e §§ 1º-B e seguintes) e 61 da Lei 9.430 no Planalto; as reduções de multa vigentes hoje; regras do Simples Nacional, de tributos municipais e estaduais e de contribuições previdenciárias. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+
+## 1. Multa de mora (pagamento espontâneo em atraso)
+- **0,33% por dia de atraso, limitada a 20%**, contada do dia seguinte ao vencimento até o dia do pagamento (Lei 9.430/1996, arts. 47 e 61; fonte: Receita Federal).
+- Não incide quando o tributo é lançado de ofício (a multa de ofício a substitui). Pagamento até o 20º dia após receber o termo de início de fiscalização ainda é espontâneo, segundo a Receita.
+
+## 2. Juros de mora pela Selic
+- Sobre o valor do débito, **sem a multa de mora**: Selic acumulada de cada mês, desde o 1º dia do mês seguinte ao vencimento até o mês anterior ao pagamento, **mais 1% no mês do pagamento** (Lei 9.430/1996, art. 61, § 3º, e art. 5º do DL 1.736/1979, segundo a Receita).
+- Os juros continuam correndo mesmo com a cobrança suspensa; depósito integral afasta os juros.
+
+## 3. Multa de ofício (lançamento pela fiscalização)
+- **75%** sobre o tributo não pago, não declarado ou declarado com inexatidão (art. 44, I, da Lei 9.430; fonte da Receita, arquivo de 2021).
+- **Multa qualificada (sonegação, fraude ou conluio, arts. 71 a 73 da Lei 4.502/1964): 100%** após a **Lei 14.689/2023**; **150% apenas em caso de reincidência**, isto é, nova infração no prazo de 2 anos. A qualificação **não se aplica** se a conduta dolosa não for individualizada e comprovada ou se houver sentença penal de absolvição com apreciação de mérito (texto da Lei 14.689 lido no Planalto).
+- **ATENÇÃO:** a documentação da Receita lida (arquivo de 2021) ainda fala em 150%. Prevalece a lei mais nova (Lei 14.689/2023), mas **preciso confirmar** a aplicação a fatos geradores anteriores à vigência da lei.
+- **Reduções por pagamento ou parcelamento após a notificação** (50%, 40%, 30% e 20% da multa, conforme prazo e fase, segundo a Receita em 2021): **preciso confirmar** no art. 6º da Lei 8.218/1991 vigente.
+- **Majoração de 50%** por não atender intimação ou não entregar arquivos digitais (art. 44, § 2º, segundo a Receita em 2021): **preciso confirmar** a redação atual.`
   }
 ];
