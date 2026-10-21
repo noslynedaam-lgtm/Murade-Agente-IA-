@@ -1,8 +1,16 @@
 # ICMS - Regras Fundamentais, DIFAL e Substituição Tributária
 
-> **Status de conferência (21/10/2026):** conferido o que está na seção 0 abaixo (LC 87/1996 no Planalto e alíquotas interestaduais no portal DIFAL das SEFAZ). **Não foram reconferidos:** o restante deste documento (EC 87/2015, LC 190/2022, fórmulas de DIFAL, MVA e base dupla) nem a alíquota interna de Goiás. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
+> **Status de conferência (21/10/2026):** conferido o que está na seção 0 abaixo (LC 87/1996 no Planalto e alíquotas interestaduais no portal DIFAL das SEFAZ). **Também conferida em 21/10/2026:** a LC 190/2022 (seção 0-A). **Não foram reconferidos:** o restante deste documento (EC 87/2015, fórmulas de DIFAL, MVA e base dupla) nem a alíquota interna de Goiás. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
 
 > **Legislação Base:** Lei Complementar nº 87/1996 (Lei Kandir), Emenda Constitucional nº 87/2015, Lei Complementar nº 190/2022 e Convênios ICMS / CONFAZ.
+
+## 0-A. DIFAL: LC 190/2022 (conferida em 21/10/2026 na [publicação da Câmara dos Deputados](https://www2.camara.leg.br/legin/fed/leicom/2022/leicomplementar-190-4-janeiro-2022-792209-publicacaooriginal-164316-pl.html))
+- **Quem recolhe a diferença (art. 4º, § 2º da LC 87, incluído pela LC 190):** pela diferença entre a alíquota interna do Estado de destino e a interestadual, é contribuinte o **destinatário**, se for contribuinte do imposto, e o **remetente ou prestador**, se o destinatário **não** for contribuinte.
+- **Art. 12, inciso XVI:** novo fato gerador na saída de estabelecimento de contribuinte de bens destinados a consumidor final não contribuinte em outro Estado. Inciso XV: entrada, no Estado, de bens adquiridos por contribuinte para uso, consumo ou ativo imobilizado. Inciso XIV: início de transporte interestadual não vinculado a operação subsequente, com tomador não contribuinte no destino.
+- **Base de cálculo (art. 13, §§ 1º e 3º, e incisos IX e X):** o valor da operação (ou preço do serviço) é a base para o imposto de cada Estado, e o imposto do destino é a **diferença entre a alíquota interna e a interestadual**. Os §§ 6º e 7º definem quais alíquotas entram no cálculo da base; **preciso confirmar** a fórmula exata antes de calcular (a leitura foi um resumo do texto).
+- **Crédito (art. 20-A):** nas hipóteses XIV e XVI, o crédito de operações anteriores só pode ser deduzido do débito devido ao Estado de **origem**.
+- **Portal (art. 24-A):** os Estados e o DF devem manter portal com legislação, alíquotas, benefícios e obrigações acessórias, com apuração centralizada e emissão de guias; alguns dispositivos só valem a partir do primeiro dia útil do terceiro mês após a disponibilização do portal (§ 4º).
+- **Vigência (art. 3º):** vigora desde a publicação (04/01/2022), mas a produção de efeitos respeita a noventena (art. 150, III, "c" da CF). A data prática de cobrança do DIFAL: **preciso confirmar** (a leitura não trouxe a data final).
 
 ## 0. Conferido em fonte oficial (21/10/2026)
 **LC 87/1996 (Lei Kandir), [texto no Planalto](https://planalto.gov.br/ccivil_03/leis/lcp/lcp87.htm?origin=instituicao)** (a página foi lida até o art. 33):
