@@ -3,7 +3,8 @@
 > **Fontes oficiais (conferidas em 21/10/2026):**
 > - [Lei Complementar 236/2026 (Planalto)](https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp236.htm) e [Agência Câmara sobre a lei](https://www.camara.leg.br/noticias/1303227-lei-limita-multas-e-amplia-acordos-tributarios)
 > - [Receita Federal, 11/08/2026: CGSN atualiza regras do Simples Nacional para a Reforma Tributária do Consumo](https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/agosto/cgsn-atualiza-regras-do-simples-nacional-para-adequacao-a-reforma-tributaria-do-consumo)
-> **Não conferido nesta revisão:** o texto das Resoluções CGSN 190 e 191/2026 (li só a notícia da Receita), a data de vigência da 191, o texto completo da LC 236/2026 (li o resumo da página do Planalto) e os vetos. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
+> - [Receita Federal, Orientações da Reforma Tributária do Consumo: obrigações em 2026 e 2027 (Ato Conjunto RFB/CGIBS nº 4, de 30/07/2026)](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/reforma-tributaria-do-consumo/orientacoes-da-reforma-tributaria)
+> **Não conferido nesta revisão:** o texto do Ato Conjunto nº 4/2026 (li o cronograma da página), quem deve destacar CBS e IBS e as penalidades (a página não trata), o texto das Resoluções CGSN 190 e 191/2026 (li só a notícia da Receita), a data de vigência da 191, o texto completo da LC 236/2026 (li o resumo da página do Planalto) e os vetos. **Diante de dúvida, o agente deve dizer "preciso confirmar".**
 
 ## 1. LC 236/2026: mudanças no Código Tributário Nacional (sancionada e publicada em 04/09/2026)
 - **Ementa:** altera o CTN para tratar de normas gerais sobre solução de controvérsias, consensualidade e processo administrativo tributário e aduaneiro, e revoga um dispositivo da Lei 9.430/1996. Vigência: **na data da publicação** (art. 3º). Estados, municípios e DF têm dois anos para adaptar suas leis (Agência Câmara).
@@ -29,3 +30,13 @@
 - **Reconhecimento da receita** passa a ser ligado à emissão do documento fiscal.
 - **DEFIS:** segundo a notícia, a Defis é **substituída por informações enviadas no PGDAS-D entre janeiro e março de cada ano**. O documento "Simples Nacional" desta base ainda cita a Defis até 31 de março: **preciso confirmar** a partir de quando a mudança vale (a notícia fala em efeitos, em regra, a partir de 2027).
 - **Atenção a prazos:** a janela de 1 a 30 de setembro de 2026 já passou; o cancelamento da opção vai até **30/11/2026**.
+
+## 3. Cronograma dos documentos fiscais eletrônicos da Reforma (Ato Conjunto RFB/CGIBS nº 4, de 30/07/2026, divulgado em 31/07/2026)
+Datas de **início da obrigatoriedade** (as datas são "previsões para planejamento e podem receber ajustes", segundo a própria página):
+- **03/08/2026:** BP-e (passageiros, exceto transporte aéreo, urbano, semiurbano e metropolitano), CT-e, CT-e OS, DC-e, GTV-e, MDF-e, NF3e, **NF-e**, **NFC-e** e NFS-e Via (pedágio).
+- **01/10/2026:** **NFS-e** (exceto serviços específicos), NFCom, DIR e DeRE (1ª fase).
+- **15/11/2026:** DeRE (2ª fase).
+- **01/12/2026:** BP-e (transporte semiurbano, metropolitano ou aéreo), NF-e ABI, NFAg, NFGas, NFS-e Plataformas, NF-e para não contribuintes do ICMS, NFS-e para serviços específicos, para bens imateriais, Condomínios e Locações.
+- **01/01/2027:** documentos fiscais do **Simples Nacional** (NF-e, NFC-e, CT-e, NFS-e e outros), Duimp, NF-e de Importação, DeRE (3ª fase) e NF-e de Combustíveis (tributação monofásica).
+- O ato prevê um **programa de orientação** e prazo adicional de regularização para contribuintes que demonstrem cooperação; a página afirma que **não é uma prorrogação geral**.
+- **Preciso confirmar:** quem deve destacar CBS e IBS nas notas, as penalidades e a aplicação ao seu cliente, no Ato Conjunto e nas notas técnicas.
