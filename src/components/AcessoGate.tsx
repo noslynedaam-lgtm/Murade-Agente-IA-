@@ -18,6 +18,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   const [cnpjAtivo, setCnpjAtivo] = useState<string | null>(null);
   const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
   const convite = hash.get('convite') || '';
+  const redefinirSenha = hash.get('redefinir') === '1';
   const [login, setLogin] = useState(hash.get('login') || '');
   const [senha, setSenha] = useState('');
   const [confirmacao, setConfirmacao] = useState('');
@@ -96,7 +97,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
         <form onSubmit={enviar} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 shadow-xl p-7 space-y-4">
           <h1 className="text-xl font-black text-slate-900 text-center">Murade Agente IA</h1>
           <p className="text-sm text-slate-600 text-center">
-            {convite ? 'Você foi convidado. Crie sua senha para entrar.' : primeiroAcesso ? 'Primeiro acesso: crie o usuário do dono do sistema.' : 'Entre com seu usuário e senha.'}
+            {redefinirSenha ? 'Defina uma nova senha para sua conta.' : convite ? 'Você foi convidado. Crie sua senha para entrar.' : primeiroAcesso ? 'Primeiro acesso: crie o usuário do dono do sistema.' : 'Entre com seu usuário e senha.'}
           </p>
           {erro && <div role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-sm text-rose-800">{erro}</div>}
           <label className="block text-sm font-semibold text-slate-700">Usuário
@@ -107,7 +108,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
               <input type="password" value={chave} onChange={(e) => setChave(e.target.value)} required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" />
             </label>
           )}
-          <label className="block text-sm font-semibold text-slate-700">{convite || primeiroAcesso ? 'Nova senha' : 'Senha'}
+          <label className="block text-sm font-semibold text-slate-700">{redefinirSenha ? 'Nova senha' : convite || primeiroAcesso ? 'Nova senha' : 'Senha'}
             <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} autoComplete={convite ? 'new-password' : 'current-password'} required minLength={convite ? 12 : undefined} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" placeholder={convite ? 'Pelo menos 12 caracteres' : ''} />
           </label>
           {(convite || primeiroAcesso) && (

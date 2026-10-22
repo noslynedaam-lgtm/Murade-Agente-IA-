@@ -151,7 +151,7 @@ export function registrarRotasDeAcesso(app: Express) {
         const rc = await resgatarConvite(login, senha.slice(0, 256), convite);
         if (!rc.ok) return res.status(400).json({ motivo: rc.motivo });
         const l = await entrarLocal(login, senha.slice(0, 256), req.ip || 'unknown');
-        if (!l || !l.ok) return res.status(401).json({ motivo: 'Conta criada, mas não foi possível entrar. Tente entrar com a nova senha.' });
+        if (!l || !l.ok) return res.status(401).json({ motivo: 'Senha atualizada, mas o acesso continua bloqueado. Peça ao responsável do escritório para desbloquear a conta.' });
         cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + DURACAO_S }), DURACAO_S);
         return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
       } catch (e) { console.error('Falha ao ativar convite do Agente:', e); return res.status(503).json({ motivo: 'Não foi possível ativar agora.' }); }

@@ -1,32 +1,43 @@
 import React, { useEffect, useState } from 'react';
 
-// Equipe do escritório (responsável) e escritórios clientes (dono do sistema). Mesmo modelo do Fiscal/DP.
+// Equipe do escritório (responsável) e escritórios clientes (dono do sistema).
 async function chamar(url: string, metodo = 'GET', corpo?: object) {
   const r = await fetch(url, { method: metodo, credentials: 'include', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: corpo ? JSON.stringify(corpo) : undefined });
   const d = await r.json().catch(() => ({}));
   if (!r.ok || d.sucesso !== true) throw new Error(d.motivo || 'Não foi possível concluir.');
   return d;
 }
-const Link: React.FC<{ url: string }> = ({ url }) => (
+const Link: React.FC<{ url: string; titulo?: string }> = ({ url, titulo = 'Link (vale 24 horas):' }) => (
   <div className="mt-2 break-all rounded-lg border border-green-300 bg-green-50 p-3 text-sm text-slate-900">
-    <strong>Link (vale 24 horas):</strong> <a className="text-blue-800 underline" href={url}>{url}</a>
+    <strong>{titulo}</strong> <a className="text-blue-800 underline" href={url}>{url}</a>
     <button type="button" className="ml-2 rounded bg-slate-800 px-2 py-0.5 text-white" onClick={() => void navigator.clipboard?.writeText(url)}>Copiar</button>
   </div>
 );
 
+type Membro = { login: string; disabled: boolean; created_at?: string };
+type ConvitePendente = { login: string; expires_at: string };
+
 export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolean; empresas?: Array<{ cnpj: string; nome: string }>; mostrarEmpresas?: boolean; onFechar: () => void }> = ({ ehEscritorio, donoSistema, empresas = [], mostrarEmpresas = false, onFechar }) => {
   const [cnpjConvite, setCnpjConvite] = useState(''); const [loginEmp, setLoginEmp] = useState(''); const [papel, setPapel] = useState('operator'); const [linkEmp, setLinkEmp] = useState('');
-  const [equipe, setEquipe] = useState<string[]>([]); const [limite, setLimite] = useState<number | null>(null);
+  const [equipe, setEquipe] = useState<Membro[]>([]); const [pendentes, setPendentes] = useState<ConvitePendente[]>([]); const [limite, setLimite] = useState<number | null>(null);
   const [escritorios, setEscritorios] = useState<any[]>([]);
   const [loginEq, setLoginEq] = useState(''); const [loginEsc, setLoginEsc] = useState('');
   const [linkEq, setLinkEq] = useState(''); const [linkEsc, setLinkEsc] = useState(''); const [msg, setMsg] = useState('');
+  const [linksSenha, setLinksSenha] = useState<Record<string, string>>({});
   const erro = (c: unknown) => setMsg(c instanceof Error ? c.message : 'Falha.');
   const carregar = () => {
-    if (ehEscritorio) chamar('/api/auth/team').then((d) => { setEquipe(d.equipe || []); setLimite(d.limite ?? null); }).catch(erro);
+    if (ehEscritorio) chamar('/api/auth/team').then((d) => { setEquipe(d.equipe || []); setPendentes(d.convitesPendentes || []); setLimite(d.limite ?? null); }).catch(erro);
     if (donoSistema) chamar('/api/auth/tenants').then((d) => setEscritorios(d.escritorios || [])).catch(erro);
   };
   useEffect(carregar, []);
   const campo = 'min-w-0 flex-1 rounded-lg border border-slate-300 p-2 text-slate-900';
+  const gerarLinkSenha = async (login: string) => {
+    setMsg('');
+    try {
+      const d = await chamar(`/api/auth/team/${encodeURIComponent(login)}/reset-link`, 'POST');
+      setLinksSenha((atual) => ({ ...atual, [login]: d.link }));
+    } catch (c) { erro(c); }
+  };
   return (
     <div className="mx-auto my-4 max-w-3xl rounded-2xl border border-slate-200 bg-white p-5 text-slate-900 shadow-lg">
       <div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-black">Usuários e empresas</h2><button onClick={onFechar} className="rounded bg-slate-200 px-3 py-1 text-sm">Fechar</button></div>
@@ -47,13 +58,26 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
       {ehEscritorio && (
         <section className="mb-5 rounded-xl border border-slate-200 p-4">
           <h3 className="font-semibold">Equipe do escritório</h3>
-          <p className="mb-2 text-xs text-slate-600">Cada pessoa da equipe entra de qualquer computador com o próprio usuário e senha.{limite != null ? ` Limite do plano: ${limite} usuário(s), dono incluso.` : ''}</p>
+          <p className="mb-2 text-xs text-slate-600">Cada pessoa entra com sua própria conta. Você pode bloquear, remover ou gerar um link de redefinição de senha.{limite != null ? ` Limite: ${limite} usuário(s), dono incluso.` : ''}</p>
           <form className="flex gap-2" onSubmit={async (e) => { e.preventDefault(); setMsg(''); setLinkEq(''); try { const d = await chamar('/api/auth/team/invite', 'POST', { login: loginEq }); setLinkEq(d.conviteUrl); setLoginEq(''); carregar(); } catch (c) { erro(c); } }}>
             <input required value={loginEq} onChange={(e) => setLoginEq(e.target.value)} placeholder="Usuário (e-mail) da pessoa" className={campo} />
             <button className="rounded-lg bg-slate-800 px-3 text-white">Gerar convite</button>
           </form>
           {linkEq && <Link url={linkEq} />}
-          {equipe.map((u) => <div key={u} className="flex justify-between border-t py-2 text-sm"><span>{u}</span><button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Tirar ${u} da equipe? Ele perde o acesso.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u)}`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Tirar da equipe</button></div>)}
+          {equipe.map((u) => (
+            <div key={u.login} className="border-t py-2 text-sm">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span>{u.login}{u.disabled ? ' · BLOQUEADO' : ' · ATIVO'}</span>
+                <span className="flex flex-wrap gap-2">
+                  <button className="rounded border px-2 py-0.5" onClick={async () => { try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/block`, 'POST', { bloqueado: !u.disabled }); carregar(); } catch (c) { erro(c); } }}>{u.disabled ? 'Desbloquear' : 'Bloquear'}</button>
+                  <button className="rounded border px-2 py-0.5" onClick={() => void gerarLinkSenha(u.login)}>Gerar link para nova senha</button>
+                  <button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Remover ${u.login} da equipe? O acesso será encerrado e os dados serão preservados.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Remover</button>
+                </span>
+              </div>
+              {linksSenha[u.login] && <Link url={linksSenha[u.login]} titulo="Link seguro para redefinir a senha (vale 24 horas):" />}
+            </div>
+          ))}
+          {pendentes.length > 0 && <div className="mt-3 border-t pt-2 text-xs text-slate-600"><strong>Convites aguardando ativação:</strong> {pendentes.map((x) => x.login).join(', ')}</div>}
         </section>
       )}
       {donoSistema && (
