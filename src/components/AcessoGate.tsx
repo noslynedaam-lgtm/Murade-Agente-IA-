@@ -23,13 +23,13 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   const [confirmacao, setConfirmacao] = useState('');
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
-  const [flags, setFlags] = useState<{ ehEscritorio: boolean; donoSistema: boolean; contasProprias: boolean }>({ ehEscritorio: false, donoSistema: false, contasProprias: false });
+  const [flags, setFlags] = useState<{ ehEscritorio: boolean; donoSistema: boolean; contasProprias: boolean; podeGerenciar: boolean }>({ ehEscritorio: false, donoSistema: false, contasProprias: false, podeGerenciar: false });
   const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
   const [chave, setChave] = useState('');
   const [painel, setPainel] = useState(false);
 
-  const aplicar = (d: { usuario: string; empresas: Empresa[]; ehEscritorio?: boolean; donoSistema?: boolean; contasProprias?: boolean }) => {
-    setFlags({ ehEscritorio: d.ehEscritorio === true, donoSistema: d.donoSistema === true, contasProprias: d.contasProprias === true });
+  const aplicar = (d: { usuario: string; empresas: Empresa[]; ehEscritorio?: boolean; donoSistema?: boolean; contasProprias?: boolean; podeGerenciar?: boolean }) => {
+    setFlags({ ehEscritorio: d.ehEscritorio === true, donoSistema: d.donoSistema === true, contasProprias: d.contasProprias === true, podeGerenciar: d.podeGerenciar === true || d.ehEscritorio === true || d.donoSistema === true });
     setSessao({ usuario: d.usuario, empresas: d.empresas || [] });
     let salvo: string | null = null;
     try { salvo = localStorage.getItem(CHAVE_EMPRESA); } catch { /* sem storage */ }
@@ -130,12 +130,11 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
       <div className="sticky top-0 z-[100] flex min-h-10 flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-1.5 text-xs text-white">
         <span>Conta: <strong>{sessao.usuario}</strong>{flags.contasProprias ? '' : ` · ${sessao.empresas.length} empresa(s) autorizada(s)`}</span>
         <div className="flex gap-2">
-          {flags.contasProprias && (flags.ehEscritorio || flags.donoSistema) && <button type="button" onClick={() => setPainel((v) => !v)} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">{flags.donoSistema ? 'Escritórios e equipe' : 'Equipe'}</button>}
-          {!flags.contasProprias && <a href={urlDP} target="_blank" rel="noopener noreferrer" title="Usuários, convites e licenças são gerenciados no Murade DP" className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e licenças</a>}
+          {(flags.podeGerenciar || flags.ehEscritorio || flags.donoSistema) && <button type="button" onClick={() => setPainel((v) => !v)} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e empresas</button>}
           <button type="button" onClick={() => void sair()} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Sair</button>
         </div>
       </div>
-      {painel && <PainelContas ehEscritorio={flags.ehEscritorio} donoSistema={flags.donoSistema} onFechar={() => setPainel(false)} />}
+      {painel && <PainelContas ehEscritorio={flags.ehEscritorio} donoSistema={flags.donoSistema} empresas={sessao.empresas} mostrarEmpresas={!flags.contasProprias} onFechar={() => setPainel(false)} />}
       {children}
     </AcessoContext.Provider>
   );

@@ -9,7 +9,17 @@ const DURACAO_S = 12 * 3600;
 const COOKIE = 'agente_sessao';
 
 export type Empresa = { cnpj: string; nome: string };
-export type Sessao = { usuario: string; empresas: Empresa[]; exp: number; uid?: string };
+export type Sessao = { usuario: string; empresas: Empresa[]; exp: number; uid?: string; sid?: string; esc?: boolean; dono?: boolean; ger?: boolean };
+
+// Sessões abertas no Murade DP (na memória deste serviço): permitem gerar convites e gerenciar a equipe pelo DP.
+const sessoesDP = new Map<string, { cookie: string; exp: number }>();
+function guardarSessaoDP(cookieDP: string): string {
+  const agora = Date.now() / 1000;
+  for (const [k, v] of sessoesDP) if (v.exp < agora) sessoesDP.delete(k);
+  const sid = crypto.randomBytes(18).toString('base64url');
+  sessoesDP.set(sid, { cookie: cookieDP, exp: agora + DURACAO_S });
+  return sid;
+}
 
 const dpBase = () => (process.env.MURADE_DP_URL || 'https://murade-dp.onrender.com').replace(/\/$/, '');
 
@@ -70,10 +80,16 @@ async function entrarPeloDP(login: string, senha: string): Promise<{ ok: true; s
           empresas = empresas.map((x) => ({ cnpj: x.cnpj, nome: nomes.get(String(x.cnpj).replace(/[^0-9A-Za-z]/g, '').toUpperCase()) || x.cnpj }));
         }
       } catch { /* mantém o CNPJ como nome */ }
-      // Encerra a sessão aberta no DP: o Agente usa só a sua própria.
-      fetch(`${dpBase()}/api/auth/logout`, { method: 'POST', headers: { cookie: cookieDP } }).catch(() => undefined);
     }
-    return { ok: true, sessao: { usuario: String(dados.usuario || login), empresas, exp: Math.floor(Date.now() / 1000) + DURACAO_S } };
+    let sid: string | undefined; let esc = false; let dono = false; let ger = false;
+    if (cookieDP) {
+      try {
+        const me = await fetch(`${dpBase()}/api/auth/me`, { headers: { cookie: cookieDP }, signal: AbortSignal.timeout(10000) });
+        if (me.ok) { const m: any = await me.json(); esc = m.ehEscritorio === true; dono = m.donoSistema === true; ger = m.podeGerenciarEmpresas === true; }
+      } catch { /* sem permissões de gestão */ }
+      sid = guardarSessaoDP(cookieDP);
+    }
+    return { ok: true, sessao: { usuario: String(dados.usuario || login), empresas, exp: Math.floor(Date.now() / 1000) + DURACAO_S, sid, esc, dono, ger } };
   } catch {
     return { ok: false, status: 503, motivo: 'Não foi possível falar com o Murade DP agora. Tente novamente.' };
   }
@@ -88,7 +104,7 @@ export function registrarRotasDeAcesso(app: Express) {
       if (!u) { cookie(res, '', 0); return res.json({ autenticado: false }); }
       return res.json({ autenticado: true, usuario: u.login, empresas: [], ehEscritorio: u.ehEscritorio, donoSistema: u.donoSistema, contasProprias: true });
     }
-    if (s) return res.json({ autenticado: true, usuario: s.usuario, empresas: s.empresas });
+    if (s) return res.json({ autenticado: true, usuario: s.usuario, empresas: s.empresas, ehEscritorio: Boolean(s.sid && sessoesDP.has(s.sid) && s.esc), donoSistema: Boolean(s.sid && sessoesDP.has(s.sid) && s.dono), podeGerenciar: Boolean(s.sid && sessoesDP.has(s.sid) && (s.ger || s.esc || s.dono)), viaDP: true });
     let primeiroAcesso = false;
     if (contasAtivas() && process.env.AGENTE_BOOTSTRAP_TOKEN) { try { primeiroAcesso = !(await haUsuarios()); } catch { /* sem banco */ } }
     res.json({ autenticado: false, primeiroAcesso });
@@ -120,7 +136,7 @@ export function registrarRotasDeAcesso(app: Express) {
     const r = await entrarPeloDP(login, senha.slice(0, 256));
     if (!r.ok) return res.status(r.status).json({ motivo: r.motivo });
     cookie(res, assinar(r.sessao), DURACAO_S);
-    return res.json({ autenticado: true, usuario: r.sessao.usuario, empresas: r.sessao.empresas });
+    return res.json({ autenticado: true, usuario: r.sessao.usuario, empresas: r.sessao.empresas, ehEscritorio: r.sessao.esc === true, donoSistema: r.sessao.dono === true, podeGerenciar: r.sessao.ger === true || r.sessao.esc === true || r.sessao.dono === true, viaDP: true });
   });
 
   // Link do WhatsApp: ativa o convite (cria a conta com a senha escolhida) e já entra.
@@ -148,9 +164,10 @@ export function registrarRotasDeAcesso(app: Express) {
     const e = await entrarPeloDP(login, senha.slice(0, 256));
     if (!e.ok) return res.status(e.status).json({ motivo: e.motivo });
     cookie(res, assinar(e.sessao), DURACAO_S);
-    return res.json({ autenticado: true, usuario: e.sessao.usuario, empresas: e.sessao.empresas });
+    return res.json({ autenticado: true, usuario: e.sessao.usuario, empresas: e.sessao.empresas, ehEscritorio: e.sessao.esc === true, donoSistema: e.sessao.dono === true, podeGerenciar: e.sessao.ger === true || e.sessao.esc === true || e.sessao.dono === true, viaDP: true });
   });
 
+  registrarGestaoPeloDP(app);
   registrarRotasDeContas(app, contaDaRequisicao);
   app.post('/api/auth/logout', (_req, res) => { cookie(res, '', 0); res.json({ sucesso: true }); });
 
@@ -168,4 +185,51 @@ export function registrarRotasDeAcesso(app: Express) {
       return res.json({ licenca: (await r.json() as any).licenca });
     } catch { return res.json({ indisponivel: true, motivo: 'Não foi possível falar com o DP agora.' }); }
   });
+}
+
+
+// Equipe e convites pelo Murade DP (usado enquanto o Agente não tem banco próprio): o Agente repassa o pedido
+// com a sessão do próprio usuário no DP, que confere as permissões, e entrega o link já com o endereço do Agente.
+function enderecoDoAgente(req: Request): string {
+  const env = process.env.PUBLIC_APP_URL?.trim() || process.env.RENDER_EXTERNAL_URL?.trim();
+  if (env) return env.replace(/\/$/, '');
+  const proto = String(req.header('x-forwarded-proto') || req.protocol).split(',')[0];
+  return `${proto}://${req.get('host')}`;
+}
+
+function registrarGestaoPeloDP(app: Express) {
+  const rotas: Array<[string, string, (req: Request) => string, (req: Request) => any]> = [
+    ['post', '/api/auth/invites', () => '/api/auth/invites', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase(), cnpj: String(r.body?.cnpj || ''), papel: r.body?.papel === 'viewer' ? 'viewer' : 'operator' })],
+    ['get', '/api/auth/team', () => '/api/auth/team', () => undefined],
+    ['post', '/api/auth/team/invite', () => '/api/auth/team/invite', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['delete', '/api/auth/team/:login', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}`, () => undefined],
+    ['get', '/api/auth/tenants', () => '/api/auth/tenants', () => undefined],
+    ['post', '/api/auth/tenants/invite', () => '/api/auth/tenants/invite', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['post', '/api/auth/tenants/:login/block', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/tenants/:login/limit', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/limite`, (r) => { const b = r.body?.limite; return { limite: b === null || b === '' || b === undefined ? null : Number(b) }; }],
+  ];
+  for (const [metodo, caminho, destino, corpo] of rotas) {
+    (app as any)[metodo](caminho, async (req: Request, res: Response, next: NextFunction) => {
+      if (contasAtivas()) { next(); return; }
+      res.setHeader('Cache-Control', 'no-store');
+      const s = ler(req);
+      if (!s) { res.status(401).json({ sucesso: false, motivo: 'Entre com seu usuário para continuar.' }); return; }
+      const dp = s.sid ? sessoesDP.get(s.sid) : undefined;
+      if (!dp || dp.exp < Date.now() / 1000) { res.status(401).json({ sucesso: false, motivo: 'Sua sessão com o DP expirou. Saia e entre de novo no Agente IA.' }); return; }
+      try {
+        const b = corpo(req);
+        const r = await fetch(`${dpBase()}${destino(req)}`, {
+          method: metodo.toUpperCase(),
+          headers: { cookie: dp.cookie, Origin: dpBase(), ...(b !== undefined ? { 'Content-Type': 'application/json' } : {}) },
+          body: b !== undefined ? JSON.stringify(b) : undefined,
+          signal: AbortSignal.timeout(15000),
+        });
+        const d: any = await r.json().catch(() => ({}));
+        if (d && typeof d.conviteUrl === 'string') {
+          try { const u = new URL(d.conviteUrl); d.conviteUrl = `${enderecoDoAgente(req)}/${u.hash}`; } catch { /* mantém */ }
+        }
+        res.status(r.status).json(d);
+      } catch { res.status(503).json({ sucesso: false, motivo: 'Não foi possível falar com o Murade DP agora.' }); }
+    });
+  }
 }
