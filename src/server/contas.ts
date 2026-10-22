@@ -20,7 +20,8 @@ export function prepararContas(): Promise<void> {
       max_usuarios integer, created_at timestamptz NOT NULL DEFAULT now())`);
     await db().query(`CREATE TABLE IF NOT EXISTS agente_invites(
       token_hash text PRIMARY KEY, login text NOT NULL, created_by uuid NOT NULL, office_owner uuid, novo_escritorio boolean NOT NULL DEFAULT false,
-      expires_at timestamptz NOT NULL, created_at timestamptz NOT NULL DEFAULT now())`);
+      expires_at timestamptz NOT NULL, redefinir_senha boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now())`);
+    await db().query('ALTER TABLE agente_invites ADD COLUMN IF NOT EXISTS redefinir_senha boolean NOT NULL DEFAULT false');
   })().catch((e) => { pronto = null; throw e; });
   return pronto;
 }
@@ -70,7 +71,7 @@ export async function entrarLocal(login: string, senha: string, ip: string): Pro
 export async function haUsuarios(): Promise<boolean> { await prepararContas(); return (await db().query('SELECT 1 FROM agente_users LIMIT 1')).rowCount! > 0; }
 
 const baseUrl = (req: Request) => process.env.PUBLIC_APP_URL?.trim() || process.env.RENDER_EXTERNAL_URL?.trim() || `${req.protocol}://${req.get('host')}`;
-function linkConvite(req: Request, token: string, login: string) { const u = new URL('/', baseUrl(req)); u.hash = new URLSearchParams({ convite: token, login }).toString(); return u.toString(); }
+function linkConvite(req: Request, token: string, login: string, redefinirSenha = false) { const params = new URLSearchParams({ convite: token, login }); if (redefinirSenha) params.set('redefinir', '1'); const u = new URL('/', baseUrl(req)); u.hash = params.toString(); return u.toString(); }
 const hashToken = (t: string) => crypto.createHash('sha256').update(t).digest('hex');
 
 async function limiteAtingido(donoId: string): Promise<string | null> {
@@ -106,11 +107,17 @@ export async function resgatarConvite(login: string, senha: string, convite: str
   const c = await db().connect();
   try {
     await c.query('BEGIN');
-    const inv = await c.query('DELETE FROM agente_invites WHERE token_hash=$1 AND expires_at>now() RETURNING login,office_owner,novo_escritorio', [hashToken(convite)]);
+    const inv = await c.query('DELETE FROM agente_invites WHERE token_hash=$1 AND expires_at>now() RETURNING login,office_owner,novo_escritorio,redefinir_senha', [hashToken(convite)]);
     const i = inv.rows[0];
-    if (!i || i.login !== login) { await c.query('ROLLBACK'); return { ok: false, motivo: 'Convite inválido, usado ou expirado. Peça outro.' }; }
+    if (!i || i.login !== login) { await c.query('ROLLBACK'); return { ok: false, motivo: 'Link inválido, usado ou expirado. Peça um novo.' }; }
+    const salt = crypto.randomBytes(16).toString('hex'); const hash = (await kdf(senha, salt)).toString('hex');
+    if (i.redefinir_senha === true) {
+      const alterado = await c.query('UPDATE agente_users SET password_salt=$1,password_hash=$2 WHERE login=$3 AND office_owner IS NOT DISTINCT FROM $4 RETURNING id', [salt, hash, login, i.office_owner]);
+      if (!alterado.rowCount) { await c.query('ROLLBACK'); return { ok: false, motivo: 'Esta conta não pertence mais à equipe. Peça um novo convite.' }; }
+      await c.query('COMMIT'); return { ok: true };
+    }
     if ((await c.query('SELECT 1 FROM agente_users WHERE login=$1', [login])).rowCount) { await c.query('ROLLBACK'); return { ok: false, motivo: 'Este usuário já existe.' }; }
-    const id = crypto.randomUUID(); const salt = crypto.randomBytes(16).toString('hex'); const hash = (await kdf(senha, salt)).toString('hex');
+    const id = crypto.randomUUID();
     const tenant = i.novo_escritorio ? id : i.office_owner;
     await c.query('INSERT INTO agente_users(id,login,password_salt,password_hash,office_admin,office_owner,tenant_id) VALUES($1,$2,$3,$4,$5,$6,$7)', [id, login, salt, hash, i.novo_escritorio === true, i.novo_escritorio ? null : i.office_owner, tenant]);
     await c.query('COMMIT'); return { ok: true };
@@ -131,9 +138,10 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
   const loginReq = (req: Request) => String(req.body?.login || '').trim().toLowerCase();
 
   app.get('/api/auth/team', com('escritorio', async (_req, res, u) => {
-    const r = await db().query('SELECT login FROM agente_users WHERE office_owner=$1 AND disabled=false ORDER BY login', [u.id]);
+    const r = await db().query('SELECT login,disabled,created_at FROM agente_users WHERE office_owner=$1 ORDER BY login', [u.id]);
+    const pendentes = await db().query("SELECT login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY login", [u.id]);
     const l = await db().query('SELECT max_usuarios FROM agente_users WHERE id=$1', [u.id]);
-    res.json({ sucesso: true, equipe: r.rows.map((x) => x.login), limite: l.rows[0]?.max_usuarios ?? null });
+    res.json({ sucesso: true, equipe: r.rows, convitesPendentes: pendentes.rows, limite: l.rows[0]?.max_usuarios ?? null });
   }));
   app.post('/api/auth/team/invite', com('escritorio', async (req, res, u) => {
     const login = loginReq(req);
@@ -144,11 +152,31 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,expires_at) VALUES($1,$2,$3,$3,now()+interval '24 hours')", [hashToken(token), login, u.id]);
     res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 24 });
   }));
-  app.delete('/api/auth/team/:login', com('escritorio', async (req, res, u) => {
-    const r = await db().query('UPDATE agente_users SET office_owner=NULL, tenant_id=id, disabled=true WHERE login=$1 AND office_owner=$2 RETURNING login', [String(req.params.login).toLowerCase(), u.id]);
+  app.post('/api/auth/team/:login/block', com('escritorio', async (req, res, u) => {
+    const bloqueado = req.body?.bloqueado === true;
+    const r = await db().query('UPDATE agente_users SET disabled=$1 WHERE login=$2 AND office_owner=$3 RETURNING login', [bloqueado, String(req.params.login).toLowerCase(), u.id]);
     limparCache();
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
-    res.json({ sucesso: true, login: r.rows[0].login });
+    res.json({ sucesso: true, login: r.rows[0].login, bloqueado });
+  }));
+  app.post('/api/auth/team/:login/reset-link', com('escritorio', async (req, res, u) => {
+    const login = String(req.params.login).toLowerCase();
+    const membro = await db().query('SELECT 1 FROM agente_users WHERE login=$1 AND office_owner=$2', [login, u.id]);
+    if (!membro.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
+    const token = crypto.randomBytes(32).toString('base64url');
+    await db().query('DELETE FROM agente_invites WHERE login=$1 AND office_owner=$2 AND redefinir_senha=true', [login, u.id]);
+    await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,redefinir_senha,expires_at) VALUES($1,$2,$3,$3,true,now()+interval '24 hours')", [hashToken(token), login, u.id]);
+    res.status(201).json({ sucesso: true, link: linkConvite(req, token, login, true), expiraEmHoras: 24 });
+  }));
+  app.delete('/api/auth/team/:login', com('escritorio', async (req, res, u) => {
+    const c = await db().connect();
+    try {
+      await c.query('BEGIN');
+      const r = await c.query('UPDATE agente_users SET office_owner=NULL, tenant_id=id, disabled=true WHERE login=$1 AND office_owner=$2 RETURNING login', [String(req.params.login).toLowerCase(), u.id]);
+      if (!r.rowCount) { await c.query('ROLLBACK'); res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
+      await c.query('DELETE FROM agente_invites WHERE login=$1 AND office_owner=$2', [String(req.params.login).toLowerCase(), u.id]);
+      await c.query('COMMIT'); limparCache(); res.json({ sucesso: true, login: r.rows[0].login });
+    } catch (e) { await c.query('ROLLBACK').catch(() => undefined); throw e; } finally { c.release(); }
   }));
   app.get('/api/auth/tenants', com('dono', async (_req, res, u) => {
     const r = await db().query(`SELECT u.login,u.disabled,u.created_at,u.max_usuarios,(SELECT count(*)::int FROM agente_users t WHERE t.tenant_id=u.id AND t.id<>u.id) AS usuarios
