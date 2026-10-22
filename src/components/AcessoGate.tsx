@@ -124,7 +124,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   }
 
   const empresaAtiva = sessao.empresas.find((e) => e.cnpj === cnpjAtivo) || null;
-  const urlDP = 'https://murade-dp.onrender.com';
+  const urlDP = 'https://murade-dp.onrender.com/#acessos';
   return (
     <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>
       <div className="sticky top-0 z-[100] flex min-h-10 flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-1.5 text-xs text-white">
