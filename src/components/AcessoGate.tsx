@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { PainelContas } from './PainelContas';
 
 type Empresa = { cnpj: string; nome: string };
 type Ctx = { usuario: string; empresas: Empresa[]; empresaAtiva: Empresa | null; escolherEmpresa: (cnpj: string) => void; sair: () => Promise<void> };
@@ -22,8 +23,13 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   const [confirmacao, setConfirmacao] = useState('');
   const [erro, setErro] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [flags, setFlags] = useState<{ ehEscritorio: boolean; donoSistema: boolean; contasProprias: boolean }>({ ehEscritorio: false, donoSistema: false, contasProprias: false });
+  const [primeiroAcesso, setPrimeiroAcesso] = useState(false);
+  const [chave, setChave] = useState('');
+  const [painel, setPainel] = useState(false);
 
-  const aplicar = (d: { usuario: string; empresas: Empresa[] }) => {
+  const aplicar = (d: { usuario: string; empresas: Empresa[]; ehEscritorio?: boolean; donoSistema?: boolean; contasProprias?: boolean }) => {
+    setFlags({ ehEscritorio: d.ehEscritorio === true, donoSistema: d.donoSistema === true, contasProprias: d.contasProprias === true });
     setSessao({ usuario: d.usuario, empresas: d.empresas || [] });
     let salvo: string | null = null;
     try { salvo = localStorage.getItem(CHAVE_EMPRESA); } catch { /* sem storage */ }
@@ -34,7 +40,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     fetch('/api/auth/session', { credentials: 'include', cache: 'no-store' })
       .then((r) => r.json())
-      .then((d) => { if (d.autenticado) aplicar(d); })
+      .then((d) => { if (d.autenticado) aplicar(d); else setPrimeiroAcesso(d.primeiroAcesso === true); })
       .catch(() => undefined)
       .finally(() => setCarregando(false));
   }, []);
@@ -46,8 +52,22 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
       if (senha.length < 12) { setErro('A senha precisa ter pelo menos 12 caracteres.'); return; }
       if (senha !== confirmacao) { setErro('As senhas não coincidem.'); return; }
     }
+    if (primeiroAcesso && !convite) {
+      if (senha.length < 12) { setErro('A senha precisa ter pelo menos 12 caracteres.'); return; }
+      if (senha !== confirmacao) { setErro('As senhas não coincidem.'); return; }
+    }
     setEnviando(true);
     try {
+      if (primeiroAcesso && !convite) {
+        const c = await fetch('/api/auth/setup', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: chave, login, senha }) });
+        const dc = await c.json().catch(() => ({}));
+        if (!c.ok) { setErro(dc.motivo || 'Não foi possível configurar.'); return; }
+        setPrimeiroAcesso(false); setChave(''); setConfirmacao('');
+        const r0 = await fetch('/api/auth/login', { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ login, senha }) });
+        const d0 = await r0.json().catch(() => ({}));
+        if (r0.ok) aplicar(d0); else setErro('Conta criada. Entre com a nova senha.');
+        return;
+      }
       const r = await fetch(convite ? '/api/auth/redeem' : '/api/auth/login', {
         method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login, senha, convite }),
@@ -76,22 +96,27 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
         <form onSubmit={enviar} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 shadow-xl p-7 space-y-4">
           <h1 className="text-xl font-black text-slate-900 text-center">Murade Agente IA</h1>
           <p className="text-sm text-slate-600 text-center">
-            {convite ? 'Você foi convidado. Crie sua senha para entrar.' : 'Entre com o mesmo usuário e senha do Murade.'}
+            {convite ? 'Você foi convidado. Crie sua senha para entrar.' : primeiroAcesso ? 'Primeiro acesso: crie o usuário do dono do sistema.' : 'Entre com seu usuário e senha.'}
           </p>
           {erro && <div role="alert" className="rounded-lg border border-rose-200 bg-rose-50 p-2.5 text-sm text-rose-800">{erro}</div>}
           <label className="block text-sm font-semibold text-slate-700">Usuário
             <input value={login} onChange={(e) => setLogin(e.target.value)} readOnly={Boolean(convite && hash.get('login'))} autoComplete="username" required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" />
           </label>
-          <label className="block text-sm font-semibold text-slate-700">{convite ? 'Nova senha' : 'Senha'}
+          {primeiroAcesso && !convite && (
+            <label className="block text-sm font-semibold text-slate-700">Chave de configuração
+              <input type="password" value={chave} onChange={(e) => setChave(e.target.value)} required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" />
+            </label>
+          )}
+          <label className="block text-sm font-semibold text-slate-700">{convite || primeiroAcesso ? 'Nova senha' : 'Senha'}
             <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} autoComplete={convite ? 'new-password' : 'current-password'} required minLength={convite ? 12 : undefined} className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" placeholder={convite ? 'Pelo menos 12 caracteres' : ''} />
           </label>
-          {convite && (
+          {(convite || primeiroAcesso) && (
             <label className="block text-sm font-semibold text-slate-700">Confirme a senha
               <input type="password" value={confirmacao} onChange={(e) => setConfirmacao(e.target.value)} autoComplete="new-password" required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" />
             </label>
           )}
           <button type="submit" disabled={enviando} className="w-full rounded-lg bg-[#0f2444] hover:bg-[#1b3d6f] text-white font-bold py-2.5 disabled:opacity-60">
-            {enviando ? 'Aguarde…' : convite ? 'Salvar senha e entrar' : 'Entrar'}
+            {enviando ? 'Aguarde…' : convite ? 'Salvar senha e entrar' : primeiroAcesso ? 'Criar e entrar' : 'Entrar'}
           </button>
         </form>
       </main>
@@ -103,12 +128,14 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   return (
     <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>
       <div className="sticky top-0 z-[100] flex min-h-10 flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-1.5 text-xs text-white">
-        <span>Conta: <strong>{sessao.usuario}</strong> · {sessao.empresas.length} empresa(s) autorizada(s)</span>
+        <span>Conta: <strong>{sessao.usuario}</strong>{flags.contasProprias ? '' : ` · ${sessao.empresas.length} empresa(s) autorizada(s)`}</span>
         <div className="flex gap-2">
-          <a href={urlDP} target="_blank" rel="noopener noreferrer" title="Usuários, convites e licenças são gerenciados no Murade DP" className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e licenças</a>
+          {flags.contasProprias && (flags.ehEscritorio || flags.donoSistema) && <button type="button" onClick={() => setPainel((v) => !v)} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">{flags.donoSistema ? 'Escritórios e equipe' : 'Equipe'}</button>}
+          {!flags.contasProprias && <a href={urlDP} target="_blank" rel="noopener noreferrer" title="Usuários, convites e licenças são gerenciados no Murade DP" className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e licenças</a>}
           <button type="button" onClick={() => void sair()} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Sair</button>
         </div>
       </div>
+      {painel && <PainelContas ehEscritorio={flags.ehEscritorio} donoSistema={flags.donoSistema} onFechar={() => setPainel(false)} />}
       {children}
     </AcessoContext.Provider>
   );

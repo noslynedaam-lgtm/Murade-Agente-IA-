@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import type { Express, Request, Response, NextFunction } from 'express';
+import { contasAtivas, entrarLocal, usuarioAtivo, haUsuarios, criarPrimeiroAcesso, resgatarConvite, registrarRotasDeContas, type UsuarioConta } from './contas';
 
 // Acesso ao Agente IA: a conta é a mesma do Murade DP (usuário, senha, convite e empresas).
 // O Agente não guarda senhas: valida no DP e emite uma sessão assinada própria (cookie HttpOnly).
@@ -8,7 +9,7 @@ const DURACAO_S = 12 * 3600;
 const COOKIE = 'agente_sessao';
 
 export type Empresa = { cnpj: string; nome: string };
-export type Sessao = { usuario: string; empresas: Empresa[]; exp: number };
+export type Sessao = { usuario: string; empresas: Empresa[]; exp: number; uid?: string };
 
 const dpBase = () => (process.env.MURADE_DP_URL || 'https://murade-dp.onrender.com').replace(/\/$/, '');
 
@@ -37,8 +38,13 @@ function cookie(res: Response, valor: string, maxAge: number) {
   res.setHeader('Set-Cookie', `${COOKIE}=${valor}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${seguro}`);
 }
 
-export function exigirAcesso(req: Request, res: Response, next: NextFunction) {
+async function contaDaRequisicao(req: Request): Promise<UsuarioConta | null> {
+  const s = ler(req); if (!s?.uid) return null;
+  try { return await usuarioAtivo(s.uid); } catch { return null; }
+}
+export async function exigirAcesso(req: Request, res: Response, next: NextFunction) {
   const s = ler(req);
+  if (s?.uid && !(await contaDaRequisicao(req))) { cookie(res, '', 0); res.status(401).json({ error: 'Seu acesso foi encerrado ou bloqueado.', codigo: 'NAO_AUTENTICADO' }); return; }
   if (!s) { res.status(401).json({ error: 'Entre com seu usuário para usar o Agente IA.', codigo: 'NAO_AUTENTICADO' }); return; }
   (req as any).sessaoAgente = s;
   next();
@@ -74,10 +80,26 @@ async function entrarPeloDP(login: string, senha: string): Promise<{ ok: true; s
 }
 
 export function registrarRotasDeAcesso(app: Express) {
-  app.get('/api/auth/session', (req, res) => {
+  app.get('/api/auth/session', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     const s = ler(req);
-    res.json(s ? { autenticado: true, usuario: s.usuario, empresas: s.empresas } : { autenticado: false });
+    if (s?.uid) {
+      const u = await contaDaRequisicao(req);
+      if (!u) { cookie(res, '', 0); return res.json({ autenticado: false }); }
+      return res.json({ autenticado: true, usuario: u.login, empresas: [], ehEscritorio: u.ehEscritorio, donoSistema: u.donoSistema, contasProprias: true });
+    }
+    if (s) return res.json({ autenticado: true, usuario: s.usuario, empresas: s.empresas });
+    let primeiroAcesso = false;
+    if (contasAtivas() && process.env.AGENTE_BOOTSTRAP_TOKEN) { try { primeiroAcesso = !(await haUsuarios()); } catch { /* sem banco */ } }
+    res.json({ autenticado: false, primeiroAcesso });
+  });
+  app.post('/api/auth/setup', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    try {
+      const r = await criarPrimeiroAcesso(String(req.body?.token || ''), String(req.body?.login || '').trim().toLowerCase(), String(req.body?.senha || ''));
+      if (!r.ok) return res.status(400).json({ motivo: r.motivo });
+      return res.status(201).json({ sucesso: true });
+    } catch { return res.status(503).json({ motivo: 'Não foi possível configurar agora.' }); }
   });
 
   app.post('/api/auth/login', async (req, res) => {
@@ -85,6 +107,16 @@ export function registrarRotasDeAcesso(app: Express) {
     const login = String(req.body?.login || '').trim().toLowerCase();
     const senha = String(req.body?.senha || '');
     if (!login || !senha) return res.status(400).json({ motivo: 'Informe usuário e senha.' });
+    if (contasAtivas()) {
+      try {
+        const l = await entrarLocal(login, senha.slice(0, 256), req.ip || 'unknown');
+        if (l) {
+          if (!l.ok) return res.status(l.status).json({ motivo: l.motivo });
+          cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + DURACAO_S }), DURACAO_S);
+          return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
+        }
+      } catch (e) { console.error('Falha no login local do Agente:', e); return res.status(503).json({ motivo: 'Autenticação indisponível agora. Tente novamente.' }); }
+    }
     const r = await entrarPeloDP(login, senha.slice(0, 256));
     if (!r.ok) return res.status(r.status).json({ motivo: r.motivo });
     cookie(res, assinar(r.sessao), DURACAO_S);
@@ -98,6 +130,16 @@ export function registrarRotasDeAcesso(app: Express) {
     const senha = String(req.body?.senha || '');
     const convite = String(req.body?.convite || '');
     if (!login || !senha || !convite) return res.status(400).json({ motivo: 'Confira usuário, senha e link de convite.' });
+    if (contasAtivas()) {
+      try {
+        const rc = await resgatarConvite(login, senha.slice(0, 256), convite);
+        if (!rc.ok) return res.status(400).json({ motivo: rc.motivo });
+        const l = await entrarLocal(login, senha.slice(0, 256), req.ip || 'unknown');
+        if (!l || !l.ok) return res.status(401).json({ motivo: 'Conta criada, mas não foi possível entrar. Tente entrar com a nova senha.' });
+        cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + DURACAO_S }), DURACAO_S);
+        return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
+      } catch (e) { console.error('Falha ao ativar convite do Agente:', e); return res.status(503).json({ motivo: 'Não foi possível ativar agora.' }); }
+    }
     try {
       const r = await fetch(`${dpBase()}/api/auth/redeem`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ login, senha, convite }), signal: AbortSignal.timeout(10000) });
       const d: any = await r.json().catch(() => ({}));
@@ -109,6 +151,7 @@ export function registrarRotasDeAcesso(app: Express) {
     return res.json({ autenticado: true, usuario: e.sessao.usuario, empresas: e.sessao.empresas });
   });
 
+  registrarRotasDeContas(app, contaDaRequisicao);
   app.post('/api/auth/logout', (_req, res) => { cookie(res, '', 0); res.json({ sucesso: true }); });
 
   // Licença por empresa: cadastrada e gerenciada no Murade DP; aqui só se lê.
