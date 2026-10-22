@@ -384,6 +384,8 @@ app.post('/api/transcribe', async (req, res) => {
   }
 });
 
+const cacheVoz = new Map<string, string>();
+let vozPausadaAte = 0;
 // Endpoint: Generate ultra-natural human voice audio using Gemini TTS
 app.post('/api/tts', async (req, res) => {
   try {
@@ -406,6 +408,11 @@ app.post('/api/tts', async (req, res) => {
       .replace(/\s+/g, ' ')
       .trim()
       .slice(0, 3000);
+
+    const chaveCache = `${voice}|${cleanSpeech}`;
+    const emCache = cacheVoz.get(chaveCache);
+    if (emCache) { res.json({ success: true, audio: emCache, mimeType: 'audio/wav', cache: true }); return; }
+    if (Date.now() < vozPausadaAte) { res.status(429).json({ error: 'Cota da voz humana esgotada; usando voz do navegador.' }); return; }
 
     const validVoice = ['Kore', 'Puck', 'Zephyr', 'Fenrir', 'Charon'].includes(voice) ? voice : 'Kore';
 
@@ -464,6 +471,8 @@ app.post('/api/tts', async (req, res) => {
 
     const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
     if (base64Audio) {
+      cacheVoz.set(chaveCache, base64Audio);
+      if (cacheVoz.size > 60) cacheVoz.delete(cacheVoz.keys().next().value as string);
       res.json({
         success: true,
         audio: base64Audio,
@@ -475,6 +484,11 @@ app.post('/api/tts', async (req, res) => {
     res.status(500).json({ error: 'Nenhum áudio gerado pelo modelo TTS.' });
   } catch (err: any) {
     console.error('Error in /api/tts:', err);
+    if (/429|quota|RESOURCE_EXHAUSTED/i.test(String(err?.message || err))) {
+      vozPausadaAte = Date.now() + 60_000;
+      res.status(429).json({ error: 'Cota da voz humana esgotada; usando voz do navegador.' });
+      return;
+    }
     res.status(500).json({
       error: 'Falha ao gerar voz humana.',
       details: err.message,
