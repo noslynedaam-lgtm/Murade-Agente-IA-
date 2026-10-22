@@ -21,7 +21,8 @@ import {
   X,
   Maximize2,
   Copy,
-  Check
+  Check,
+  Mic,
 } from 'lucide-react';
 import { KNOWLEDGE_BASE_DOCS, KnowledgeDoc } from '../data/knowledgeDocs.ts';
 import planaltoBanner from '../assets/images/planalto_banner_1792361999160.jpg';
@@ -280,6 +281,21 @@ export const OfficialLegislationPortal: React.FC<OfficialLegislationPortalProps>
   }, [readingDocId]);
 
   // Filter links
+  const [escutando, setEscutando] = useState(false);
+  const [avisoVoz, setAvisoVoz] = useState('');
+  const falarParaPesquisar = () => {
+    const Reconhecedor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!Reconhecedor) { setAvisoVoz('Este navegador não tem reconhecimento de voz. Use o Chrome ou o Edge.'); return; }
+    try {
+      const r = new Reconhecedor();
+      r.lang = 'pt-BR'; r.interimResults = true; r.maxAlternatives = 1;
+      setAvisoVoz(''); setEscutando(true);
+      r.onresult = (e: any) => { setSearchTerm(Array.from(e.results).map((x: any) => x[0].transcript).join(' ').trim()); };
+      r.onerror = (e: any) => { setEscutando(false); setAvisoVoz(e.error === 'not-allowed' ? 'Permita o microfone no cadeado da barra de endereço.' : 'Não consegui ouvir. Tente de novo.'); };
+      r.onend = () => setEscutando(false);
+      r.start();
+    } catch { setEscutando(false); setAvisoVoz('Não foi possível abrir o microfone.'); }
+  };
   const filteredLinks = useMemo(() => {
     return OFFICIAL_LINKS.filter((item) => {
       const matchesCat = selectedCategory === 'all' || item.category === selectedCategory;
@@ -569,6 +585,18 @@ export const OfficialLegislationPortal: React.FC<OfficialLegislationPortalProps>
                 </button>
               )}
             </div>
+
+            <button
+              type="button"
+              onClick={falarParaPesquisar}
+              title="Falar para pesquisar (microfone)"
+              aria-label="Falar para pesquisar"
+              className={`shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border text-xs font-bold ${escutando ? 'bg-rose-600 text-white border-rose-400 animate-pulse' : 'bg-[#eef2f6] text-blue-900 border-blue-200 hover:bg-blue-100'}`}
+            >
+              <Mic className="w-4 h-4" />
+              <span>{escutando ? 'Ouvindo…' : 'Falar'}</span>
+            </button>
+            {avisoVoz && <span role="alert" className="text-[11px] text-rose-700">{avisoVoz}</span>}
 
             <div className="flex items-center gap-2 shrink-0 text-xs">
               <span className="text-slate-500 font-mono text-[11px]">
