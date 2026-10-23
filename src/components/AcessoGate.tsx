@@ -1,3 +1,4 @@
+import { EsqueciSenha } from './EsqueciSenha';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PainelContas } from './PainelContas';
 
@@ -119,6 +120,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
           <button type="submit" disabled={enviando} className="w-full rounded-lg bg-[#0f2444] hover:bg-[#1b3d6f] text-white font-bold py-2.5 disabled:opacity-60">
             {enviando ? 'Aguarde…' : convite ? 'Salvar senha e entrar' : primeiroAcesso ? 'Criar e entrar' : 'Entrar'}
           </button>
+          {!convite && !primeiroAcesso && <div className="pt-1 text-center"><EsqueciSenha /></div>}
         </form>
       </main>
     );

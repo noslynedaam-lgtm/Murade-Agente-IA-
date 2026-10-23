@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { PainelEquipe } from './PainelEquipe';
+import { PainelEscritorios } from './PainelEscritorios';
 
 // Equipe do escritório (responsável) e escritórios clientes (dono do sistema).
 async function chamar(url: string, metodo = 'GET', corpo?: object) {
@@ -25,11 +27,7 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
   const [linkEq, setLinkEq] = useState(''); const [linkEsc, setLinkEsc] = useState(''); const [msg, setMsg] = useState('');
   const [linksSenha, setLinksSenha] = useState<Record<string, string>>({});
   const erro = (c: unknown) => setMsg(c instanceof Error ? c.message : 'Falha.');
-  const carregar = () => {
-    if (ehEscritorio) chamar('/api/auth/team').then((d) => { setEquipe(d.equipe || []); setPendentes(d.convitesPendentes || []); setLimite(d.limite ?? null); }).catch(erro);
-    if (donoSistema) chamar('/api/auth/tenants').then((d) => setEscritorios(d.escritorios || [])).catch(erro);
-  };
-  useEffect(carregar, []);
+  const carregar = () => undefined;
   const campo = 'min-w-0 flex-1 rounded-lg border border-slate-300 p-2 text-slate-900';
   const gerarLinkSenha = async (login: string) => {
     setMsg('');
@@ -55,57 +53,8 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
           {linkEmp && <Link url={linkEmp} />}
         </section>
       )}
-      {ehEscritorio && (
-        <section className="mb-5 rounded-xl border border-slate-200 p-4">
-          <h3 className="font-semibold">Equipe do escritório</h3>
-          <p className="mb-2 text-xs text-slate-600">Cada pessoa entra com sua própria conta. Você pode bloquear, remover ou gerar um link de redefinição de senha.{limite != null ? ` Limite: ${limite} usuário(s), dono incluso.` : ''}</p>
-          <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm"><strong>Aplicativo instalado travou ou ficou desatualizado?</strong> Não precisa reenviar convite nem instalar de novo. Mande este link para a pessoa abrir uma vez; o usuário, a senha e os dados dela continuam iguais: <a className="break-all text-blue-800 underline" href="/reparar.html">{`${window.location.origin}/reparar.html`}</a> <button type="button" className="ml-2 rounded bg-blue-800 px-2 py-1 text-white" onClick={() => void navigator.clipboard.writeText(`${window.location.origin}/reparar.html`)}>Copiar</button></div>
-          <form className="flex gap-2" onSubmit={async (e) => { e.preventDefault(); setMsg(''); setLinkEq(''); try { const d = await chamar('/api/auth/team/invite', 'POST', { login: loginEq }); setLinkEq(d.conviteUrl); setLoginEq(''); carregar(); } catch (c) { erro(c); } }}>
-            <input required value={loginEq} onChange={(e) => setLoginEq(e.target.value)} placeholder="Usuário (e-mail) da pessoa" className={campo} />
-            <button className="rounded-lg bg-slate-800 px-3 text-white">Gerar convite</button>
-          </form>
-          {linkEq && <Link url={linkEq} />}
-          <div className="mt-3"><p className="text-xs font-semibold text-slate-700">Convites pendentes (valem 24 horas)</p>
-            {pendentes.length === 0 && <p className="border-t py-2 text-sm text-slate-500">Nenhum convite pendente.</p>}
-            {pendentes.map((x) => <div key={x.login} className="flex flex-wrap items-center justify-between gap-2 border-t py-2 text-sm"><span>{x.login}</span><span className="flex gap-3"><button className="text-blue-800 hover:underline" onClick={async () => { setMsg(''); setLinkEq(''); try { const d = await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/reenviar`, 'POST'); setLinkEq(d.conviteUrl); carregar(); } catch (c) { erro(c); } }}>Reenviar (novo link)</button><button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Cancelar o convite de ${x.login}? O link deixa de funcionar.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/convite`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Cancelar convite</button></span></div>)}
-          </div>
-          <div className="mt-3"><p className="text-xs font-semibold text-slate-700">Usuários da equipe</p>
-            {equipe.length === 0 && <p className="border-t py-2 text-sm text-slate-500">Nenhum usuário na equipe ainda. Gere um convite acima.</p>}
-            {equipe.map((u) => (
-              <div key={u.login} className="border-t py-2 text-sm">
-                <div className="flex flex-wrap items-center justify-between gap-2"><span>{u.login}{u.disabled && <em className="ml-2 text-xs text-amber-700">bloqueado</em>}</span>
-                  <span className="flex flex-wrap gap-3">
-                    {!u.disabled && <button className="text-blue-800 hover:underline" onClick={() => void gerarLinkSenha(u.login)}>Nova senha (gerar link)</button>}
-                    <button className="text-amber-700 hover:underline" onClick={async () => { if (!u.disabled && !window.confirm(`Bloquear ${u.login}? Ele sai na hora e não entra até você desbloquear.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/block`, 'POST', { bloqueado: !u.disabled }); carregar(); } catch (c) { erro(c); } }}>{u.disabled ? 'Desbloquear' : 'Bloquear'}</button>
-                    <button className="text-slate-700 hover:underline" onClick={async () => { if (!window.confirm(`Tirar ${u.login} da equipe? Ele perde o acesso; nada é apagado.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Tirar da equipe</button>
-                    <button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`EXCLUIR ${u.login}? A conta é apagada e não tem volta.`)) return; try { const d = await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/excluir`, 'POST'); if (d.aviso) setMsg(d.aviso); carregar(); } catch (c) { erro(c); } }}>Excluir</button>
-                  </span></div>
-                {linksSenha[u.login] && <Link url={linksSenha[u.login]} titulo="Link para a pessoa escolher a nova senha (vale 24 horas):" />}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-      {donoSistema && (
-        <section className="rounded-xl border border-slate-200 p-4">
-          <h3 className="font-semibold">Escritórios clientes</h3>
-          <p className="mb-2 text-xs text-slate-600">Você contrata, define o limite de usuários e bloqueia. Você não vê dados dos escritórios.</p>
-          <form className="flex gap-2" onSubmit={async (e) => { e.preventDefault(); setMsg(''); setLinkEsc(''); try { const d = await chamar('/api/auth/tenants/invite', 'POST', { login: loginEsc }); setLinkEsc(d.conviteUrl); setLoginEsc(''); carregar(); } catch (c) { erro(c); } }}>
-            <input required value={loginEsc} onChange={(e) => setLoginEsc(e.target.value)} placeholder="Usuário (e-mail) do escritório" className={campo} />
-            <button className="rounded-lg bg-slate-800 px-3 text-white">Convidar escritório</button>
-          </form>
-          {linkEsc && <Link url={linkEsc} />}
-          {escritorios.map((o) => (
-            <div key={o.login} className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t pt-2 text-sm">
-              <span>{o.login} · {o.usuarios} usuário(s){o.disabled ? ' · BLOQUEADO' : ''}</span>
-              <span className="flex items-center gap-2">
-                <button className="rounded border px-2 py-0.5" onClick={async () => { const v = window.prompt('Limite de usuários (vazio = sem limite):', o.max_usuarios ?? ''); if (v === null) return; try { await chamar(`/api/auth/tenants/${encodeURIComponent(o.login)}/limit`, 'POST', { limite: v.trim() === '' ? null : Number(v) }); carregar(); } catch (c) { erro(c); } }}>Limite{o.max_usuarios != null ? `: ${o.max_usuarios}` : ''}</button>
-                <button className="rounded border px-2 py-0.5" onClick={async () => { try { await chamar(`/api/auth/tenants/${encodeURIComponent(o.login)}/block`, 'POST', { bloqueado: !o.disabled }); carregar(); } catch (c) { erro(c); } }}>{o.disabled ? 'Desbloquear' : 'Bloquear'}</button>
-              </span>
-            </div>
-          ))}
-        </section>
-      )}
+      {donoSistema && <PainelEscritorios />}
+      {ehEscritorio && <PainelEquipe />}
     </div>
   );
 };

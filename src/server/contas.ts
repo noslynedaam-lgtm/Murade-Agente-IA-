@@ -143,6 +143,19 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     const l = await db().query('SELECT max_usuarios FROM agente_users WHERE id=$1', [u.id]);
     res.json({ sucesso: true, equipe: r.rows, convitesPendentes: pendentes.rows, limite: l.rows[0]?.max_usuarios ?? null });
   }));
+  app.get('/api/auth/team/detalhes', com('escritorio', async (_req, res, u) => {
+    const m = await db().query('SELECT login,disabled FROM agente_users WHERE office_owner=$1 ORDER BY login', [u.id]);
+    const c = await db().query("SELECT login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY created_at DESC", [u.id]);
+    res.json({ sucesso: true, membros: m.rows.map((x) => ({ login: x.login, bloqueado: x.disabled === true })), convites: c.rows.map((x) => ({ login: x.login, expiraEm: x.expires_at })) });
+  }));
+  app.post('/api/auth/team', com('escritorio', async (req, res, u) => {
+    const login = loginReq(req);
+    const cheio = await limiteAtingido(u.id); if (cheio) { res.status(409).json({ sucesso: false, motivo: cheio }); return; }
+    const r = await db().query('UPDATE agente_users SET office_owner=$1, tenant_id=$1 WHERE login=$2 AND disabled=false AND office_admin=false AND office_owner IS NULL AND (tenant_id IS NULL OR tenant_id=id) RETURNING login', [u.id, login]);
+    if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Usuário não encontrado, já pertence a outro escritório ou é administrador. Gere um convite para ele criar a conta.' }); return; }
+    limparCache(); res.json({ sucesso: true, login });
+  }));
+  app.get('/api/auth/atividade', com('escritorio', async (_req, res) => { res.json({ sucesso: true, atividades: [] }); }));
   app.post('/api/auth/team/invite', com('escritorio', async (req, res, u) => {
     const login = loginReq(req);
     if (!LOGIN_OK.test(login)) { res.status(400).json({ sucesso: false, motivo: 'Informe um nome de usuário válido.' }); return; }
@@ -152,7 +165,7 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,expires_at) VALUES($1,$2,$3,$3,now()+interval '24 hours')", [hashToken(token), login, u.id]);
     res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 24 });
   }));
-  app.post('/api/auth/team/:login/block', com('escritorio', async (req, res, u) => {
+  app.post(['/api/auth/team/:login/block', '/api/auth/team/:login/bloqueio'], com('escritorio', async (req, res, u) => {
     const bloqueado = req.body?.bloqueado === true;
     const r = await db().query('UPDATE agente_users SET disabled=$1 WHERE login=$2 AND office_owner=$3 RETURNING login', [bloqueado, String(req.params.login).toLowerCase(), u.id]);
     limparCache();
@@ -184,14 +197,14 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
       res.json({ sucesso: true, login, excluido: false, bloqueado: true, aviso: 'A conta tem histórico e não pode ser apagada; ficou bloqueada e sem acesso.' });
     } finally { c.release(); }
   }));
-  app.post('/api/auth/team/:login/reset-link', com('escritorio', async (req, res, u) => {
+  app.post(['/api/auth/team/:login/reset-link', '/api/auth/team/:login/nova-senha'], com('escritorio', async (req, res, u) => {
     const login = String(req.params.login).toLowerCase();
     const membro = await db().query('SELECT 1 FROM agente_users WHERE login=$1 AND office_owner=$2', [login, u.id]);
     if (!membro.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
     const token = crypto.randomBytes(32).toString('base64url');
     await db().query('DELETE FROM agente_invites WHERE login=$1 AND office_owner=$2 AND redefinir_senha=true', [login, u.id]);
     await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,redefinir_senha,expires_at) VALUES($1,$2,$3,$3,true,now()+interval '24 hours')", [hashToken(token), login, u.id]);
-    res.status(201).json({ sucesso: true, link: linkConvite(req, token, login, true), expiraEmHoras: 24 });
+    res.status(201).json({ sucesso: true, link: linkConvite(req, token, login, true), conviteUrl: linkConvite(req, token, login, true), login, expiraEmHoras: 24 });
   }));
   app.delete('/api/auth/team/:login', com('escritorio', async (req, res, u) => {
     const c = await db().connect();
@@ -204,7 +217,7 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     } catch (e) { await c.query('ROLLBACK').catch(() => undefined); throw e; } finally { c.release(); }
   }));
   app.get('/api/auth/tenants', com('dono', async (_req, res, u) => {
-    const r = await db().query(`SELECT u.login,u.disabled,u.created_at,u.max_usuarios,(SELECT count(*)::int FROM agente_users t WHERE t.tenant_id=u.id AND t.id<>u.id) AS usuarios
+    const r = await db().query(`SELECT u.login,u.disabled,u.created_at,u.max_usuarios,(SELECT count(*)::int FROM agente_users t WHERE t.tenant_id=u.id AND t.id<>u.id) AS usuarios, 0 AS empresas
       FROM agente_users u WHERE u.office_admin=true AND u.tenant_id=u.id AND u.id<>$1 ORDER BY u.created_at`, [u.id]);
     res.json({ sucesso: true, escritorios: r.rows });
   }));
@@ -216,17 +229,27 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     await db().query("INSERT INTO agente_invites(token_hash,login,created_by,novo_escritorio,expires_at) VALUES($1,$2,$3,true,now()+interval '24 hours')", [hashToken(token), login, u.id]);
     res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 24 });
   }));
-  app.post('/api/auth/tenants/:login/block', com('dono', async (req, res, u) => {
+  app.post(['/api/auth/tenants/:login/block', '/api/auth/tenants/:login/bloqueio'], com('dono', async (req, res, u) => {
     const alvo = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_admin=true AND tenant_id=id AND id<>$2', [String(req.params.login).toLowerCase(), u.id]);
     if (!alvo.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Escritório não encontrado.' }); return; }
     await db().query('UPDATE agente_users SET disabled=$1 WHERE tenant_id=$2', [req.body?.bloqueado === true, alvo.rows[0].id]); limparCache();
     res.json({ sucesso: true, bloqueado: req.body?.bloqueado === true });
   }));
-  app.post('/api/auth/tenants/:login/limit', com('dono', async (req, res, u) => {
+  app.post(['/api/auth/tenants/:login/limit', '/api/auth/tenants/:login/limite'], com('dono', async (req, res, u) => {
     const b = req.body?.limite; const limite = b === null || b === '' ? null : Number(b);
     if (limite !== null && (!Number.isInteger(limite) || limite < 1 || limite > 1000)) { res.status(400).json({ sucesso: false, motivo: 'Informe um limite de 1 a 1000 (ou vazio para sem limite).' }); return; }
     const r = await db().query('UPDATE agente_users SET max_usuarios=$1 WHERE login=$2 AND office_admin=true AND tenant_id=id AND id<>$3 RETURNING login', [limite, String(req.params.login).toLowerCase(), u.id]);
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Escritório não encontrado.' }); return; }
     res.json({ sucesso: true, limite });
   }));
+}
+
+// Esqueci minha senha (contas próprias): cria o link de uso único e devolve o endereço; quem chama envia por e-mail.
+export async function criarLinkEsqueciSenha(req: Request, login: string): Promise<string | null> {
+  const u = await db().query('SELECT id,office_owner FROM agente_users WHERE login=$1 AND disabled=false', [login]);
+  if (!u.rowCount) return null;
+  const token = crypto.randomBytes(32).toString('base64url');
+  await db().query('DELETE FROM agente_invites WHERE login=$1 AND redefinir_senha=true', [login]);
+  await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,redefinir_senha,expires_at) VALUES($1,$2,$3,$4,true,now()+interval '24 hours')", [hashToken(token), login, u.rows[0].id, u.rows[0].office_owner || null]);
+  return linkConvite(req, token, login, true);
 }

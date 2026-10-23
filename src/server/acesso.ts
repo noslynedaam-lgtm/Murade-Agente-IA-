@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
+import { emailConfigurado, enviarEmail } from './emailMurade';
 import type { Express, Request, Response, NextFunction } from 'express';
-import { contasAtivas, entrarLocal, usuarioAtivo, haUsuarios, criarPrimeiroAcesso, resgatarConvite, registrarRotasDeContas, type UsuarioConta } from './contas';
+import { contasAtivas, entrarLocal, usuarioAtivo, haUsuarios, criarPrimeiroAcesso, resgatarConvite, registrarRotasDeContas, criarLinkEsqueciSenha, type UsuarioConta } from './contas';
 
 // Acesso ao Agente IA: a conta é a mesma do Murade DP (usuário, senha, convite e empresas).
 // O Agente não guarda senhas: valida no DP e emite uma sessão assinada própria (cookie HttpOnly).
@@ -140,6 +141,31 @@ export function registrarRotasDeAcesso(app: Express) {
   });
 
   // Link do WhatsApp: ativa o convite (cria a conta com a senha escolhida) e já entra.
+  const tentativasEsqueci = new Map<string, number[]>();
+  app.post('/api/auth/esqueci-senha', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const lg = String(req.body?.login || '').trim().toLowerCase();
+    const resposta = { sucesso: true, mensagem: 'Se este e-mail estiver cadastrado, enviamos um link para criar a nova senha. Confira também a caixa de spam.' };
+    const agora = Date.now();
+    for (const k of [`ip:${req.ip || 'x'}`, `lg:${lg}`]) { const l = (tentativasEsqueci.get(k) || []).filter((t) => agora - t < 15 * 60_000); if (l.length >= (k.startsWith('ip:') ? 10 : 3)) return res.status(429).json({ sucesso: false, motivo: 'Muitas tentativas. Aguarde alguns minutos.' }); l.push(agora); tentativasEsqueci.set(k, l); }
+    if (tentativasEsqueci.size > 5000) tentativasEsqueci.clear();
+    if (contasAtivas()) {
+      if (!emailConfigurado()) return res.status(503).json({ sucesso: false, motivo: 'A recuperação por e-mail ainda não foi ativada neste sistema. Peça ao responsável do escritório para gerar um link de nova senha.' });
+      try {
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lg) && lg.length <= 120) {
+          const link = await criarLinkEsqueciSenha(req, lg);
+          if (link) await enviarEmail(lg, 'Murade: criar nova senha', `Olá!\n\nRecebemos um pedido para criar uma nova senha no Murade Agente IA.\nAbra o link abaixo (vale 24 horas e só pode ser usado uma vez):\n\n${link}\n\nSe não foi você, ignore este e-mail: sua senha continua a mesma.`);
+        }
+      } catch (e) { console.error('Falha na recuperação de senha:', e instanceof Error ? e.message : e); }
+      return res.json(resposta);
+    }
+    // Modo DP: as contas moram no Murade DP; o pedido vai para lá (o e-mail sai de lá, com o link do DP).
+    try {
+      const r = await fetch(`${dpBase()}/api/auth/esqueci-senha`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: dpBase() }, body: JSON.stringify({ login: lg }), signal: AbortSignal.timeout(15000) });
+      const d: any = await r.json().catch(() => ({}));
+      return res.status(r.status).json(d);
+    } catch { return res.status(503).json({ sucesso: false, motivo: 'Não foi possível falar com o Murade DP agora. Tente de novo em instantes.' }); }
+  });
   app.post('/api/auth/redeem', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     const login = String(req.body?.login || '').trim().toLowerCase();
@@ -200,6 +226,13 @@ function enderecoDoAgente(req: Request): string {
 function registrarGestaoPeloDP(app: Express) {
   const rotas: Array<[string, string, (req: Request) => string, (req: Request) => any]> = [
     ['post', '/api/auth/invites', () => '/api/auth/invites', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase(), cnpj: String(r.body?.cnpj || ''), papel: r.body?.papel === 'viewer' ? 'viewer' : 'operator' })],
+    ['get', '/api/auth/team/detalhes', () => '/api/auth/team/detalhes', () => undefined],
+    ['post', '/api/auth/team', () => '/api/auth/team', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['post', '/api/auth/team/:login/nova-senha', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/nova-senha`, () => ({})],
+    ['post', '/api/auth/team/:login/bloqueio', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado !== false })],
+    ['post', '/api/auth/tenants/:login/bloqueio', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/tenants/:login/limite', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/limite`, (r) => { const b = r.body?.limite; return { limite: b === null || b === '' || b === undefined ? null : Number(b) }; }],
+    ['get', '/api/auth/atividade', (r) => `/api/auth/atividade?${new URLSearchParams(Object.entries(r.query).filter(([, v]) => typeof v === 'string') as [string, string][]).toString()}`, () => undefined],
     ['get', '/api/auth/team', () => '/api/auth/team/detalhes', () => undefined],
     ['post', '/api/auth/team/:login/reset-link', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/nova-senha`, () => ({})],
     ['post', '/api/auth/team/:login/block', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
