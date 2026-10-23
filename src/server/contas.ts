@@ -159,6 +159,17 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
     res.json({ sucesso: true, login: r.rows[0].login, bloqueado });
   }));
+  app.post('/api/auth/team/:login/reenviar', com('escritorio', async (req, res, u) => {
+    const login = String(req.params.login).toLowerCase(); const token = crypto.randomBytes(32).toString('base64url');
+    const r = await db().query("UPDATE agente_invites SET token_hash=$1, expires_at=now()+interval '24 hours' WHERE login=$2 AND office_owner=$3 AND redefinir_senha=false RETURNING login", [hashToken(token), login, u.id]);
+    if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Não há convite pendente para este usuário. Gere um convite novo.' }); return; }
+    res.json({ sucesso: true, login, conviteUrl: linkConvite(req, token, login), expiraEmHoras: 24 });
+  }));
+  app.delete('/api/auth/team/:login/convite', com('escritorio', async (req, res, u) => {
+    const r = await db().query('DELETE FROM agente_invites WHERE login=$1 AND office_owner=$2 AND redefinir_senha=false RETURNING login', [String(req.params.login).toLowerCase(), u.id]);
+    if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Convite não encontrado (talvez já usado ou cancelado).' }); return; }
+    res.json({ sucesso: true });
+  }));
   app.post('/api/auth/team/:login/reset-link', com('escritorio', async (req, res, u) => {
     const login = String(req.params.login).toLowerCase();
     const membro = await db().query('SELECT 1 FROM agente_users WHERE login=$1 AND office_owner=$2', [login, u.id]);

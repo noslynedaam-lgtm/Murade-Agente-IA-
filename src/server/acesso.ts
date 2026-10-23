@@ -200,7 +200,12 @@ function enderecoDoAgente(req: Request): string {
 function registrarGestaoPeloDP(app: Express) {
   const rotas: Array<[string, string, (req: Request) => string, (req: Request) => any]> = [
     ['post', '/api/auth/invites', () => '/api/auth/invites', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase(), cnpj: String(r.body?.cnpj || ''), papel: r.body?.papel === 'viewer' ? 'viewer' : 'operator' })],
-    ['get', '/api/auth/team', () => '/api/auth/team', () => undefined],
+    ['get', '/api/auth/team', () => '/api/auth/team/detalhes', () => undefined],
+    ['post', '/api/auth/team/:login/reset-link', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/nova-senha`, () => ({})],
+    ['post', '/api/auth/team/:login/block', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/team/:login/reenviar', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/reenviar`, () => ({})],
+    ['delete', '/api/auth/team/:login/convite', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/convite`, () => undefined],
+    ['post', '/api/auth/team/:login/excluir', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/excluir`, () => ({})],
     ['post', '/api/auth/team/invite', () => '/api/auth/team/invite', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
     ['delete', '/api/auth/team/:login', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}`, () => undefined],
     ['get', '/api/auth/tenants', () => '/api/auth/tenants', () => undefined],
@@ -227,6 +232,11 @@ function registrarGestaoPeloDP(app: Express) {
         const d: any = await r.json().catch(() => ({}));
         if (d && typeof d.conviteUrl === 'string') {
           try { const u = new URL(d.conviteUrl); d.conviteUrl = `${enderecoDoAgente(req)}/${u.hash}`; } catch { /* mantém */ }
+        }
+        if (d && typeof d.conviteUrl === 'string' && /\/reset-link$/.test(req.path)) d.link = d.conviteUrl;
+        if (d && Array.isArray(d.membros) && req.path === '/api/auth/team') {
+          d.equipe = d.membros.map((m: any) => ({ login: m.login, disabled: m.bloqueado === true }));
+          d.convitesPendentes = (d.convites || []).map((c: any) => ({ login: c.login, expires_at: c.expiraEm }));
         }
         res.status(r.status).json(d);
       } catch { res.status(503).json({ sucesso: false, motivo: 'Não foi possível falar com o Murade DP agora.' }); }

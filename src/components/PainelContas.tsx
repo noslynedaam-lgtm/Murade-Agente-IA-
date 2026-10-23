@@ -77,7 +77,7 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
               {linksSenha[u.login] && <Link url={linksSenha[u.login]} titulo="Link seguro para redefinir a senha (vale 24 horas):" />}
             </div>
           ))}
-          {pendentes.length > 0 && <div className="mt-3 border-t pt-2 text-xs text-slate-600"><strong>Convites aguardando ativação:</strong> {pendentes.map((x) => x.login).join(', ')}</div>}
+          {pendentes.length > 0 && <div className="mt-3 border-t pt-2 text-xs"><strong>Convites pendentes (valem 24 horas)</strong>{pendentes.map((x) => <div key={x.login} className="flex flex-wrap items-center justify-between gap-2 py-1 text-sm"><span>{x.login}</span><span className="flex gap-3"><button className="text-blue-800 hover:underline" onClick={async () => { setMsg(''); setLinkEq(''); try { const d = await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/reenviar`, 'POST'); setLinkEq(d.conviteUrl); carregar(); } catch (c) { erro(c); } }}>Reenviar (novo link)</button><button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Cancelar o convite de ${x.login}?`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/convite`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Cancelar convite</button></span></div>)}</div>}
         </section>
       )}
       {donoSistema && (
