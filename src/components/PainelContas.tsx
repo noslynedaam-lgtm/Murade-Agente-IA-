@@ -65,20 +65,25 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
             <button className="rounded-lg bg-slate-800 px-3 text-white">Gerar convite</button>
           </form>
           {linkEq && <Link url={linkEq} />}
-          {equipe.map((u) => (
-            <div key={u.login} className="border-t py-2 text-sm">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span>{u.login}{u.disabled ? ' · BLOQUEADO' : ' · ATIVO'}</span>
-                <span className="flex flex-wrap gap-2">
-                  <button className="rounded border px-2 py-0.5" onClick={async () => { try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/block`, 'POST', { bloqueado: !u.disabled }); carregar(); } catch (c) { erro(c); } }}>{u.disabled ? 'Desbloquear' : 'Bloquear'}</button>
-                  <button className="rounded border px-2 py-0.5" onClick={() => void gerarLinkSenha(u.login)}>Gerar link para nova senha</button>
-                  <button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Remover ${u.login} da equipe? O acesso será encerrado e os dados serão preservados.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Remover</button>
-                </span>
+          <div className="mt-3"><p className="text-xs font-semibold text-slate-700">Convites pendentes (valem 24 horas)</p>
+            {pendentes.length === 0 && <p className="border-t py-2 text-sm text-slate-500">Nenhum convite pendente.</p>}
+            {pendentes.map((x) => <div key={x.login} className="flex flex-wrap items-center justify-between gap-2 border-t py-2 text-sm"><span>{x.login}</span><span className="flex gap-3"><button className="text-blue-800 hover:underline" onClick={async () => { setMsg(''); setLinkEq(''); try { const d = await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/reenviar`, 'POST'); setLinkEq(d.conviteUrl); carregar(); } catch (c) { erro(c); } }}>Reenviar (novo link)</button><button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Cancelar o convite de ${x.login}? O link deixa de funcionar.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/convite`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Cancelar convite</button></span></div>)}
+          </div>
+          <div className="mt-3"><p className="text-xs font-semibold text-slate-700">Usuários da equipe</p>
+            {equipe.length === 0 && <p className="border-t py-2 text-sm text-slate-500">Nenhum usuário na equipe ainda. Gere um convite acima.</p>}
+            {equipe.map((u) => (
+              <div key={u.login} className="border-t py-2 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2"><span>{u.login}{u.disabled && <em className="ml-2 text-xs text-amber-700">bloqueado</em>}</span>
+                  <span className="flex flex-wrap gap-3">
+                    {!u.disabled && <button className="text-blue-800 hover:underline" onClick={() => void gerarLinkSenha(u.login)}>Nova senha (gerar link)</button>}
+                    <button className="text-amber-700 hover:underline" onClick={async () => { if (!u.disabled && !window.confirm(`Bloquear ${u.login}? Ele sai na hora e não entra até você desbloquear.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/block`, 'POST', { bloqueado: !u.disabled }); carregar(); } catch (c) { erro(c); } }}>{u.disabled ? 'Desbloquear' : 'Bloquear'}</button>
+                    <button className="text-slate-700 hover:underline" onClick={async () => { if (!window.confirm(`Tirar ${u.login} da equipe? Ele perde o acesso; nada é apagado.`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(u.login)}`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Tirar da equipe</button>
+                    <button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`EXCLUIR ${u.login}? A conta é apagada e não tem volta.`)) return; try { const d = await chamar(`/api/auth/team/${encodeURIComponent(u.login)}/excluir`, 'POST'); if (d.aviso) setMsg(d.aviso); carregar(); } catch (c) { erro(c); } }}>Excluir</button>
+                  </span></div>
+                {linksSenha[u.login] && <Link url={linksSenha[u.login]} titulo="Link para a pessoa escolher a nova senha (vale 24 horas):" />}
               </div>
-              {linksSenha[u.login] && <Link url={linksSenha[u.login]} titulo="Link seguro para redefinir a senha (vale 24 horas):" />}
-            </div>
-          ))}
-          {pendentes.length > 0 && <div className="mt-3 border-t pt-2 text-xs"><strong>Convites pendentes (valem 24 horas)</strong>{pendentes.map((x) => <div key={x.login} className="flex flex-wrap items-center justify-between gap-2 py-1 text-sm"><span>{x.login}</span><span className="flex gap-3"><button className="text-blue-800 hover:underline" onClick={async () => { setMsg(''); setLinkEq(''); try { const d = await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/reenviar`, 'POST'); setLinkEq(d.conviteUrl); carregar(); } catch (c) { erro(c); } }}>Reenviar (novo link)</button><button className="text-red-700 hover:underline" onClick={async () => { if (!window.confirm(`Cancelar o convite de ${x.login}?`)) return; try { await chamar(`/api/auth/team/${encodeURIComponent(x.login)}/convite`, 'DELETE'); carregar(); } catch (c) { erro(c); } }}>Cancelar convite</button></span></div>)}</div>}
+            ))}
+          </div>
         </section>
       )}
       {donoSistema && (

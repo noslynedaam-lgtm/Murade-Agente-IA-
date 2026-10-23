@@ -170,6 +170,20 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Convite não encontrado (talvez já usado ou cancelado).' }); return; }
     res.json({ sucesso: true });
   }));
+  app.post('/api/auth/team/:login/excluir', com('escritorio', async (req, res, u) => {
+    const login = String(req.params.login).toLowerCase();
+    const r = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_owner=$2 AND id<>$3', [login, u.id, u.id]);
+    if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Esse usuário não é da sua equipe.' }); return; }
+    const c = await db().connect();
+    try {
+      await c.query('BEGIN'); await c.query('DELETE FROM agente_invites WHERE login=$1', [login]); await c.query('DELETE FROM agente_users WHERE id=$1', [r.rows[0].id]); await c.query('COMMIT');
+      limparCache(); res.json({ sucesso: true, login, excluido: true });
+    } catch {
+      await c.query('ROLLBACK').catch(() => undefined);
+      await db().query('UPDATE agente_users SET disabled=true WHERE id=$1', [r.rows[0].id]); limparCache();
+      res.json({ sucesso: true, login, excluido: false, bloqueado: true, aviso: 'A conta tem histórico e não pode ser apagada; ficou bloqueada e sem acesso.' });
+    } finally { c.release(); }
+  }));
   app.post('/api/auth/team/:login/reset-link', com('escritorio', async (req, res, u) => {
     const login = String(req.params.login).toLowerCase();
     const membro = await db().query('SELECT 1 FROM agente_users WHERE login=$1 AND office_owner=$2', [login, u.id]);
