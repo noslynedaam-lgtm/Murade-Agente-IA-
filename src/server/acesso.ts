@@ -5,7 +5,9 @@ import { contasAtivas, entrarLocal, usuarioAtivo, haUsuarios, criarPrimeiroAcess
 
 // Acesso ao Agente IA: a conta é a mesma do Murade DP (usuário, senha, convite e empresas).
 // O Agente não guarda senhas: valida no DP e emite uma sessão assinada própria (cookie HttpOnly).
-const SEGREDO = process.env.AGENTE_SESSION_SECRET || crypto.randomBytes(32).toString('hex'); // sem env: sessões caem ao reiniciar
+// Sem AGENTE_SESSION_SECRET, deriva uma chave estável (HMAC de rótulo fixo) de um segredo que já existe no serviço, para o login não cair a cada reinício/despertar.
+const BASE_SEGREDO = process.env.AGENTE_SESSION_SECRET || process.env.MURADE_INTEGRATION_TOKEN || process.env.DATABASE_URL || process.env.GEMINI_API_KEY || '';
+const SEGREDO = process.env.AGENTE_SESSION_SECRET || (BASE_SEGREDO ? crypto.createHmac('sha256', BASE_SEGREDO).update('murade-agente-sessao-v1').digest('hex') : crypto.randomBytes(32).toString('hex'));
 const DURACAO_S = 12 * 3600;
 const COOKIE = 'agente_sessao';
 
