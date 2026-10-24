@@ -10,6 +10,8 @@ export type LicencaEmpresa =
 interface Props {
   usuario: string | null;
   empresaNome: string | null;
+  /** Esconde o chip da empresa (Agente IA não usa empresa/CNPJ). */
+  esconderEmpresa?: boolean;
   empresaCnpj: string | null;
   buscarLicenca: (cnpj: string) => Promise<LicencaEmpresa | null>;
   onSair: () => void;
@@ -27,7 +29,7 @@ function formatarData(iso: string): string {
   return `${d}/${m}/${a}`;
 }
 
-export const CabecalhoPadrao: React.FC<Props> = ({ usuario, empresaNome, empresaCnpj, buscarLicenca, onSair, salvarLicenca, onClicarEmpresa, urlGerenciarLicenca }) => {
+export const CabecalhoPadrao: React.FC<Props> = ({ usuario, empresaNome, esconderEmpresa, empresaCnpj, buscarLicenca, onSair, salvarLicenca, onClicarEmpresa, urlGerenciarLicenca }) => {
   const [licenca, setLicenca] = useState<LicencaEmpresa | null | undefined>(undefined);
   const [aberto, setAberto] = useState(false);
   const [plano, setPlano] = useState('P50');
@@ -81,10 +83,12 @@ export const CabecalhoPadrao: React.FC<Props> = ({ usuario, empresaNome, empresa
         <UserCircle size={13} className="shrink-0" />
         <span className="truncate">{usuario || '—'}</span>
       </span>
+      {!esconderEmpresa && (
       <span onClick={onClicarEmpresa} className={`hidden md:flex items-center gap-1 px-2 py-0.5 rounded bg-white/10 max-w-[200px] ${onClicarEmpresa ? 'cursor-pointer hover:bg-white/20' : ''}`} title={empresaCnpj ? `CNPJ ${empresaCnpj} — dados e certificado da empresa` : 'Empresa'}>
         <Building2 size={13} className="shrink-0" />
         <span className="truncate">{empresaNome || 'Nenhuma empresa'}</span>
       </span>
+      )}
       <div className="relative hidden" aria-hidden="true">
         <button
           type="button"

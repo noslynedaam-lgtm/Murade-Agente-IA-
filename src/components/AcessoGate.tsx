@@ -131,7 +131,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   return (
     <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>
       <div className="sticky top-0 z-[100] flex min-h-10 flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-1.5 text-xs text-white">
-        <span>Conta: <strong>{sessao.usuario}</strong>{flags.contasProprias ? '' : ` · ${sessao.empresas.length} empresa(s) autorizada(s)`}</span>
+        <span>Conta: <strong>{sessao.usuario}</strong></span>
         <div className="flex gap-2">
           {(flags.podeGerenciar || flags.ehEscritorio || flags.donoSistema) && <button type="button" onClick={() => setPainel((v) => !v)} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Usuários e empresas</button>}
           <button type="button" onClick={() => void sair()} className="rounded bg-white/15 px-3 py-1 hover:bg-white/25">Sair</button>

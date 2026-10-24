@@ -22,20 +22,11 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex justify-end py-1 border-b border-[#1b3d6f]">
       {/* Bloco padrão Murade: Usuário | Empresa | Licença | Sair */}
       <div className="flex items-center gap-2 shrink-0">
-        {empresas.length > 1 && (
-          <select
-            value={empresaAtiva?.cnpj || ''}
-            onChange={(e) => escolherEmpresa(e.target.value)}
-            className="hidden md:block bg-white/10 text-white text-[11px] rounded px-1.5 py-0.5 border border-white/20 max-w-[180px]"
-            title="Escolher empresa"
-          >
-            {empresas.map((e) => <option key={e.cnpj} value={e.cnpj} className="text-slate-900">{e.nome}</option>)}
-          </select>
-        )}
         <CabecalhoPadrao
           urlGerenciarLicenca="https://murade-dp.onrender.com"
           usuario={usuario}
-          empresaNome={empresas.length > 1 ? null : empresaAtiva?.nome || null}
+          empresaNome={null}
+          esconderEmpresa
           empresaCnpj={empresaAtiva?.cnpj || null}
           buscarLicenca={async (cnpj) => {
             const r = await fetch(`/api/licenca?cnpj=${encodeURIComponent(cnpj)}`, { credentials: 'include' });

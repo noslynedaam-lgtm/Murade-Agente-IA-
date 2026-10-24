@@ -23,7 +23,7 @@ export function PainelAtividade() {
       {msg && <p role="alert" className="mt-2 text-sm text-red-700">{msg}</p>}
       {!msg && itens.length === 0 && <p className="mt-2 text-sm text-slate-500">Nenhuma atividade registrada ainda.</p>}
       {itens.length > 0 && <div className="mt-3 max-h-80 overflow-auto">{itens.map((a, i) => (
-        <div key={i} className="border-t py-2 text-sm"><strong>{a.usuario}</strong> · {a.acao}{a.cnpj ? ` · empresa ${a.cnpj}` : ''}<span className="block text-xs text-slate-500">{new Date(a.quando).toLocaleString('pt-BR')}</span></div>
+        <div key={i} className="border-t py-2 text-sm"><strong>{a.usuario}</strong> · {a.acao}<span className="block text-xs text-slate-500">{new Date(a.quando).toLocaleString('pt-BR')}</span></div>
       ))}</div>}
     </div>
   );
