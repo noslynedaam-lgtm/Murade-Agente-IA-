@@ -9,7 +9,7 @@ async function chamar(url: string, metodo = 'GET', corpo?: object) {
   if (!r.ok || d.sucesso !== true) throw new Error(d.motivo || 'Não foi possível concluir.');
   return d;
 }
-const Link: React.FC<{ url: string; titulo?: string }> = ({ url, titulo = 'Link (vale 24 horas):' }) => (
+const Link: React.FC<{ url: string; titulo?: string }> = ({ url, titulo = 'Link de uso único:' }) => (
   <div className="mt-2 break-all rounded-lg border border-green-300 bg-green-50 p-3 text-sm text-slate-900">
     <strong>{titulo}</strong> <a className="text-blue-800 underline" href={url}>{url}</a>
     <button type="button" className="ml-2 rounded bg-slate-800 px-2 py-0.5 text-white" onClick={() => void navigator.clipboard?.writeText(url)}>Copiar</button>

@@ -162,8 +162,8 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     const cheio = await limiteAtingido(u.id); if (cheio) { res.status(409).json({ sucesso: false, motivo: cheio }); return; }
     if ((await db().query('SELECT 1 FROM agente_users WHERE login=$1', [login])).rowCount) { res.status(409).json({ sucesso: false, motivo: 'Este usuário já existe.' }); return; }
     const token = crypto.randomBytes(32).toString('base64url');
-    await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,expires_at) VALUES($1,$2,$3,$3,now()+interval '24 hours')", [hashToken(token), login, u.id]);
-    res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 24 });
+    await db().query("INSERT INTO agente_invites(token_hash,login,created_by,office_owner,expires_at) VALUES($1,$2,$3,$3,now()+interval '30 days')", [hashToken(token), login, u.id]);
+    res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 720 });
   }));
   app.post(['/api/auth/team/:login/block', '/api/auth/team/:login/bloqueio'], com('escritorio', async (req, res, u) => {
     const bloqueado = req.body?.bloqueado === true;
@@ -174,9 +174,9 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
   }));
   app.post('/api/auth/team/:login/reenviar', com('escritorio', async (req, res, u) => {
     const login = String(req.params.login).toLowerCase(); const token = crypto.randomBytes(32).toString('base64url');
-    const r = await db().query("UPDATE agente_invites SET token_hash=$1, expires_at=now()+interval '24 hours' WHERE login=$2 AND office_owner=$3 AND redefinir_senha=false RETURNING login", [hashToken(token), login, u.id]);
+    const r = await db().query("UPDATE agente_invites SET token_hash=$1, expires_at=now()+interval '30 days' WHERE login=$2 AND office_owner=$3 AND redefinir_senha=false RETURNING login", [hashToken(token), login, u.id]);
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Não há convite pendente para este usuário. Gere um convite novo.' }); return; }
-    res.json({ sucesso: true, login, conviteUrl: linkConvite(req, token, login), expiraEmHoras: 24 });
+    res.json({ sucesso: true, login, conviteUrl: linkConvite(req, token, login), expiraEmHoras: 720 });
   }));
   app.delete('/api/auth/team/:login/convite', com('escritorio', async (req, res, u) => {
     const r = await db().query('DELETE FROM agente_invites WHERE login=$1 AND office_owner=$2 AND redefinir_senha=false RETURNING login', [String(req.params.login).toLowerCase(), u.id]);
@@ -226,8 +226,8 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     if (!LOGIN_OK.test(login)) { res.status(400).json({ sucesso: false, motivo: 'Informe um nome de usuário válido.' }); return; }
     if ((await db().query('SELECT 1 FROM agente_users WHERE login=$1', [login])).rowCount) { res.status(409).json({ sucesso: false, motivo: 'Este usuário já existe.' }); return; }
     const token = crypto.randomBytes(32).toString('base64url');
-    await db().query("INSERT INTO agente_invites(token_hash,login,created_by,novo_escritorio,expires_at) VALUES($1,$2,$3,true,now()+interval '24 hours')", [hashToken(token), login, u.id]);
-    res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 24 });
+    await db().query("INSERT INTO agente_invites(token_hash,login,created_by,novo_escritorio,expires_at) VALUES($1,$2,$3,true,now()+interval '30 days')", [hashToken(token), login, u.id]);
+    res.status(201).json({ sucesso: true, conviteUrl: linkConvite(req, token, login), login, expiraEmHoras: 720 });
   }));
   app.post(['/api/auth/tenants/:login/block', '/api/auth/tenants/:login/bloqueio'], com('dono', async (req, res, u) => {
     const alvo = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_admin=true AND tenant_id=id AND id<>$2', [String(req.params.login).toLowerCase(), u.id]);
