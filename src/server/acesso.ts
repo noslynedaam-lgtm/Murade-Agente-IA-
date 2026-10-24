@@ -107,6 +107,8 @@ export function registrarRotasDeAcesso(app: Express) {
       if (!u) { cookie(res, '', 0); return res.json({ autenticado: false }); }
       return res.json({ autenticado: true, usuario: u.login, empresas: [], ehEscritorio: u.ehEscritorio, donoSistema: u.donoSistema, contasProprias: true });
     }
+    // Quem gerencia usuários precisa da sessão com o DP (guardada só na memória): se o servidor reiniciou, pede novo login para o botão 'Usuários e empresas' voltar.
+    if (s && (s.esc || s.dono || s.ger) && !(s.sid && sessoesDP.has(s.sid))) { cookie(res, '', 0); return res.json({ autenticado: false }); }
     if (s) return res.json({ autenticado: true, usuario: s.usuario, empresas: s.empresas, ehEscritorio: Boolean(s.sid && sessoesDP.has(s.sid) && s.esc), donoSistema: Boolean(s.sid && sessoesDP.has(s.sid) && s.dono), podeGerenciar: Boolean(s.sid && sessoesDP.has(s.sid) && (s.ger || s.esc || s.dono)), viaDP: true });
     let primeiroAcesso = false;
     if (contasAtivas() && process.env.AGENTE_BOOTSTRAP_TOKEN) { try { primeiroAcesso = !(await haUsuarios()); } catch { /* sem banco */ } }
