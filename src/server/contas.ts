@@ -27,8 +27,8 @@ export function prepararContas(): Promise<void> {
 }
 
 // Conta solta (tirada da equipe ou excluída/bloqueada por este escritório): apaga de vez para o e-mail poder receber convite novo.
-async function liberarLoginSoltoAgente(login: string, donoId: string): Promise<void> {
-  const r = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_admin=false AND ((office_owner=$2 AND disabled=true) OR (office_owner IS NULL AND (tenant_id IS NULL OR tenant_id=$2)))', [login, donoId]);
+async function liberarLoginSoltoAgente(login: string, donoId: string | null): Promise<void> {
+  const r = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_admin=false AND ((office_owner=$2::uuid AND disabled=true) OR (office_owner IS NULL AND (tenant_id IS NULL OR $2::uuid IS NULL OR tenant_id=$2::uuid)))', [login, donoId]);
   if (!r.rowCount) return;
   try { await db().query('DELETE FROM agente_users WHERE id=$1', [r.rows[0].id]); }
   catch { await db().query("UPDATE agente_users SET login=left(login,40)||'#removido-'||extract(epoch from now())::bigint::text, disabled=true, office_owner=NULL WHERE id=$1", [r.rows[0].id]); }
@@ -233,6 +233,7 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
   app.post('/api/auth/tenants/invite', com('dono', async (req, res, u) => {
     const login = loginReq(req);
     if (!LOGIN_OK.test(login)) { res.status(400).json({ sucesso: false, motivo: 'Informe um nome de usuário válido.' }); return; }
+    await liberarLoginSoltoAgente(login, null);
     if ((await db().query('SELECT 1 FROM agente_users WHERE login=$1', [login])).rowCount) { res.status(409).json({ sucesso: false, motivo: 'Este usuário já existe.' }); return; }
     const token = crypto.randomBytes(32).toString('base64url');
     await db().query("INSERT INTO agente_invites(token_hash,login,created_by,novo_escritorio,expires_at) VALUES($1,$2,$3,true,now()+interval '30 days')", [hashToken(token), login, u.id]);
