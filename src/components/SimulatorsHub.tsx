@@ -76,7 +76,7 @@ export const SimulatorsHub: React.FC<SimulatorsHubProps> = ({ onAskAgent }) => {
         </div>
 
         {/* Tab Controls: Signature Blue with Light Gray Interior */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-200/70 border border-slate-300 rounded-xl text-xs">
+        <div className="flex items-center gap-1.5 p-1 max-w-full overflow-x-auto bg-slate-200/70 border border-slate-300 rounded-xl text-xs">
           <button
             onClick={() => setActiveTab('fator-r')}
             className={`flex items-center gap-1.5 px-3 py-1.5 font-medium rounded-lg transition-all cursor-pointer whitespace-nowrap ${

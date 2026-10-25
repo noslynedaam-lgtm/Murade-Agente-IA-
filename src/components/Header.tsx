@@ -58,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Zone 2: Concise single-line text navigation links */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-5 text-sm font-medium text-slate-300">
+          <nav className="hidden xl:flex items-center gap-4 xl:gap-5 text-sm font-medium text-slate-300">
             <button
               onClick={() => onSelectTab('legislacao')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer flex items-center gap-1.5 ${
@@ -135,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile secondary navigation strip */}
-        <div className="md:hidden flex items-center gap-4 py-2 border-t border-[#1b3d6f] overflow-x-auto text-xs font-medium text-slate-300 no-scrollbar">
+        <div className="xl:hidden flex items-center gap-4 py-2 border-t border-[#1b3d6f] overflow-x-auto text-xs font-medium text-slate-300 no-scrollbar">
           <button
             onClick={() => onSelectTab('legislacao')}
             className={`whitespace-nowrap pb-1 ${currentTab === 'legislacao' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
