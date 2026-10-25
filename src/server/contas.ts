@@ -202,8 +202,8 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
       limparCache(); res.json({ sucesso: true, login, excluido: true });
     } catch {
       await c.query('ROLLBACK').catch(() => undefined);
-      await db().query('UPDATE agente_users SET disabled=true WHERE id=$1', [r.rows[0].id]); limparCache();
-      res.json({ sucesso: true, login, excluido: false, bloqueado: true, aviso: 'A conta tem histórico e não pode ser apagada; ficou bloqueada e sem acesso.' });
+      await db().query("UPDATE agente_users SET login=left(login,40)||'#removido-'||extract(epoch from now())::bigint::text, disabled=true WHERE id=$1", [r.rows[0].id]); limparCache();
+      res.json({ sucesso: true, login, excluido: false, bloqueado: true, aviso: 'O histórico impediu apagar a conta por completo; ela ficou sem acesso e o e-mail está livre para um novo cadastro.' });
     } finally { c.release(); }
   }));
   app.post(['/api/auth/team/:login/reset-link', '/api/auth/team/:login/nova-senha'], com('escritorio', async (req, res, u) => {
