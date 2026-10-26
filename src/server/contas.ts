@@ -147,13 +147,13 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
 
   app.get('/api/auth/team', com('escritorio', async (_req, res, u) => {
     const r = await db().query('SELECT login,disabled,created_at FROM agente_users WHERE office_owner=$1 ORDER BY login', [u.id]);
-    const pendentes = await db().query("SELECT login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY login", [u.id]);
+    const pendentes = await db().query("SELECT DISTINCT ON (login) login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY login, created_at DESC", [u.id]);
     const l = await db().query('SELECT max_usuarios FROM agente_users WHERE id=$1', [u.id]);
     res.json({ sucesso: true, equipe: r.rows, convitesPendentes: pendentes.rows, limite: l.rows[0]?.max_usuarios ?? null });
   }));
   app.get('/api/auth/team/detalhes', com('escritorio', async (_req, res, u) => {
     const m = await db().query('SELECT login,disabled FROM agente_users WHERE office_owner=$1 ORDER BY login', [u.id]);
-    const c = await db().query("SELECT login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY created_at DESC", [u.id]);
+    const c = await db().query("SELECT DISTINCT ON (login) login,expires_at FROM agente_invites WHERE office_owner=$1 AND redefinir_senha=false AND expires_at>now() ORDER BY login, created_at DESC", [u.id]);
     res.json({ sucesso: true, membros: m.rows.map((x) => ({ login: x.login, bloqueado: x.disabled === true })), convites: c.rows.map((x) => ({ login: x.login, expiraEm: x.expires_at })) });
   }));
   app.post('/api/auth/team', com('escritorio', async (req, res, u) => {
@@ -251,6 +251,44 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     const r = await db().query('UPDATE agente_users SET max_usuarios=$1 WHERE login=$2 AND office_admin=true AND tenant_id=id AND id<>$3 RETURNING login', [limite, String(req.params.login).toLowerCase(), u.id]);
     if (!r.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Escritório não encontrado.' }); return; }
     res.json({ sucesso: true, limite });
+  }));
+
+  // Dono do sistema: apagar conta (ou escritório inteiro) para o e-mail poder receber convite novo. Os registros somem; nada fica bloqueado.
+  const apagarContaAgente = async (c: pg.PoolClient, id: string, login: string): Promise<'apagada' | 'sem_acesso'> => {
+    await c.query('SAVEPOINT conta');
+    try { await c.query('DELETE FROM agente_invites WHERE login=$1 OR created_by=$2', [login, id]); await c.query('DELETE FROM agente_users WHERE id=$1', [id]); await c.query('RELEASE SAVEPOINT conta'); return 'apagada'; }
+    catch { await c.query('ROLLBACK TO SAVEPOINT conta'); await c.query("UPDATE agente_users SET login=left(login,40)||'#removido-'||extract(epoch from now())::bigint::text, disabled=true, office_owner=NULL, tenant_id=NULL, office_admin=false WHERE id=$1", [id]); return 'sem_acesso'; }
+  };
+  app.post('/api/auth/usuarios/:login/resumo', com('dono', async (req, res, u) => {
+    const r = await db().query('SELECT id,disabled,office_admin FROM agente_users WHERE login=$1', [String(req.params.login).toLowerCase()]);
+    if (!r.rowCount) { res.json({ sucesso: true, existe: false }); return; }
+    const x = r.rows[0]; res.json({ sucesso: true, existe: true, bloqueada: x.disabled === true, escritorio: x.office_admin === true, ehVoce: String(x.id) === u.id, empresas: 0 });
+  }));
+  app.post('/api/auth/usuarios/:login/excluir', com('dono', async (req, res, u) => {
+    if (req.body?.confirmar !== true) { res.status(400).json({ sucesso: false, motivo: 'Confirme a exclusão da conta.' }); return; }
+    const login = String(req.params.login).toLowerCase();
+    const alvo = await db().query('SELECT id,office_admin FROM agente_users WHERE login=$1', [login]);
+    if (!alvo.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Conta não encontrada: o e-mail já está livre.' }); return; }
+    if (String(alvo.rows[0].id) === u.id) { res.status(400).json({ sucesso: false, motivo: 'Você não pode excluir a própria conta.' }); return; }
+    if (alvo.rows[0].office_admin === true) { res.status(409).json({ sucesso: false, motivo: 'Esta conta é dono de escritório: use o botão Excluir do escritório, que apaga também a equipe.' }); return; }
+    const c = await db().connect();
+    try { await c.query('BEGIN'); const r = await apagarContaAgente(c, String(alvo.rows[0].id), login); await c.query('COMMIT'); limparCache(); res.json({ sucesso: true, login, excluido: true, semAcesso: r === 'sem_acesso' }); }
+    catch (e) { await c.query('ROLLBACK').catch(() => undefined); throw e; } finally { c.release(); }
+  }));
+  app.post('/api/auth/tenants/:login/excluir', com('dono', async (req, res, u) => {
+    if (req.body?.confirmar !== true) { res.status(400).json({ sucesso: false, motivo: 'Confirme a exclusão do escritório.' }); return; }
+    const login = String(req.params.login).toLowerCase();
+    const alvo = await db().query('SELECT id FROM agente_users WHERE login=$1 AND office_admin=true AND tenant_id=id AND id<>$2', [login, u.id]);
+    if (!alvo.rowCount) { res.status(404).json({ sucesso: false, motivo: 'Escritório não encontrado.' }); return; }
+    const tenant = String(alvo.rows[0].id); const c = await db().connect(); let apagadas = 0; let semAcesso = 0;
+    try {
+      await c.query('BEGIN');
+      const contas = await c.query('SELECT id,login FROM agente_users WHERE (tenant_id=$1 OR office_owner=$1 OR id=$1) AND id<>$2 ORDER BY (id=$1) ASC', [tenant, u.id]);
+      await c.query('DELETE FROM agente_invites WHERE office_owner=$1', [tenant]);
+      for (const x of contas.rows) { if (await apagarContaAgente(c, String(x.id), String(x.login)) === 'apagada') apagadas += 1; else semAcesso += 1; }
+      await c.query('COMMIT'); limparCache();
+      res.json({ sucesso: true, login, excluido: true, contasApagadas: apagadas, contasSemAcesso: semAcesso, aviso: semAcesso ? 'Algumas contas ficaram sem acesso, com o e-mail liberado para novo cadastro.' : undefined });
+    } catch (e) { await c.query('ROLLBACK').catch(() => undefined); throw e; } finally { c.release(); }
   }));
 }
 
