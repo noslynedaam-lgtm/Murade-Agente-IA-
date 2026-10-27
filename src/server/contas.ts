@@ -139,7 +139,7 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     try {
       if (!contasAtivas()) { res.status(404).json({ sucesso: false, motivo: 'Contas próprias não estão ativas neste serviço.' }); return; }
       const u = await usuarioDaRequisicao(req);
-      if (!u || (exige === 'escritorio' && !u.ehEscritorio) || (exige === 'dono' && !u.donoSistema)) { res.status(403).json({ sucesso: false, motivo: exige === 'dono' ? 'Somente o dono do sistema pode fazer isto.' : 'Somente o responsável do escritório pode fazer isto.' }); return; }
+      if (!u || (exige === 'escritorio' && !u.donoSistema) || (exige === 'dono' && !u.donoSistema)) { res.status(403).json({ sucesso: false, motivo: exige === 'dono' ? 'Somente o dono do sistema pode fazer isto.' : 'Somente o responsável do escritório pode fazer isto.' }); return; }
       await prepararContas(); await h(req, res, u);
     } catch (e) { console.error('Falha em contas do Agente:', e); res.status(503).json({ sucesso: false, motivo: 'Não foi possível concluir agora.' }); }
   };
