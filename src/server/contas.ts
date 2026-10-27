@@ -22,6 +22,13 @@ export function prepararContas(): Promise<void> {
       token_hash text PRIMARY KEY, login text NOT NULL, created_by uuid NOT NULL, office_owner uuid, novo_escritorio boolean NOT NULL DEFAULT false,
       expires_at timestamptz NOT NULL, redefinir_senha boolean NOT NULL DEFAULT false, created_at timestamptz NOT NULL DEFAULT now())`);
     await db().query('ALTER TABLE agente_invites ADD COLUMN IF NOT EXISTS redefinir_senha boolean NOT NULL DEFAULT false');
+    // Uma única vez: escritórios "sem limite" passam a ter 3 usuários (dono + 2). O dono do sistema não entra.
+    await db().query('CREATE TABLE IF NOT EXISTS agente_marcadores(chave text PRIMARY KEY, criado_em timestamptz NOT NULL DEFAULT now())');
+    const marcou = await db().query("INSERT INTO agente_marcadores(chave) VALUES('limite-inicial-3') ON CONFLICT DO NOTHING RETURNING chave");
+    if (marcou.rowCount) {
+      const donos = (process.env.MURADE_DONO_SISTEMA || '').split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+      await db().query('UPDATE agente_users SET max_usuarios=3 WHERE office_admin=true AND tenant_id=id AND max_usuarios IS NULL AND lower(login) <> ALL($1::text[]) AND id <> (SELECT id FROM agente_users WHERE office_admin=true ORDER BY created_at, id LIMIT 1)', [donos]);
+    }
   })().catch((e) => { pronto = null; throw e; });
   return pronto;
 }
@@ -127,7 +134,7 @@ export async function resgatarConvite(login: string, senha: string, convite: str
     if ((await c.query('SELECT 1 FROM agente_users WHERE login=$1', [login])).rowCount) { await c.query('ROLLBACK'); return { ok: false, motivo: 'Este usuário já existe.' }; }
     const id = crypto.randomUUID();
     const tenant = i.novo_escritorio ? id : i.office_owner;
-    await c.query('INSERT INTO agente_users(id,login,password_salt,password_hash,office_admin,office_owner,tenant_id) VALUES($1,$2,$3,$4,$5,$6,$7)', [id, login, salt, hash, i.novo_escritorio === true, i.novo_escritorio ? null : i.office_owner, tenant]);
+    await c.query('INSERT INTO agente_users(id,login,password_salt,password_hash,office_admin,office_owner,tenant_id,max_usuarios) VALUES($1,$2,$3,$4,$5,$6,$7,$8)', [id, login, salt, hash, i.novo_escritorio === true, i.novo_escritorio ? null : i.office_owner, tenant, i.novo_escritorio === true ? 3 : null]);
     await c.query('COMMIT'); return { ok: true };
   } catch (e) { await c.query('ROLLBACK').catch(() => undefined); throw e; } finally { c.release(); }
 }
@@ -139,7 +146,7 @@ export function registrarRotasDeContas(app: Express, usuarioDaRequisicao: (req: 
     try {
       if (!contasAtivas()) { res.status(404).json({ sucesso: false, motivo: 'Contas próprias não estão ativas neste serviço.' }); return; }
       const u = await usuarioDaRequisicao(req);
-      if (!u || (exige === 'escritorio' && !u.donoSistema) || (exige === 'dono' && !u.donoSistema)) { res.status(403).json({ sucesso: false, motivo: exige === 'dono' ? 'Somente o dono do sistema pode fazer isto.' : 'Somente o responsável do escritório pode fazer isto.' }); return; }
+      if (!u || (exige === 'escritorio' && !u.ehEscritorio) || (exige === 'dono' && !u.donoSistema)) { res.status(403).json({ sucesso: false, motivo: exige === 'dono' ? 'Somente o dono do sistema pode fazer isto.' : 'Somente o responsável do escritório pode fazer isto.' }); return; }
       await prepararContas(); await h(req, res, u);
     } catch (e) { console.error('Falha em contas do Agente:', e); res.status(503).json({ sucesso: false, motivo: 'Não foi possível concluir agora.' }); }
   };
