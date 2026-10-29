@@ -9,6 +9,11 @@ import { contasAtivas, entrarLocal, usuarioAtivo, haUsuarios, criarPrimeiroAcess
 const BASE_SEGREDO = process.env.AGENTE_SESSION_SECRET || process.env.MURADE_INTEGRATION_TOKEN || process.env.DATABASE_URL || process.env.GEMINI_API_KEY || '';
 const SEGREDO = process.env.AGENTE_SESSION_SECRET || (BASE_SEGREDO ? crypto.createHmac('sha256', BASE_SEGREDO).update('murade-agente-sessao-v1').digest('hex') : crypto.randomBytes(32).toString('hex'));
 const DURACAO_S = 12 * 3600;
+const DURACAO_LONGA_S = 90 * 24 * 3600;
+/** Celular/tablet com conta própria do Agente: a senha é pedida só no primeiro acesso (90 dias), a menos que a pessoa ligue "pedir senha ao abrir". */
+export function ehCelularUA(ua: string): boolean { return /Android|iPhone|iPad|iPod|Mobile/i.test(ua || ''); }
+function exigeSenhaAoAbrir(req: Request): boolean { return /(?:^|;\s*)murade_exigir_senha=1(?:;|$)/.test(req.header('cookie') || ''); }
+export function duracaoContaPropria(req: Request): number { return ehCelularUA(req.header('user-agent') || '') && !exigeSenhaAoAbrir(req) ? DURACAO_LONGA_S : DURACAO_S; }
 const COOKIE = 'agente_sessao';
 
 export type Empresa = { cnpj: string; nome: string };
@@ -133,7 +138,8 @@ export function registrarRotasDeAcesso(app: Express) {
         const l = await entrarLocal(login, senha.slice(0, 256), req.ip || 'unknown');
         if (l) {
           if (!l.ok) return res.status(l.status).json({ motivo: l.motivo });
-          cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + DURACAO_S }), DURACAO_S);
+          const dur = duracaoContaPropria(req);
+          cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + dur }), dur);
           return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
         }
       } catch (e) { console.error('Falha no login local do Agente:', e); return res.status(503).json({ motivo: 'Autenticação indisponível agora. Tente novamente.' }); }
@@ -182,7 +188,8 @@ export function registrarRotasDeAcesso(app: Express) {
         if (!rc.ok) return res.status(400).json({ motivo: rc.motivo });
         const l = await entrarLocal(login, senha.slice(0, 256), req.ip || 'unknown');
         if (!l || !l.ok) return res.status(401).json({ motivo: 'Senha atualizada, mas o acesso continua bloqueado. Peça ao responsável do escritório para desbloquear a conta.' });
-        cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + DURACAO_S }), DURACAO_S);
+        const dur = duracaoContaPropria(req);
+        cookie(res, assinar({ usuario: l.usuario.login, empresas: [], uid: l.usuario.id, exp: Math.floor(Date.now() / 1000) + dur }), dur);
         return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
       } catch (e) { console.error('Falha ao ativar convite do Agente:', e); return res.status(503).json({ motivo: 'Não foi possível ativar agora.' }); }
     }
@@ -199,6 +206,19 @@ export function registrarRotasDeAcesso(app: Express) {
 
   registrarGestaoPeloDP(app);
   registrarRotasDeContas(app, contaDaRequisicao);
+  // Liga/desliga "manter conectado" na sessão atual (celular). Desligado = volta a pedir senha em 12 horas. Só para contas próprias do Agente
+  // (essas são conferidas a cada acesso: se a conta for bloqueada ou excluída, o celular cai na hora).
+  app.post('/api/auth/manter-conectado', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    const s = ler(req);
+    if (!s) return res.status(401).json({ sucesso: false, motivo: 'Entre no sistema primeiro.' });
+    if (!s.uid || !(await contaDaRequisicao(req))) return res.status(400).json({ sucesso: false, motivo: 'Esta opção vale para contas próprias do Agente IA.' });
+    const ativo = req.body?.ativo === true;
+    if (ativo && !ehCelularUA(req.header('user-agent') || '')) return res.status(400).json({ sucesso: false, motivo: 'Esta opção vale só para celular e tablet.' });
+    const dur = ativo ? DURACAO_LONGA_S : DURACAO_S;
+    cookie(res, assinar({ ...s, exp: Math.floor(Date.now() / 1000) + dur }), dur);
+    return res.json({ sucesso: true, manterConectado: ativo });
+  });
   app.post('/api/auth/logout', (_req, res) => { cookie(res, '', 0); res.json({ sucesso: true }); });
 
   // Licença por empresa: cadastrada e gerenciada no Murade DP; aqui só se lê.
