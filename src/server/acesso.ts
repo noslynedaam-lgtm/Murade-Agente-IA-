@@ -19,6 +19,16 @@ const COOKIE = 'agente_sessao';
 export type Empresa = { cnpj: string; nome: string };
 export type Sessao = { usuario: string; empresas: Empresa[]; exp: number; uid?: string; sid?: string; esc?: boolean; dono?: boolean; ger?: boolean };
 
+// Sessões abertas no Murade DP (na memória deste serviço): permitem gerar convites e gerenciar a equipe pelo DP.
+const sessoesDP = new Map<string, { cookie: string; exp: number }>();
+function guardarSessaoDP(cookieDP: string): string {
+  const agora = Date.now() / 1000;
+  for (const [k, v] of sessoesDP) if (v.exp < agora) sessoesDP.delete(k);
+  const sid = crypto.randomBytes(18).toString('base64url');
+  sessoesDP.set(sid, { cookie: cookieDP, exp: agora + DURACAO_S });
+  return sid;
+}
+
 const dpBase = () => (process.env.MURADE_DP_URL || 'https://murade-dp.onrender.com').replace(/\/$/, '');
 
 function assinar(s: Sessao): string {
@@ -53,9 +63,44 @@ async function contaDaRequisicao(req: Request): Promise<UsuarioConta | null> {
 export async function exigirAcesso(req: Request, res: Response, next: NextFunction) {
   const s = ler(req);
   if (s?.uid && !(await contaDaRequisicao(req))) { cookie(res, '', 0); res.status(401).json({ error: 'Seu acesso foi encerrado ou bloqueado.', codigo: 'NAO_AUTENTICADO' }); return; }
-  if (!s || !s.uid) { if (s) cookie(res, '', 0); res.status(401).json({ error: 'Entre com seu usuário para usar o Agente IA.', codigo: 'NAO_AUTENTICADO' }); return; }
+  if (!s) { res.status(401).json({ error: 'Entre com seu usuário para usar o Agente IA.', codigo: 'NAO_AUTENTICADO' }); return; }
   (req as any).sessaoAgente = s;
   next();
+}
+
+async function entrarPeloDP(login: string, senha: string): Promise<{ ok: true; sessao: Sessao } | { ok: false; status: number; motivo: string }> {
+  try {
+    const r = await fetch(`${dpBase()}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ login, senha }), signal: AbortSignal.timeout(10000) });
+    if (!r.ok) {
+      const d: any = await r.json().catch(() => ({}));
+      return { ok: false, status: r.status === 429 ? 429 : 401, motivo: d.motivo || 'Usuário ou senha incorretos.' };
+    }
+    const dados: any = await r.json();
+    const setCookie = (r.headers as any).getSetCookie ? (r.headers as any).getSetCookie() : [];
+    const cookieDP = setCookie.map((c: string) => c.split(';')[0]).join('; ');
+    let empresas: Empresa[] = (dados.cnpjs || []).map((cnpj: string) => ({ cnpj, nome: cnpj }));
+    if (cookieDP) {
+      try {
+        const e = await fetch(`${dpBase()}/api/empresas`, { headers: { cookie: cookieDP }, signal: AbortSignal.timeout(10000) });
+        if (e.ok) {
+          const lista: any = await e.json();
+          const nomes = new Map<string, string>((lista.empresas || []).map((x: any) => [String(x.cnpj || '').replace(/[^0-9A-Za-z]/g, '').toUpperCase(), String(x.nomeFantasia || x.razaoSocial || x.cnpj)]));
+          empresas = empresas.map((x) => ({ cnpj: x.cnpj, nome: nomes.get(String(x.cnpj).replace(/[^0-9A-Za-z]/g, '').toUpperCase()) || x.cnpj }));
+        }
+      } catch { /* mantém o CNPJ como nome */ }
+    }
+    let sid: string | undefined; let esc = false; let dono = false; let ger = false;
+    if (cookieDP) {
+      try {
+        const me = await fetch(`${dpBase()}/api/auth/me`, { headers: { cookie: cookieDP }, signal: AbortSignal.timeout(10000) });
+        if (me.ok) { const m: any = await me.json(); esc = m.ehEscritorio === true; dono = m.donoSistema === true; ger = m.podeGerenciarEmpresas === true; }
+      } catch { /* sem permissões de gestão */ }
+      sid = guardarSessaoDP(cookieDP);
+    }
+    return { ok: true, sessao: { usuario: String(dados.usuario || login), empresas, exp: Math.floor(Date.now() / 1000) + DURACAO_S, sid, esc, dono, ger } };
+  } catch {
+    return { ok: false, status: 503, motivo: 'Não foi possível falar com o Murade DP agora. Tente novamente.' };
+  }
 }
 
 export function registrarRotasDeAcesso(app: Express) {
@@ -67,8 +112,9 @@ export function registrarRotasDeAcesso(app: Express) {
       if (!u) { cookie(res, '', 0); return res.json({ autenticado: false }); }
       return res.json({ autenticado: true, usuario: u.login, empresas: [], ehEscritorio: u.ehEscritorio, donoSistema: u.donoSistema, contasProprias: true });
     }
-    // Cookie de sessão do modo antigo (sem conta própria): não vale mais; pede novo login.
-    if (s) { cookie(res, '', 0); return res.json({ autenticado: false }); }
+    // Quem gerencia usuários precisa da sessão com o DP (guardada só na memória): se o servidor reiniciou, pede novo login para o botão 'Usuários e empresas' voltar.
+    if (s && (s.esc || s.dono || s.ger) && !(s.sid && sessoesDP.has(s.sid))) { cookie(res, '', 0); return res.json({ autenticado: false }); }
+    if (s) return res.json({ autenticado: true, usuario: s.usuario, empresas: s.empresas, ehEscritorio: Boolean(s.sid && sessoesDP.has(s.sid) && s.esc), donoSistema: Boolean(s.sid && sessoesDP.has(s.sid) && s.dono), podeGerenciar: Boolean(s.sid && sessoesDP.has(s.sid) && (s.ger || s.esc || s.dono)), viaDP: true });
     let primeiroAcesso = false;
     if (contasAtivas() && process.env.AGENTE_BOOTSTRAP_TOKEN) { try { primeiroAcesso = !(await haUsuarios()); } catch { /* sem banco */ } }
     res.json({ autenticado: false, primeiroAcesso });
@@ -98,7 +144,10 @@ export function registrarRotasDeAcesso(app: Express) {
         }
       } catch (e) { console.error('Falha no login local do Agente:', e); return res.status(503).json({ motivo: 'Autenticação indisponível agora. Tente novamente.' }); }
     }
-    return res.status(503).json({ motivo: 'Contas do Agente IA não estão ativas neste serviço.' });
+    const r = await entrarPeloDP(login, senha.slice(0, 256));
+    if (!r.ok) return res.status(r.status).json({ motivo: r.motivo });
+    cookie(res, assinar(r.sessao), DURACAO_S);
+    return res.json({ autenticado: true, usuario: r.sessao.usuario, empresas: r.sessao.empresas, ehEscritorio: r.sessao.esc === true, donoSistema: r.sessao.dono === true, podeGerenciar: r.sessao.ger === true || r.sessao.esc === true || r.sessao.dono === true, viaDP: true });
   });
 
   // Link do WhatsApp: ativa o convite (cria a conta com a senha escolhida) e já entra.
@@ -120,7 +169,12 @@ export function registrarRotasDeAcesso(app: Express) {
       } catch (e) { console.error('Falha na recuperação de senha:', e instanceof Error ? e.message : e); }
       return res.json(resposta);
     }
-    return res.status(503).json({ sucesso: false, motivo: 'Contas do Agente IA não estão ativas neste serviço.' });
+    // Modo DP: as contas moram no Murade DP; o pedido vai para lá (o e-mail sai de lá, com o link do DP).
+    try {
+      const r = await fetch(`${dpBase()}/api/auth/esqueci-senha`, { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: dpBase() }, body: JSON.stringify({ login: lg }), signal: AbortSignal.timeout(15000) });
+      const d: any = await r.json().catch(() => ({}));
+      return res.status(r.status).json(d);
+    } catch { return res.status(503).json({ sucesso: false, motivo: 'Não foi possível falar com o Murade DP agora. Tente de novo em instantes.' }); }
   });
   app.post('/api/auth/redeem', async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
@@ -139,9 +193,19 @@ export function registrarRotasDeAcesso(app: Express) {
         return res.json({ autenticado: true, usuario: l.usuario.login, empresas: [], ehEscritorio: l.usuario.ehEscritorio, donoSistema: l.usuario.donoSistema, contasProprias: true });
       } catch (e) { console.error('Falha ao ativar convite do Agente:', e); return res.status(503).json({ motivo: 'Não foi possível ativar agora.' }); }
     }
-    return res.status(503).json({ motivo: 'Contas do Agente IA não estão ativas neste serviço.' });
+    try {
+      const r = await fetch(`${dpBase()}/api/auth/redeem`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ login, senha, convite }), signal: AbortSignal.timeout(10000) });
+      const d: any = await r.json().catch(() => ({}));
+      if (!r.ok) return res.status(r.status === 400 ? 400 : 503).json({ motivo: d.motivo || 'Não foi possível ativar o convite.' });
+    } catch { return res.status(503).json({ motivo: 'Não foi possível falar com o Murade DP agora.' }); }
+    const e = await entrarPeloDP(login, senha.slice(0, 256));
+    if (!e.ok) return res.status(e.status).json({ motivo: e.motivo });
+    cookie(res, assinar(e.sessao), DURACAO_S);
+    return res.json({ autenticado: true, usuario: e.sessao.usuario, empresas: e.sessao.empresas, ehEscritorio: e.sessao.esc === true, donoSistema: e.sessao.dono === true, podeGerenciar: e.sessao.ger === true || e.sessao.esc === true || e.sessao.dono === true, viaDP: true });
   });
 
+  registrarGestaoPeloDP(app);
+  registrarRotasDeContas(app, contaDaRequisicao);
   // Liga/desliga "manter conectado" na sessão atual (celular). Desligado = volta a pedir senha em 12 horas. Só para contas próprias do Agente
   // (essas são conferidas a cada acesso: se a conta for bloqueada ou excluída, o celular cai na hora).
   app.post('/api/auth/manter-conectado', async (req, res) => {
@@ -181,4 +245,61 @@ function enderecoDoAgente(req: Request): string {
   if (env) return env.replace(/\/$/, '');
   const proto = String(req.header('x-forwarded-proto') || req.protocol).split(',')[0];
   return `${proto}://${req.get('host')}`;
+}
+
+function registrarGestaoPeloDP(app: Express) {
+  const rotas: Array<[string, string, (req: Request) => string, (req: Request) => any]> = [
+    ['post', '/api/auth/invites', () => '/api/auth/invites', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase(), cnpj: String(r.body?.cnpj || ''), papel: r.body?.papel === 'viewer' ? 'viewer' : 'operator' })],
+    ['get', '/api/auth/team/detalhes', () => '/api/auth/team/detalhes', () => undefined],
+    ['post', '/api/auth/team', () => '/api/auth/team', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['post', '/api/auth/team/:login/nova-senha', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/nova-senha`, () => ({})],
+    ['post', '/api/auth/team/:login/bloqueio', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado !== false })],
+    ['post', '/api/auth/tenants/:login/bloqueio', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/tenants/:login/limite', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/limite`, (r) => { const b = r.body?.limite; return { limite: b === null || b === '' || b === undefined ? null : Number(b) }; }],
+    ['get', '/api/auth/atividade', (r) => `/api/auth/atividade?${new URLSearchParams(Object.entries(r.query).filter(([, v]) => typeof v === 'string') as [string, string][]).toString()}`, () => undefined],
+    ['get', '/api/auth/team', () => '/api/auth/team/detalhes', () => undefined],
+    ['post', '/api/auth/team/:login/reset-link', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/nova-senha`, () => ({})],
+    ['post', '/api/auth/team/:login/block', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/team/:login/reenviar', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/reenviar`, () => ({})],
+    ['delete', '/api/auth/team/:login/convite', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/convite`, () => undefined],
+    ['post', '/api/auth/team/:login/excluir', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}/excluir`, () => ({})],
+    ['post', '/api/auth/team/invite', () => '/api/auth/team/invite', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['delete', '/api/auth/team/:login', (r) => `/api/auth/team/${encodeURIComponent(String(r.params.login))}`, () => undefined],
+    ['get', '/api/auth/tenants', () => '/api/auth/tenants', () => undefined],
+    ['post', '/api/auth/tenants/:login/excluir', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/excluir`, () => ({ confirmar: true })],
+    ['post', '/api/auth/usuarios/:login/resumo', (r) => `/api/auth/usuarios/${encodeURIComponent(String(r.params.login))}/resumo`, () => ({})],
+    ['post', '/api/auth/usuarios/:login/excluir', (r) => `/api/auth/usuarios/${encodeURIComponent(String(r.params.login))}/excluir`, () => ({ confirmar: true })],
+    ['post', '/api/auth/tenants/invite', () => '/api/auth/tenants/invite', (r) => ({ login: String(r.body?.login || '').trim().toLowerCase() })],
+    ['post', '/api/auth/tenants/:login/block', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/bloqueio`, (r) => ({ bloqueado: r.body?.bloqueado === true })],
+    ['post', '/api/auth/tenants/:login/limit', (r) => `/api/auth/tenants/${encodeURIComponent(String(r.params.login))}/limite`, (r) => { const b = r.body?.limite; return { limite: b === null || b === '' || b === undefined ? null : Number(b) }; }],
+  ];
+  for (const [metodo, caminho, destino, corpo] of rotas) {
+    (app as any)[metodo](caminho, async (req: Request, res: Response, next: NextFunction) => {
+      if (contasAtivas()) { next(); return; }
+      res.setHeader('Cache-Control', 'no-store');
+      const s = ler(req);
+      if (!s) { res.status(401).json({ sucesso: false, motivo: 'Entre com seu usuário para continuar.' }); return; }
+      const dp = s.sid ? sessoesDP.get(s.sid) : undefined;
+      if (!dp || dp.exp < Date.now() / 1000) { res.status(401).json({ sucesso: false, motivo: 'Sua sessão com o DP expirou. Saia e entre de novo no Agente IA.' }); return; }
+      try {
+        const b = corpo(req);
+        const r = await fetch(`${dpBase()}${destino(req)}`, {
+          method: metodo.toUpperCase(),
+          headers: { cookie: dp.cookie, Origin: dpBase(), ...(b !== undefined ? { 'Content-Type': 'application/json' } : {}) },
+          body: b !== undefined ? JSON.stringify(b) : undefined,
+          signal: AbortSignal.timeout(15000),
+        });
+        const d: any = await r.json().catch(() => ({}));
+        if (d && typeof d.conviteUrl === 'string') {
+          try { const u = new URL(d.conviteUrl); d.conviteUrl = `${enderecoDoAgente(req)}/${u.hash}`; } catch { /* mantém */ }
+        }
+        if (d && typeof d.conviteUrl === 'string' && /\/reset-link$/.test(req.path)) d.link = d.conviteUrl;
+        if (d && Array.isArray(d.membros) && req.path === '/api/auth/team') {
+          d.equipe = d.membros.map((m: any) => ({ login: m.login, disabled: m.bloqueado === true }));
+          d.convitesPendentes = (d.convites || []).map((c: any) => ({ login: c.login, expires_at: c.expiraEm }));
+        }
+        res.status(r.status).json(d);
+      } catch { res.status(503).json({ sucesso: false, motivo: 'Não foi possível falar com o Murade DP agora.' }); }
+    });
+  }
 }
