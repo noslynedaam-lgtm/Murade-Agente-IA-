@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { falarHumana, pararHumana } from '../utils/vozHumana';
 import {
   Send,
   Sparkles,
@@ -302,6 +303,7 @@ Como posso orientar sua demanda hoje?
 
   // Helper to cleanly stop any playing audio (both HTML5 Audio and SpeechSynthesis)
   const stopAudioPlayback = () => {
+    pararHumana();
     if (audioElementRef.current) {
       try {
         audioElementRef.current.pause();
@@ -361,78 +363,13 @@ Como posso orientar sua demanda hoje?
     setSpeakingId(id);
 
     const naturalText = cleanTextForHumanSpeech(text);
-
-    // Divide a resposta inteira em trechos (por frase) para falar TUDO, sem cortar.
-    const trechos: string[] = [];
-    let atual = '';
-    for (const frase of naturalText.split(/(?<=[.!?:;])\s+/)) {
-      if ((atual + ' ' + frase).length > (trechos.length === 0 ? 280 : 2000) && atual) {
-        trechos.push(atual.trim());
-        atual = frase;
-      } else {
-        atual = atual ? atual + ' ' + frase : frase;
-      }
-    }
-    if (atual.trim()) trechos.push(atual.trim());
-
-    const buscarAudio = async (trecho: string): Promise<string | null> => {
-      try {
-        const res = await fetch('/api/tts', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: trecho, voice: 'Kore' }),
-        });
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data.audio ? `data:${data.mimeType || 'audio/wav'};base64,${data.audio}` : null;
-      } catch (err) {
-        console.error('TTS error:', err);
-        return null;
-      }
-    };
-
-    // Reserva SÓ para quando a voz humana estiver indisponível (cota): voz feminina pt-BR do navegador.
-    const falarNoNavegador = (restante: string) => {
-      if (!('speechSynthesis' in window)) {
-        setSpeakingId(null);
-        return;
-      }
-      const vozes = window.speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('pt'));
-      const masculina = /daniel|antonio|ant[oô]nio|felipe|ricardo|male|jorge|diego/i;
-      const feminina = /maria|francisca|luciana|camila|vit[oó]ria|thalita|female|google portugu/i;
-      const voz = vozes.find((v) => feminina.test(v.name)) || vozes.find((v) => !masculina.test(v.name));
-      const u = new SpeechSynthesisUtterance(restante);
-      u.lang = 'pt-BR';
-      if (voz) u.voice = voz;
-      u.rate = 1;
-      u.onend = () => setSpeakingId(null);
-      u.onerror = () => setSpeakingId(null);
-      window.speechSynthesis.speak(u);
-    };
-
+    // Voz humana (Kore): fica salva neste aparelho, começa por um trecho curto e não gasta a chave de novo.
     try {
-      let proximo = buscarAudio(trechos[0] || naturalText);
-      for (let i = 0; i < trechos.length; i++) {
-        const src = await proximo;
-        if (i + 1 < trechos.length) proximo = buscarAudio(trechos[i + 1]);
-        if (!src) {
-          falarNoNavegador(trechos.slice(i).join(' '));
-          return;
-        }
-        await new Promise<void>((resolve) => {
-          const audioObj = new Audio(src);
-          audioElementRef.current = audioObj;
-          audioObj.onended = () => resolve();
-          audioObj.onerror = () => resolve();
-          audioObj.play().catch(() => resolve());
-        });
-        if (audioElementRef.current === null) return; // usuário interrompeu
-      }
-      setSpeakingId(null);
-      audioElementRef.current = null;
+      await falarHumana(naturalText, () => setSpeakingId(null));
     } catch (err) {
       console.error('TTS error:', err);
-      setSpeakingId(null);
+    } finally {
+      setSpeakingId((atual) => (atual === id ? null : atual));
     }
   };
 
