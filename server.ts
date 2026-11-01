@@ -399,6 +399,8 @@ const cacheVoz = new Map<string, string>();
 let vozPausadaAte = 0;
 // Endpoint: Generate ultra-natural human voice audio using Gemini TTS
 app.post('/api/tts', async (req, res) => {
+  // Trava de custo: a voz premium gasta a chave e só funciona se o dono ligar VOZ_PREMIUM=ligada no servidor.
+  if (process.env.VOZ_PREMIUM !== 'ligada') { res.status(403).json({ error: 'Voz premium desligada; usando a voz econômica do navegador.' }); return; }
   try {
     const { text, voice = 'Kore' } = req.body;
     if (!text || typeof text !== 'string') {
