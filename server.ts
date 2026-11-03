@@ -241,7 +241,7 @@ app.post('/api/chat', async (req, res) => {
         matchedDoc = KNOWLEDGE_BASE_DOCS.find((d) => d.id === 'simples-nacional');
       } else if (query.includes('rescis') || query.includes('clt') || query.includes('férias') || query.includes('aviso prévio') || query.includes('jornada')) {
         matchedDoc = KNOWLEDGE_BASE_DOCS.find((d) => d.id === 'clt-principios');
-      } else if (query.includes('esocial') || query.includes('s-2200') || query.includes('s-2299') || query.includes('s-1200') || query.includes('dctfweb')) {
+      } else if (query.includes('esocial') || query.includes('s-2200') || query.includes('s-2299') || query.includes('s-1200') || query.includes('dctfweb') || query.includes('lotaç') || query.includes('lotac') || query.includes('s-1020') || query.includes('s-1010') || query.includes('s-1005') || query.includes('s-1000') || query.includes('tabela de rubrica') || query.includes('fpas') || query.includes('código de terceiros') || query.includes('codigo de terceiros')) {
         matchedDoc = KNOWLEDGE_BASE_DOCS.find((d) => d.id === 'eSocial-prazos');
       } else if (query.includes('fgts') || query.includes('inss') || query.includes('pix') || query.includes('tabela inss')) {
         matchedDoc = KNOWLEDGE_BASE_DOCS.find((d) => d.id === 'fgts-inss');

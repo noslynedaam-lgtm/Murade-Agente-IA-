@@ -67,3 +67,37 @@ Informação da versão anterior, mantida como referência:
 1. A transmissão do fechamento (S-1299) no eSocial, junto com os eventos da EFD-Reinf, alimenta a **DCTFWeb**.
 2. O **DARF previdenciário** gerado na DCTFWeb substituiu a GPS.
 3. Vencimento informado antes: **dia 20 do mês seguinte**, com antecipação se o dia não for útil. **Não conferido**: confirme na Receita.
+
+---
+
+## 3. Por que o S-1200 não é aceito: as 3 fases do eSocial
+
+> **Fontes:** estrutura de fases confirmada em várias fontes oficiais e de apoio (Manual de Orientação do eSocial — itens 9.1/9.2/10.1; jornalcontabil.com.br sobre a Fase 1 do Grupo 3; vriconsulting.com.br sobre o item 10.1 do MOS). O caminho de menu do item 4 abaixo foi **conferido ao vivo, direto no portal oficial, por print do usuário em 03/11/2026** — é a fonte mais confiável que existe porque veio da tela real.
+
+Quando o Murade DP (ou qualquer outro sistema) tenta transmitir a folha de um funcionário (S-1200) e o eSocial rejeita, a causa quase sempre é a mesma: falta alguma coisa nas **3 fases obrigatórias**, que têm que ser cumpridas **nesta ordem**:
+
+1. **Fase 1 — Eventos de Tabelas** (cadastro "de base" da empresa, feito uma vez e atualizado só quando muda algo):
+   - **S-1000** — Informações do Empregador/Contribuinte (dados cadastrais e classificação tributária).
+   - **S-1005** — Tabela de Estabelecimentos (filiais/obras).
+   - **S-1010** — Tabela de Rubricas (proventos e descontos da folha).
+   - **S-1020** — Tabela de Lotações Tributárias (FPAS + Código de Terceiros).
+   - Sem essas 4 tabelas certas no eSocial, **nenhum evento posterior é aceito** — nem admissão, nem folha.
+2. **Fase 2 — Eventos Não Periódicos**: admissão (S-2200), férias, afastamentos, desligamento (S-2299) — os fatos que acontecem na vida do funcionário.
+3. **Fase 3 — Eventos Periódicos**: a folha em si (S-1200), os pagamentos (S-1210) e o fechamento do mês (S-1299).
+
+**Na prática: se o S-1200 de um funcionário não for aceito, confira nesta ordem:** (1) a lotação tributária da empresa existe no eSocial (S-1020)? (2) a rubrica usada está mapeada corretamente (S-1010)? (3) o estabelecimento (S-1005) e os dados do empregador (S-1000) estão certos e compatíveis com a classificação tributária? Só depois disso faz sentido revisar o próprio S-1200.
+
+## 4. Onde conferir e cadastrar cada tabela, direto no Portal Web do eSocial
+
+> **Caminho de menu confirmado por print real do usuário em 03/11/2026:** Portal Web do eSocial → menu **"Empregador/Contribuinte"** → **"Tabelas"** → **"Tabela de Lotações Tributárias"** (URL do portal: `esocial.gov.br/portal/Lotacao/CadastroCompleto`). As demais tabelas (S-1000, S-1005, S-1010) ficam no mesmo menu "Empregador/Contribuinte", em abas/telas próprias — **o rótulo exato de cada uma pode mudar com atualizações do portal; sempre confira o menu ao vivo antes de orientar alguém com certeza absoluta.**
+
+**Passo a passo para conferir se a lotação tributária de uma empresa já existe (antes de cadastrar uma nova):**
+1. No portal, vá em **Empregador/Contribuinte → Tabelas → Tabela de Lotações Tributárias**.
+2. Na tela de busca, **não** procure pelo campo "Código" (esse é o código interno da lotação, que só existe depois de cadastrada). Em vez disso, selecione **"Tipo de Inscrição" = CNPJ** e digite o **"Número de Inscrição"** (o CNPJ da empresa, só números, sem ponto/barra/traço) no campo ao lado.
+3. Clique na lupa de buscar.
+4. **Se aparecer um resultado:** a lotação já existe — anote o código dela e informe esse código no sistema de folha (no Murade DP, é o campo "codLotacao vigente" dentro da Etapa 3 da tela do eSocial).
+5. **Se não aparecer nada:** aí sim a empresa realmente não tem lotação cadastrada, e isso precisa ser corrigido antes de qualquer S-1200 ser aceito. Clique em **"Cadastrar nova Lotação"** e preencha o tipo de lotação (geralmente tipo 01, para pessoa jurídica comum, salvo situação diferente), o FPAS e o Código de Terceiros — esses dois últimos dependem da atividade e da classificação tributária da empresa, então **não devem ser adivinhados**: confira com o responsável tributário/contador da empresa ou no sistema de origem (ex.: Alterdata) de onde a empresa migrou, porque lá normalmente já existe esse cadastro configurado.
+
+**Atenção para quem está migrando de outro sistema (ex.: Alterdata) para o Murade DP:** o cadastro de FPAS/Código de Terceiros que aparece dentro do Alterdata é a configuração *local* que o Alterdata usa para montar e enviar o evento S-1020 — **não é a lotação em si**. Se a folha dessa empresa vem sendo transmitida mensalmente sem erro pelo Alterdata, o S-1020 correspondente **já deve estar registrado no eSocial**; nesse caso, o problema mais comum é simplesmente não achar esse registro na busca (CNPJ digitado errado, ou usuário logado na empresa errada quando há procuração para várias empresas).
+
+**Para confirmar se a folha está sendo realmente aceita (e não só "enviada" por um sistema terceiro):** no Portal Web do eSocial, o caminho usual é **Folha de Pagamentos → Gestão da Folha** para consultar os eventos S-1200/S-1210 já processados, e o menu **"Download"** para baixar o recibo/XML de eventos aceitos com sucesso. Um evento que o eSocial recusou **não aparece** nessa consulta de download — nesse caso é preciso olhar o retorno/erro do próprio lote enviado.
