@@ -22,7 +22,6 @@ import {
   BookmarkCheck,
   ExternalLink,
   Globe,
-  ShieldAlert,
   Mic,
   MicOff,
   Radio,
@@ -257,7 +256,7 @@ Você pode utilizar os botões de **Filtro de Especialidade** acima para focar e
 
 Como posso orientar sua demanda hoje?
 
-⚠️ "Esta informação é uma orientação com base na legislação vigente. Sempre confirme com um contador ou advogado habilitado. Esta ferramenta não substitui orientação profissional."`,
+📌 Para mais detalhes, procure um contador ou advogado de sua confiança.`,
       timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -450,7 +449,7 @@ Como posso orientar sua demanda hoje?
         category: selectedCategory,
         content: `Ocorreu uma instabilidade na consulta ao motor do agente. Por favor, tente novamente ou consulte diretamente os manuais na aba **Base de Conhecimento** ou os portais oficiais.
 
-⚠️ "Esta informação é uma orientação com base na legislação vigente. Sempre confirme com um contador ou advogado habilitado. Esta ferramenta não substitui orientação profissional."`,
+📌 Para mais detalhes, procure um contador ou advogado de sua confiança.`,
         timestamp: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -1121,18 +1120,15 @@ Como posso orientar sua demanda hoje?
                     }
 
                     if (
-                      paragraph.includes('Esta informação é uma orientação') ||
-                      paragraph.includes('Esta informação é orientação') ||
-                      paragraph.includes('Esta ferramenta não substitui orientação profissional')
+                      paragraph.includes('Para mais detalhes, procure um contador')
                     ) {
                       return (
                         <div
                           key={pIdx}
-                          className="mt-3 p-3 bg-amber-50/90 border border-amber-300 rounded-lg text-xs sm:text-sm text-amber-950 flex items-start gap-2.5 shadow-2xs"
+                          className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-700 flex items-start gap-2.5"
                         >
-                          <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                           <span className="font-medium leading-relaxed">
-                            {paragraph.replace(/[⚖️⚠️*"]/g, '').trim()}
+                            {paragraph.replace(/[⚖️⚠️📌*"]/g, '').trim()}
                           </span>
                         </div>
                       );

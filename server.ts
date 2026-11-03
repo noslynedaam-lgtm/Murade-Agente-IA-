@@ -111,9 +111,9 @@ Ao final da resposta, cite:
 "🔗 Confira também: [link oficial homologado]"
 
 ═══════════════════════════════════════════════════════════════
-📌 AVISO LEGAL OBRIGATÓRIO NO FINAL:
+📌 ENCERRE SEMPRE A RESPOSTA COM:
 ═══════════════════════════════════════════════════════════════
-⚠️ "Esta informação é uma orientação com base na legislação vigente. Sempre confirme com um contador ou advogado habilitado. Esta ferramenta não substitui orientação profissional."
+📌 Para mais detalhes, procure um contador ou advogado de sua confiança.
 
 ═══════════════════════════════════════════════════════════════
 ARQUIVOS DA BASE DE CONHECIMENTO:
@@ -277,7 +277,7 @@ app.post('/api/chat', async (req, res) => {
 • **CFC — Conselho Federal de Contabilidade:** https://www.cfc.org.br
 • **Reforma Tributária — Portal da Câmara:** https://www.camara.leg.br/reformatributaria
 
-⚠️ "Esta informação é uma orientação com base na legislação vigente. Sempre confirme com um contador ou advogado habilitado. Esta ferramenta não substitui orientação profissional."`;
+📌 Para mais detalhes, procure um contador ou advogado de sua confiança.`;
 
       res.json({
         success: true,
@@ -300,7 +300,7 @@ ${matchedDoc.summary}
 📌 Fonte: ${matchedDoc.filePath}
 🔗 Confira também: ${matchedDoc.officialLink || 'https://www.receita.fazenda.gov.br'}
 
-⚠️ "Esta informação é uma orientação com base na legislação vigente. Sempre confirme com um contador ou advogado habilitado. Esta ferramenta não substitui orientação profissional."`;
+📌 Para mais detalhes, procure um contador ou advogado de sua confiança.`;
 
     res.json({
       success: true,
