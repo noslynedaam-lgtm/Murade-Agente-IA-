@@ -318,6 +318,160 @@ inicial de dados vindos do Alterdata, porque o cadastro de empresa mais
 completo (CNPJ, sócios, endereço, dados cadastrais gerais) tende a estar
 mais completo no módulo de DP/cadastro do cliente.
 
+## Schema de destino no Murade (levantado em 05/11/2026)
+
+Levantamento completo do lado Murade (os 3 repositórios: `departamento-
+pessoal`, `murade-fiscal`, `murade-contabil`). **Achado mais importante:
+não existe um schema SQL centralizado nem ORM com migrations** — cada
+módulo cria sua(s) tabela(s) via `CREATE TABLE IF NOT EXISTS` embutido no
+próprio código TypeScript (idempotente, sem pasta `migrations/`). E nas
+entidades mais sensíveis (empresa, funcionário, sócio), a tabela Postgres
+tem poucas colunas fixas + **um campo `payload`/`dados` (jsonb) — ou um
+payload cifrado (`payload_ciphertext`/`payload_iv`/`payload_tag`, bytea
+com AES-256-GCM) — guardando o registro inteiro como JSON**. A estrutura
+real de campos está nas *interfaces TypeScript*, não em colunas SQL.
+
+### Empresa (3 representações, uma por sistema — não é tabela compartilhada)
+
+| Sistema | Tabela | Chave | Onde o schema do payload está definido |
+|---|---|---|---|
+| Fiscal (fonte mais completa) | `murade_fiscal_empresas` | `cnpj` (14 char) | interface `Empresa`, `murade-fiscal/src/types.ts` |
+| DP (cadastro operacional, usado na folha) | `dp_companies` | `cnpj` | interface `EmpresaCliente`, `departamento-pessoal/src/types/murad.ts` |
+| Contábil (não tem cadastro próprio, só réplica) | `contabil_empresas_compartilhadas` + `contabil_company_workspaces` | `cnpj` | mesmo formato jsonb do Fiscal |
+
+Campos-chave do `Empresa` (Fiscal): `razaoSocial, nomeFantasia, cnpj,
+inscricaoEstadual, regimeTributario ('Simples Nacional'|'Lucro
+Presumido'|'Lucro Real'|'MEI'|'Não informado'), uf, cidade, status,
+certificado?, dadosContratuais?` (este último tem endereço completo,
+capital social, data de abertura, objeto social e `socios[]`). O
+`EmpresaCliente` do DP tem campos equivalentes mais granulares (CNAE,
+FPAS, RAT, FAP, anexo Simples, departamentos, etc.).
+**CNPJ é a chave em todo lugar** — normalizado pra 14 caracteres sem
+máscara, compatível com `wphd.empresa.nrcgc`.
+
+### Funcionário
+
+Tabela `dp_employees` (`cnpj, employee_id` chave composta) — **payload
+inteiro cifrado** (AES-256-GCM, chave em `DP_DATA_ENCRYPTION_KEY`).
+Interface `Funcionario` (`departamento-pessoal/src/types/murad.ts`) tem
+~70 campos (dados pessoais, CTPS, PIS, endereço, admissão, cargo, CBO,
+salário, vale-transporte, plano de saúde, férias resumidas, status
+eSocial). **Já existe um campo pronto pra isso**: `origemAlterdata?:
+Record<string,string>` — guarda a ficha original do sistema de origem
+lado a lado com os campos convertidos, pra conferência.
+
+### Dependente
+
+**Não é tabela separada** — é array `dependentesDetalhe[]` dentro do
+próprio JSON do `Funcionario` (cifrado junto): `{tpDep, nome, dtNascto,
+cpf?, depIRRF, depSF}`.
+
+### Sócio / pró-labore
+
+Duas entidades sem ligação entre si:
+- **DP** (a principal pra migração, por causa do pró-labore mensal):
+  `dp_socios` (payload cifrado: `{id, nome, cpf, dependentes, ativo}` —
+  **sem `dtadmissao`/`dtdemissao`**, diferente do `wdp.tb*` do Alterdata)
+  + `dp_prolabore_mes` (lançamento mensal, texto claro: `cnpj, socio_id,
+  competencia, valor, inss, irrf, liquido`).
+- **Fiscal** (pra contrato social, sem pró-labore): `SocioEmpresa` dentro
+  de `Empresa.dadosContratuais.socios[]` — `{nome, cpf, qualificacao,
+  percentualCapital, nacionalidade?, estadoCivil?, profissao?}`.
+
+**Gap:** nem `dp_socios` nem `SocioEmpresa` têm data de admissão/saída do
+sócio — campo que o Alterdata tem (`wdp.tb*.dtadmissao/dtdemissao`). Vai
+sobrar só em `origemAlterdata` até o cadastro ser estendido.
+
+### Férias/afastamento
+
+Sem tabela de histórico por período. Existe: (1) campos resumidos no
+próprio `Funcionario` (`dataAquisitivoFerias`, `feriasGozadas`,
+`diasFeriasVencidas`); (2) `dp_absence_draft_history` — log append-only
+de afastamentos (inclusive férias, como motivo `'Férias (S-2230 código
+15)'`), pensado pro eSocial S-2230, não como cadastro mestre de período.
+**Gap:** não existe hoje uma tabela equivalente ao histórico de períodos
+aquisitivos do Alterdata (`wdp.a*`).
+
+### Histórico de cargo/função
+
+**Não existe nenhum campo ou tabela** — `Funcionario` só guarda cargo/CBO
+**atual**, sem versionamento. Gap direto com `wdp.fh*`.
+
+### Folha de pagamento
+
+Fragmentada em várias tabelas por estágio (`dp_payroll_previews`,
+`dp_payroll_closures` — esta é o snapshot final fechado, imutável —,
+`dp_payroll_drafts`, `dp_payroll_auto_results`, etc.), todas chaveadas por
+`(cnpj, competence, employee_ref)`. Formato das rubricas segue o cálculo
+de `calculateMonthlyCltPreview` em `departamento-pessoal/src/server/
+payroll.ts` — não é uma tabela de rubricas normalizada linha a linha.
+
+### Vale-transporte
+
+Só dois campos no `Funcionario` (`valeTransporte: boolean,
+valeTransporteValor: number`) — sem número de cartão/matrícula como no
+Alterdata (`wdp.p*`). **Achado importante:** o cálculo de folha hoje
+**ainda não desconta VT automaticamente** (há um `throw` explícito dizendo
+que não está implementado).
+
+### Contribuição sindical
+
+Existe só o **cadastro do sindicato** (`dp_sindicatos`, com regras tipo
+`percentualAssistencial`, `mesDescontoAssistencial`) — **não existe
+lançamento mensal por funcionário** registrando o valor efetivamente
+descontado. Gap direto com `wdp.s*`.
+
+### Regime tributário
+
+Sempre um campo de texto único e atual dentro do cadastro da empresa
+(`regimeTributario`/`regime`) em cada sistema — **nenhum dos três
+sistemas Murade guarda histórico de regime por período**, diferente do
+Alterdata (`wfiscal.empssimples` tem período). Contábil usa esse campo só
+pra decidir qual motor de cálculo chamar (`ecfPresumidoService.ts` vs.
+`ecfRealService.ts`) — não achamos (nem no Alterdata nem no Murade) uma
+tabela que separe Presumido de Real além desse campo único; não é
+bloqueante porque nenhum dos dois lados rastreia isso por período mesmo.
+
+### Gaps a criar no Murade DP (tabelas que não existem ainda, necessárias pra não perder dado do Alterdata)
+
+Seguindo o padrão de nomenclatura já usado (`dp_<entidade>`):
+
+| Tabela nova | Pra quê | Supre o quê do Alterdata |
+|---|---|---|
+| `dp_ferias_periodos` | histórico de períodos aquisitivos de férias por funcionário/ano | `wdp.a*` |
+| `dp_historico_cargo` | histórico de mudança de cargo/função/CBO/departamento | `wdp.fh*` |
+| `dp_contribuicao_sindical_mes` | lançamento mensal de contribuição sindical descontada | `wdp.s*` |
+| `fiscal_regime_tributario_historico` | histórico de período de enquadramento tributário | `wfiscal.empssimples` |
+
+### Importadores que já existem (caminho diferente do que este documento investiga)
+
+Cada sistema já tem um importador próprio de **CSV/TXT/XML** (não lê
+`.bcir`/dump Postgres nativo): `MuradeMigracao.ts` (Fiscal, só empresas),
+`muradeDpMigracao.ts` (DP, mais amplo — funcionário, férias, 13º, lê XML
+de NF-e/CT-e/eSocial) e `migracaoContabilService.ts` (Contábil). Esses
+importadores cobrem um caminho diferente do que este documento persegue
+(restauração nativa do `.bcir` → Postgres → leitura direta das tabelas).
+Os dois caminhos podem coexistir, mas não compartilham código hoje — é
+uma decisão de arquitetura em aberto: usar/estender um desses, ou seguir
+com um importador novo que lê direto do Postgres restaurado.
+
+### Risco técnico a resolver antes de escrever dado de verdade
+
+O importador precisa:
+1. Replicar a função de cifragem AES-256-GCM (`encryptFuncionario`/
+   `cifrarJsonDP` em `departamento-pessoal/src/server/auth.ts`) pra gravar
+   em `dp_employees`/`dp_socios` — exige acesso a `DP_DATA_ENCRYPTION_KEY`
+   (segredo de produção).
+2. Adquirir o mesmo `pg_advisory_lock` por CNPJ que `salvarEmpresaEscopada`/
+   `salvarFuncionarioEscopado` usam, pra não conflitar com um fechamento de
+   folha em andamento.
+3. Rodar com acesso simultâneo ao Postgres restaurado do Alterdata (hoje
+   só acessível via pgAdmin III no notebook do Beny, rede local) **e** ao
+   Postgres de produção do Murade (Render) — hoje nenhum ambiente tem os
+   dois ao mesmo tempo. Precisa decidir com o Beny: expor o restaurado
+   temporariamente, ou exportar um recorte (CSV/dump) do restaurado pra
+   rodar o importador num lugar com acesso ao Render.
+
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
 1. ~~Terminar de extrair as colunas 13-70 de `wphd.empresa`~~ — feito
@@ -341,22 +495,35 @@ mais completo no módulo de DP/cadastro do cliente.
    idênticas (`cc`≈`mc`, `cl`≈`lt`, `cs`≈`sd`, `ct`≈`sc`, `cm`≈`mv`) — não
    bloqueante, Contábil é o 2º passo do fluxo.
 5. ~~Localizar a tabela de enquadramento tributário~~ — parcialmente
-   feito: Simples Nacional achado em `wfiscal.empssimples` (ver acima,
-   período + parâmetros por `idempresa`). Falta achar onde distingue
-   Lucro Presumido de Lucro Real pra quem não é Simples — candidato mais
-   provável é alguma tabela de `wcont` ligada à ECF/apuração do lucro.
-6. Levantar o schema de destino real nos sistemas Murade (DP, Fiscal,
-   Contábil) — tabelas de empresa, funcionário, dependente, sócio,
-   afastamento, histórico de cargo, folha, vale-transporte, sindical,
-   regime tributário — pra desenhar o de-para completo.
-7. Desenhar e implementar o ETL real: um robô/serviço batch que lê direto
-   do Postgres restaurado (ou de um dump exportado) e grava no schema do
-   Murade, começando pelo DP (empresa + funcionário + sócio), nunca
-   reaproveitando lógica de cálculo do Alterdata, só os dados brutos.
-8. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
-   Nacional e agendamento automático de guias falham com frequência,
-   segundo relato do Beny — motivo inclusive de multas em clientes dele).
-   A migração traz só dado, nunca lógica de cálculo.
+   feito: Simples Nacional achado em `wfiscal.empssimples`. Não achamos
+   uma tabela separada pra Presumido vs. Real — mas confirmamos que o
+   próprio Murade também não rastreia isso por período (só um campo
+   atual), então não é bloqueante: o importador grava o valor mais atual
+   que conseguir inferir.
+6. ~~Levantar o schema de destino real nos sistemas Murade~~ — feito
+   (05/11/2026, ver seção "Schema de destino no Murade" acima). Achado
+   principal: não tem ORM/migrations, tabelas usam payload jsonb ou
+   cifrado (AES-256-GCM); faltam 4 tabelas no Murade pra não perder dado
+   (férias por período, histórico de cargo, contribuição sindical mensal,
+   histórico de regime tributário — ver tabela de gaps acima).
+7. Decidir com o Beny o caminho de execução do importador: (a) escrever
+   um importador novo que lê direto do Postgres restaurado (caminho que
+   este documento persegue) rodando num ambiente com acesso aos dois
+   bancos (restaurado + Render), ou (b) adaptar os importadores CSV/XML
+   que já existem em cada sistema (`MuradeMigracao.ts`,
+   `muradeDpMigracao.ts`, `migracaoContabilService.ts`) pra também aceitar
+   um export do Postgres restaurado. Ver seção "Risco técnico" acima —
+   precisa also de `DP_DATA_ENCRYPTION_KEY` pra gravar funcionário/sócio.
+8. Criar as 4 tabelas novas de destino listadas acima nos repositórios
+   Murade DP/Fiscal, seguindo o padrão `CREATE TABLE IF NOT EXISTS`
+   já usado em cada módulo.
+9. Escrever o código do importador (mapeamento origem→destino já
+   documentado nas seções acima) e testar contra uma cópia/amostra dos
+   dados antes de rodar contra os dados reais de produção.
+10. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
+    Nacional e agendamento automático de guias falham com frequência,
+    segundo relato do Beny — motivo inclusive de multas em clientes
+    dele). A migração traz só dado, nunca lógica de cálculo.
 
 ## Fonte dos dados
 
