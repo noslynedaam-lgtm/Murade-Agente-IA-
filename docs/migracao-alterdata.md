@@ -137,8 +137,23 @@ Inspecionamos as 10 colunas — `idempcontratada`, `cdchamada`, `nmempresa`,
 `nrtelefone` — e é um mini-cadastro de **empresa contratada/tomadora de
 serviço** (CNPJ + endereço de uma empresa terceira, usada em contexto de
 cessão de mão-de-obra/terceirização dentro do DP), não um elo entre os
-módulos DP e Contábil. A ligação DP↔Contábil continua sem tabela
-identificada.
+módulos DP e Contábil.
+
+**Resolvido (05/11/2026): não precisa de tabela de ligação DP↔Contábil —
+já está resolvido pelo que já confirmamos.** `wphd.empresa.cdempresa` já
+é a chave que liga TUDO: as tabelas particionadas de `wdp` (ex. `f00002`,
+`tb00002`) e as de `wcont` (ex. `lt00002`, `sd00002`, `mv00002`) usam o
+mesmo sufixo numérico, que é o `cdempresa` do cadastro mestre (ver seção
+"sufixo numérico = `wphd.empresa.cdempresa`" acima) — então DP e Contábil
+já estão ligados por tabela nenhuma a mais: ambos apontam pro mesmo
+`cdempresa`. E do lado Murade, a ligação entre os três sistemas nunca foi
+por ID interno do Alterdata mesmo — é sempre pelo **CNPJ** (`dp_companies.
+cnpj`, `murade_fiscal_empresas.cnpj`, `murade_contabil_...cnpj`, ver seção
+"Schema de destino" abaixo). Ou seja: o importador usa `wphd.empresa.
+nrcgc` (o CNPJ) como chave universal de ligação — tanto pra juntar os
+dados dos três módulos do Alterdata entre si (via `cdempresa`) quanto pra
+gravar nos três sistemas Murade (via `cnpj`). Não existe, e não é preciso
+que exista, uma tabela dedicada de "ligação DP↔Contábil".
 
 ### Achado importante: dados particionados por empresa em tabelas separadas
 
@@ -704,9 +719,12 @@ O importador precisa:
    `cdempresa`/`idempresa`. A tabela de sócios (`wdp.tb*`) e a de Simples
    Nacional (`wfiscal.empssimples`) já foram achadas (ver acima); falta só
    achar onde distingue Lucro Presumido de Lucro Real.
-2. ~~Checar `wdp.empcon`~~ — feito: não é ligação DP↔Contábil, é cadastro
-   de empresa contratada/tomadora de serviço (terceirização). A ligação
-   DP↔Contábil continua sem tabela identificada — próximo passo.
+2. ~~Checar `wdp.empcon`~~ e ~~achar a ligação DP↔Contábil~~ — ambos
+   feitos: `wdp.empcon` é cadastro de empresa contratada/tomadora de
+   serviço (terceirização), não ligação entre módulos. E a "ligação" nem
+   precisava de tabela própria: DP e Contábil já batem pelo mesmo
+   `cdempresa` de `wphd.empresa` (sufixo das tabelas particionadas), e do
+   lado Murade a chave sempre foi o CNPJ mesmo (ver seção acima).
 3. ~~Descobrir a tabela de mapeamento do sufixo numérico~~ e ~~confirmar que
    bate com `cdempresa`~~ — ambos feitos e confirmados (05/11/2026, ver
    seção acima): o sufixo numérico de 5 dígitos é exatamente o `cdempresa`
