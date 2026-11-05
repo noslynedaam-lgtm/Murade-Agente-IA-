@@ -54,30 +54,76 @@ si.
 **O cadastro mestre de verdade é `wphd.empresa`** (schema `wphd` — não estava
 na lista dos 6 schemas iniciais, foi achado buscando por colunas tipo
 `%fantasia%`/`%razao%`/`%cnpj%` em todos os ~32 schemas do banco). Tem 70
-colunas; confirmadas até agora (ordinal 1 a 12):
+colunas — lista completa (05/11/2026):
 
-| # | Coluna | Tipo |
-|---|--------|------|
-| 1 | `cdempresa` | integer |
-| 2 | `nmempresa` | character varying |
-| 3 | `nmfantasia` | character varying |
-| 4 | `dsatividade` | character varying |
-| 5 | `dsendereco` | character varying |
-| 6 | `nmbairro` | character varying |
-| 7 | `nmcidade` | character varying |
-| 8 | `nrcep` | character varying |
-| 9 | `cduf` | character varying |
-| 10 | `nrtelefone` | character varying |
-| 11 | `nrinscrmunicipal` | character varying |
-| 12 | `nrinscrestadual` | character varying |
+| # | Coluna | Tipo | # | Coluna | Tipo |
+|---|--------|------|---|--------|------|
+| 1 | `cdempresa` | integer | 36 | `nmcidadebureau` | character varying |
+| 2 | `nmempresa` | character varying | 37 | `nrcepbureau` | character varying |
+| 3 | `nmfantasia` | character varying | 38 | `nrtelefonebureau1` | character varying |
+| 4 | `dsatividade` | character varying | 39 | `nrtelefonebureau2` | character varying |
+| 5 | `dsendereco` | character varying | 40 | `nrtelefonebureau3` | character varying |
+| 6 | `nmbairro` | character varying | 41 | `nmemailbureau` | character varying |
+| 7 | `nmcidade` | character varying | 42 | `stativa` | boolean |
+| 8 | `nrcep` | character varying | 43 | `imglogotipoempresa` | bytea |
+| 9 | `cduf` | character varying | 44 | `stformatologomarca` | character varying |
+| 10 | `nrtelefone` | character varying | 45 | `cdnire` | character varying |
+| 11 | `nrinscrmunicipal` | character varying | 46 | `st_dc` | boolean |
+| 12 | `nrinscrestadual` | character varying | 47 | `nroab` | character varying |
+| 13 | `nrregcartorio` | character varying | 48 | `dtiniservcont` | timestamp |
+| 14 | `nrregjuntacomercial` | character varying | 49 | `dtfimservcont` | timestamp |
+| 15 | `dtregjuntacomercial` | timestamp | 50 | `dtiniservinfo` | timestamp |
+| 16 | `vlcapital` | double precision | 51 | `dtfimservinfo` | timestamp |
+| 17 | `dtinicioatividade` | timestamp | 52 | `cdmunicipio` | character varying |
+| 18 | `nrcgc` | character varying | 53 | `nrsuframa` | character varying |
+| 19 | `dtfimatividade` | timestamp | 54 | `logindc` | character varying |
+| 20 | `obs` | text | 55 | `idmunicipio` | integer |
+| 21 | `lancautomatico` | boolean | 56 | `nmnomecompleto` | character varying |
+| 22 | `centrocusto` | boolean | 57 | `nrfax` | character varying |
+| 23 | `nmemail` | character varying | 58 | `dtconvempresa` | timestamp |
+| 24 | `tpcalculoir` | character varying | 59 | `dtexpedicaonire` | timestamp |
+| 25 | `cdnaturezajuridica` | character varying | 60 | `codigo_susep` | character varying |
+| 26 | `cdcnae` | character varying | 61 | `bairro_completo` | character varying |
+| 27 | `trabbureau` | boolean | 62 | `endereco_completo` | character varying |
+| 28 | `nmbureau` | character varying | 63 | `escritorio_data_entrada` | date |
+| 29 | `nmresponsavelbureau` | character varying | 64 | `escritorio_data_saida` | date |
+| 30 | `nrcnpjcpfresponsavel` | character varying | 65 | `endereco_complemento` | character varying |
+| 31 | `nrcrecicrc` | character varying | 66 | `tipo_porte_empresa` | smallint |
+| 32 | `nrcpfresponsavel` | character varying | 67 | `nome_auditor` | character varying |
+| 33 | `nmenderecobureau` | character varying | 68 | `codigo_cvm_auditor` | integer |
+| 34 | `cdufbureau` | character varying | 69 | `dtnascimento` | timestamp |
+| 35 | `nmbairrobureau` | character varying | 70 | `certificado_id` | integer |
 
-Faltam as colunas 13-70 (inclui com certeza CNPJ e provavelmente sócios,
-e-mail, regime tributário geral) — ficou pendente porque o pgAdmin no
-notebook do Beny voltou a pedir senha do Postgres no meio da extração.
-Próxima sessão com acesso: terminar esse SELECT e também conferir se
-`wphd.empresa.cdempresa` é a chave que liga com `wfiscal.empresa.cdempresa` /
-`wdp.empdp.idempresa` / `wcont.empcont.idempresa` (os três módulos
-provavelmente referenciam o cadastro mestre do `wphd` pelo mesmo código).
+**Conclusões da lista completa:**
+
+- **CNPJ confirmado**: é a coluna `nrcgc` (#18) — "CGC" é o nome antigo do
+  CNPJ, a Alterdata manteve o nome legado na coluna mas é o CNPJ mesmo.
+- **Responsável/contador**: `nrcnpjcpfresponsavel` (#30), `nrcpfresponsavel`
+  (#32) e `nrcrecicrc` (#31, registro CRC) — dados do contador/responsável
+  técnico, não dos sócios da empresa.
+- **Não tem sócios/quadro societário nesta tabela.** Não existe nenhuma
+  coluna de sócio(s) em `wphd.empresa` — isso confirma que dados de sócios
+  devem estar em uma tabela relacionada à parte (ainda não localizada; entra
+  no próximo levantamento).
+- **Não tem "regime tributário" (Simples/Presumido/Real) direto.** A coluna
+  mais próxima é `tpcalculoir` (#24, tipo de cálculo de IR) — é um indício,
+  mas não necessariamente o enquadramento tributário geral da empresa. Vale
+  checar o conteúdo real dessa coluna e procurar se há tabela própria de
+  enquadramento (ex.: algo em `wcont` ou `wfiscal` ligado a Simples
+  Nacional/apuração).
+- Bastante coisa de "bureau" (`nmbureau`, `nmresponsavelbureau`,
+  `nrtelefonebureau1-3`, `nmemailbureau`, `nmenderecobureau`, etc.) — parece
+  ser dado do próprio escritório de contabilidade (o "bureau" prestador de
+  serviço), não da empresa cliente. Faz sentido já que o Alterdata é
+  multiempresa por escritório.
+- `escritorio_data_entrada`/`escritorio_data_saida` (datas) sugerem período
+  em que aquela empresa foi cliente daquele escritório — útil pra saber se
+  uma empresa do backup ainda está ativa como cliente ou já saiu.
+
+Falta confirmar se `wphd.empresa.cdempresa` é a chave que liga com
+`wfiscal.empresa.cdempresa` / `wdp.empdp.idempresa` / `wcont.empcont.idempresa`
+(os três módulos provavelmente referenciam o cadastro mestre do `wphd` pelo
+mesmo código) — próximo passo com acesso ao banco.
 
 Também achamos `wdp.empcon` (schema `wdp`, nome parecido mas diferente de
 `empcont` que é do `wcont`) — ainda não inspecionado, mas o nome sugere que
@@ -170,10 +216,13 @@ mais completo no módulo de DP/cadastro do cliente.
 
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
-1. Terminar de extrair as colunas 13-70 de `wphd.empresa` (o cadastro
-   mestre de verdade — ver seção acima) e confirmar a chave que liga esse
-   cadastro mestre às tabelas de configuração `wfiscal.empresa` /
-   `wdp.empdp` / `wcont.empcont` por `cdempresa`/`idempresa`.
+1. ~~Terminar de extrair as colunas 13-70 de `wphd.empresa`~~ — feito
+   (05/11/2026, lista completa das 70 colunas na seção acima). Falta só
+   confirmar a chave que liga esse cadastro mestre às tabelas de
+   configuração `wfiscal.empresa` / `wdp.empdp` / `wcont.empcont` por
+   `cdempresa`/`idempresa`, e localizar a tabela de sócios/quadro
+   societário (não está em `wphd.empresa`) e a de enquadramento tributário
+   (Simples/Presumido/Real — `tpcalculoir` não é exatamente isso).
 2. Checar `wdp.empcon` — pode ser a ligação DP↔Contábil.
 3. ~~Descobrir a tabela de mapeamento do sufixo numérico~~ — já não é mais
    necessário descobrir uma tabela de mapeamento à parte: confirmado (só
