@@ -125,10 +125,14 @@ Falta confirmar se `wphd.empresa.cdempresa` é a chave que liga com
 (os três módulos provavelmente referenciam o cadastro mestre do `wphd` pelo
 mesmo código) — próximo passo com acesso ao banco.
 
-Também achamos `wdp.empcon` (schema `wdp`, nome parecido mas diferente de
-`empcont` que é do `wcont`) — ainda não inspecionado, mas o nome sugere que
-pode ser uma tabela de ligação DP↔Contábil, vale checar antes de montar o
-de-para final.
+**Correção (05/11/2026): `wdp.empcon` NÃO é a ligação DP↔Contábil.**
+Inspecionamos as 10 colunas — `idempcontratada`, `cdchamada`, `nmempresa`,
+`dsendereco`, `nmbairro`, `nmcidade`, `nrcep`, `cduf`, `nrcgc`,
+`nrtelefone` — e é um mini-cadastro de **empresa contratada/tomadora de
+serviço** (CNPJ + endereço de uma empresa terceira, usada em contexto de
+cessão de mão-de-obra/terceirização dentro do DP), não um elo entre os
+módulos DP e Contábil. A ligação DP↔Contábil continua sem tabela
+identificada.
 
 ### Achado importante: dados particionados por empresa em tabelas separadas
 
@@ -171,16 +175,65 @@ compartilham 30; `con` compartilha 30; `lf` compartilha 25. Ou seja, nem
 toda empresa do Contábil usa todos os módulos — mas o conjunto de códigos de
 empresa é um subconjunto fechado do mesmo grupo em todos os casos.
 
-**O que ainda falta confirmar (precisa de acesso ao banco):** o significado
-de cada prefixo de 1-3 letras (hipóteses, não confirmadas: `a`=admissão,
-`d`=demissão/desligamento, `f`=funcionário/ficha, `r`=rescisão, `s`=salário,
-`t`=tomador de serviço, `v`=vínculo — mas isso precisa ser checado olhando
-as colunas de uma tabela de cada família) e se o sufixo numérico bate
-exatamente com `wphd.empresa.cdempresa` (ex.: empresa de código `00001` →
-tabelas `a00001`, `d00001`, `f00001` etc. são dela). Essa segunda
-confirmação é crítica pra montar o importador: se bater, o importador já
-sabe exatamente quais tabelas ler pra cada empresa, sem precisar de nenhuma
-tabela de mapeamento à parte.
+### Confirmado (05/11/2026): sufixo numérico = `wphd.empresa.cdempresa`, com uma ressalva
+
+`wphd.empresa` tem 38 empresas cadastradas, com `cdempresa` variando de 2 a
+63 (ex.: `cdempresa=8` é a própria "MURAD ASSESSORIA CONTABIL LTDA", ou
+seja, o escritório do Beny também está cadastrado como empresa no banco).
+Comparando essa lista com o conjunto de 51 sufixos achado em `wdp` (seção
+acima): **todo código que aparece nos dois lados bate exatamente** — ex.:
+empresa `cdempresa=8` ↔ tabelas `a00008`, `d00008`, `f00008` etc. Ou seja,
+a hipótese está confirmada: **o sufixo numérico de 5 dígitos é o
+`cdempresa` do cadastro mestre, sem necessidade de tabela de mapeamento à
+parte.**
+
+A ressalva: existem códigos em `wphd.empresa` (`43`, `59`, `62`, `63`) que
+**não aparecem** no conjunto de sufixos de `wdp` — ou seja, essas empresas
+estão cadastradas no mestre mas não têm nenhuma tabela de Departamento
+Pessoal criada para elas (provavelmente são clientes só de Fiscal e/ou só
+de Contábil, nunca tiveram folha processada). O importador precisa tratar
+isso como caso normal: nem toda empresa do cadastro mestre tem dados em
+todos os três módulos.
+
+### Confirmado (05/11/2026): o que cada prefixo de `wdp` realmente guarda
+
+Inspecionamos as colunas reais de uma tabela de cada família (sufixo
+`00002`, a empresa "SHENG IMPORTADORA DE AVIAMENTOS"). **A maioria das
+hipóteses anteriores estava errada** — só `f` bateu com o esperado:
+
+| Prefixo | O que é (confirmado pelas colunas) | Colunas-chave |
+|---|---|---|
+| `a` | **Afastamento/férias** (não "admissão") | `dtperiodoaquisinicial/final`, `nrdiasdireito`, `nrdiasgozado`, `nrdiasfaltas` |
+| `d` | **Dependente** do funcionário (não "demissão") | `iddependente`, `nmdependente`, `tprelacao`, `dtnascimento` |
+| `e` | Evento × funcionário (tabela simples, base) | `idfuncionario`, `idevento`, `vlevento` |
+| `f` | **Funcionário/ficha cadastral** — confirmado | `nmfuncionario`, endereço completo, `dtnascimento`, `tpestadocivil` |
+| `fc` | Rateio por centro de custo | `idcentrodecusto`, `iddepartamento`, `vlpercentual` |
+| `fh` | Histórico de função/cargo (promoções) | `funcaoant`/`funcaoatual`, `cboant`/`cboatual`, `cargoant`/`cargoatual` |
+| `h` | Histórico de processamento de folha (cada rodada) | `dtrefinicial/final`, `tpprocessamento`, `decimo_terceiro_intermitente` |
+| `hr` | Histórico de reajuste salarial (dissídio) | `dtreajuste`, `tpreajuste`, `nrparcelas` |
+| `ih` | Histórico (variante próxima de `h`, provável sub-rotina) | `idhistorico`, `dtrefinicial/final`, `cdcontrdpto` |
+| `im` | Movimento de contribuição (plano de saúde/ISS) | `plano_saude_*`, `aliqiss`, `idevento` |
+| `ir` | IRRF/INSS/FGTS por evento, inclusive de contribuintes individuais | `tpfaixairrf`, `alirrf`, `alinss`, `stfgts` |
+| `l` | Lançamento/histórico de **salário** (reajustes individuais) | `vlsalario`, `vlnovosalario`, `dissidio_data_assinatura` |
+| `m` | Movimento de ponto/evento variável | `nrminutosfaltas`, `nrminutostrabalhados`, `vlmovimento` |
+| `p` | Vale-transporte ("passagens") | `numero_cartao`, `matricula` |
+| `r` | **Resumo de folha** consolidado por funcionário (não "rescisão") | `vlsalariofuncionario`, `vlremuneracao`, `nrdependentes` |
+| `s` | Contribuição **sindical** (não "salário") | `idsindicato`, `vlcontribsindical` |
+| `t` | **Troca** de departamento/setor (não "tomador") | `idsetoranterior`, `idsetoratual`, `dtmudanca` |
+| `tb` | **Tributação de sócios / pró-labore** — achado crítico, ver abaixo | `idsocio`, `nmsocio`, `dtadmissao`, `dtdemissao`, `vlsalario` |
+| `v` | **Vacinação** (não "vínculo") | `idvacina`, `nmvacina`, `dtvacina` |
+
+**Achado crítico: `tb` é a tabela de sócios que estava faltando.**
+`wphd.empresa` (cadastro mestre) não tem nenhuma coluna de sócio — mas
+`wdp.tb00002` (e demais `tb*`) tem `idsocio`, `nmsocio`, endereço completo,
+`dtadmissao`, `dtdemissao`, `vlsalario` (pró-labore) e dados de cota/classe
+societária. Ou seja: **o quadro societário mora no módulo de
+Departamento Pessoal, por empresa**, não no cadastro mestre do `wphd`.
+Isso resolve a dúvida de onde ficam os sócios, levantada na seção anterior.
+
+Ainda não inspecionadas as 3 famílias extras que só algumas empresas usam
+(`pc`, `pv`, `se`) nem as famílias de `wcont` (`cc`, `cl`, `cm`, `cs`, `ct`,
+`lk`, `lt`, `mc`, `mv`, `sc`, `sd`, `con`, `lf`) — próximo passo.
 
 ### Módulos mais pesados (prioridade de mapeamento)
 
@@ -217,31 +270,37 @@ mais completo no módulo de DP/cadastro do cliente.
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
 1. ~~Terminar de extrair as colunas 13-70 de `wphd.empresa`~~ — feito
-   (05/11/2026, lista completa das 70 colunas na seção acima). Falta só
+   (05/11/2026, lista completa das 70 colunas acima). Ainda falta
    confirmar a chave que liga esse cadastro mestre às tabelas de
    configuração `wfiscal.empresa` / `wdp.empdp` / `wcont.empcont` por
-   `cdempresa`/`idempresa`, e localizar a tabela de sócios/quadro
-   societário (não está em `wphd.empresa`) e a de enquadramento tributário
-   (Simples/Presumido/Real — `tpcalculoir` não é exatamente isso).
-2. Checar `wdp.empcon` — pode ser a ligação DP↔Contábil.
-3. ~~Descobrir a tabela de mapeamento do sufixo numérico~~ — já não é mais
-   necessário descobrir uma tabela de mapeamento à parte: confirmado (só
-   pelos nomes das tabelas, ver seção acima) que o sufixo numérico é o
-   mesmo código de empresa em todo prefixo de um schema. O que falta é só
-   confirmar que esse código bate com `cdempresa` de `wphd.empresa`, e
-   inspecionar as colunas de uma tabela de cada família de prefixo em
-   `wdp` (`a00001`, `d00001`, `f00001`, `r00001`, `s00001`, `v00001` etc.)
-   pra descobrir o que cada uma guarda de fato.
-4. Levantar estrutura de `wdp` pras tabelas de funcionário/folha
-   (candidatas, pelas famílias de prefixo achadas: `f*` = provável
-   ficha/funcionário, `a*`/`d*` = admissão/desligamento, `r*` = rescisão,
-   `s*` = salário, `v*` = vínculo — tudo hipótese, confirmar pelas colunas)
-   pra desenhar o importador de DP.
-5. Depois de ter colunas + tipos de dado, desenhar o ETL real (provável
-   abordagem: um robô/serviço batch que lê direto do Postgres restaurado
-   — ou de um dump exportado — e grava no schema do Murade, nunca
-   reaproveitando lógica de cálculo do Alterdata, só os dados brutos).
-6. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
+   `cdempresa`/`idempresa`, e localizar a tabela de enquadramento
+   tributário (Simples/Presumido/Real — `tpcalculoir` não é exatamente
+   isso). A tabela de sócios já foi achada (`wdp.tb*`, ver acima).
+2. ~~Checar `wdp.empcon`~~ — feito: não é ligação DP↔Contábil, é cadastro
+   de empresa contratada/tomadora de serviço (terceirização). A ligação
+   DP↔Contábil continua sem tabela identificada — próximo passo.
+3. ~~Descobrir a tabela de mapeamento do sufixo numérico~~ e ~~confirmar que
+   bate com `cdempresa`~~ — ambos feitos e confirmados (05/11/2026, ver
+   seção acima): o sufixo numérico de 5 dígitos é exatamente o `cdempresa`
+   de `wphd.empresa`, sem tabela de mapeamento à parte (com a ressalva de
+   4 empresas cadastradas no mestre sem tabelas de DP).
+4. ~~Levantar estrutura de `wdp` pras tabelas por família de prefixo~~ —
+   feito pra 19 das famílias em `wdp` (ver tabela de prefixos confirmados
+   acima); faltam só as 3 famílias condicionais (`pc`, `pv`, `se`) e as
+   famílias de `wcont` (`cc`, `cl`, `cm`, `cs`, `ct`, `lk`, `lt`, `mc`,
+   `mv`, `sc`, `sd`, `con`, `lf`).
+5. Inspecionar as colunas das famílias de `wcont` e das 3 condicionais de
+   `wdp` que faltaram.
+6. Localizar a tabela de enquadramento tributário (Simples Nacional/Lucro
+   Presumido/Lucro Real) — não achada ainda em `wphd.empresa` nem nas
+   famílias de `wdp` inspecionadas até agora; procurar em `wfiscal` ou
+   `wcont`.
+7. Depois de ter colunas + tipos de dado de tudo, desenhar o ETL real
+   (provável abordagem: um robô/serviço batch que lê direto do Postgres
+   restaurado — ou de um dump exportado — e grava no schema do Murade,
+   nunca reaproveitando lógica de cálculo do Alterdata, só os dados
+   brutos).
+8. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
    Nacional e agendamento automático de guias falham com frequência,
    segundo relato do Beny — motivo inclusive de multas em clientes dele).
    A migração traz só dado, nunca lógica de cálculo.
