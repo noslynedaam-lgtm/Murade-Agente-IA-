@@ -705,10 +705,32 @@ O importador precisa:
    folha em andamento.
 3. Rodar com acesso simultâneo ao Postgres restaurado do Alterdata (hoje
    só acessível via pgAdmin III no notebook do Beny, rede local) **e** ao
-   Postgres de produção do Murade (Render) — hoje nenhum ambiente tem os
-   dois ao mesmo tempo. Precisa decidir com o Beny: expor o restaurado
-   temporariamente, ou exportar um recorte (CSV/dump) do restaurado pra
-   rodar o importador num lugar com acesso ao Render.
+   Postgres do Murade (Render) — hoje nenhum ambiente tem os dois ao
+   mesmo tempo.
+
+**Decidido (05/11/2026): rodar o importador direto no notebook do Beny**,
+não expor o Postgres restaurado nem exportar dump. Justificativa: o
+notebook já enxerga os dois lados ao mesmo tempo — o restaurado por
+`localhost:5432` (rede local) e o Postgres do Murade no Render pela
+internet normal (todas as instâncias do Render usadas aqui têm
+`ipAllowList` liberado, então qualquer máquina com internet alcança).
+Isso evita criar infraestrutura nova (banco temporário no Render custa
+e dá outro lugar pra vazar dado) e evita expor a porta 5432 do
+restaurado pra internet (rede doméstica, sem necessidade). Passo a
+passo:
+1. Rodar primeiro em **modo dry-run** (só lê o Alterdata restaurado,
+   não escreve em lugar nenhum) — não precisa nem de
+   `DP_DATA_ENCRYPTION_KEY` nem de acesso de escrita ao Render, só o
+   Node.js instalado no notebook e o código do importador.
+2. Conferir o relatório do dry-run (quantas empresas, quantos
+   funcionários, o que ficaria só em `origemAlterdata` por falta de
+   campo no Murade) antes de cogitar escrever de verdade.
+3. Só depois disso, e com o Beny por perto (mesma régua que ele já usa
+   pra nota fiscal: operação sensível, quer acompanhar), rodar contra o
+   Murade DP **de homologação** primeiro (`murade-dp-homologacao`,
+   banco próprio, sem risco pra produção) — e só então, se tudo bater,
+   contra produção, com `DP_DATA_ENCRYPTION_KEY` de produção informada
+   na hora (não guardada solta no notebook).
 
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
@@ -747,14 +769,13 @@ O importador precisa:
    cifrado (AES-256-GCM); faltam 4 tabelas no Murade pra não perder dado
    (férias por período, histórico de cargo, contribuição sindical mensal,
    histórico de regime tributário — ver tabela de gaps acima).
-7. Decidir com o Beny o caminho de execução do importador: (a) escrever
-   um importador novo que lê direto do Postgres restaurado (caminho que
-   este documento persegue) rodando num ambiente com acesso aos dois
-   bancos (restaurado + Render), ou (b) adaptar os importadores CSV/XML
-   que já existem em cada sistema (`MuradeMigracao.ts`,
-   `muradeDpMigracao.ts`, `migracaoContabilService.ts`) pra também aceitar
-   um export do Postgres restaurado. Ver seção "Risco técnico" acima —
-   precisa also de `DP_DATA_ENCRYPTION_KEY` pra gravar funcionário/sócio.
+7. ~~Decidir o caminho de execução do importador~~ — decidido (05/11/2026,
+   ver seção "Risco técnico" acima): importador novo lendo direto do
+   Postgres restaurado, rodando no próprio notebook do Beny (já enxerga
+   os dois bancos ao mesmo tempo), em 3 passos: dry-run → homologação →
+   produção. Não vai precisar adaptar os importadores CSV/XML que já
+   existem (`MuradeMigracao.ts`, `muradeDpMigracao.ts`,
+   `migracaoContabilService.ts`) — caminhos independentes.
 8. ~~Criar as tabelas novas de destino~~ e ~~escrever o código do
    importador~~ — em andamento (05/11/2026): implementação disparada num
    agente separado (tabelas `dp_ferias_periodos`/`dp_historico_cargo`/
