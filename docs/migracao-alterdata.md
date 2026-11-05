@@ -201,6 +201,22 @@ de Contábil, nunca tiveram folha processada). O importador precisa tratar
 isso como caso normal: nem toda empresa do cadastro mestre tem dados em
 todos os três módulos.
 
+**Confirmado também (05/11/2026) para as tabelas de configuração por
+módulo** (`wfiscal.empresa`, `wdp.empdp`, `wcont.empcont` — as que achamos
+no início e que são parâmetro, não cadastro): comparando `cdempresa`/
+`idempresa` dessas três contra `wphd.empresa.cdempresa` com `FULL OUTER
+JOIN`, a imensa maioria bate exatamente (ex.: `wcont.empcont`: 12 de 15
+batem; `wfiscal.empresa`: 24 de 26 batem), e as exceções são só empresas
+que usam um módulo e não outro (a própria "MURAD ASSESSORIA CONTABIL",
+`cdempresa=8`, por exemplo, não tem linha em `wfiscal.empresa` — faz
+sentido, o escritório não é cliente Fiscal de si mesmo). **Conclusão
+prática pro importador: `wphd.empresa.cdempresa` é a chave universal; usar
+`LEFT JOIN` contra as tabelas de cada módulo e tratar ausência como
+"empresa não usa esse módulo", nunca como erro.** Como essas tabelas de
+config guardam parâmetro de cálculo do Alterdata (que não deve ser
+replicado, por instrução do Beny), não é prioridade mapear coluna a coluna
+delas — só confirmar a chave já foi suficiente.
+
 ### Confirmado (05/11/2026): o que cada prefixo de `wdp` realmente guarda
 
 Inspecionamos as colunas reais de uma tabela de cada família (sufixo
@@ -228,6 +244,14 @@ hipóteses anteriores estava errada** — só `f` bateu com o esperado:
 | `t` | **Troca** de departamento/setor (não "tomador") | `idsetoranterior`, `idsetoratual`, `dtmudanca` |
 | `tb` | **Tributação de sócios / pró-labore** — achado crítico, ver abaixo | `idsocio`, `nmsocio`, `dtadmissao`, `dtdemissao`, `vlsalario` |
 | `v` | **Vacinação** (não "vínculo") | `idvacina`, `nmvacina`, `dtvacina` |
+| `pc` | Provisão de férias/13º (cálculo) | `tipo_provisao`, `tipo_apuracao`, `avos_bruto`, `avos_especial`, `data_ferias_inicial/final` |
+| `pv` | Provisão de encargos (INSS/FAP/FPAS/SAT) | `aliquota_fap`, `aliquota_fpas`, `aliquota_sat`, `avos_devidos_dec`, `avos_ferias` |
+| `se` | Log de importação de arquivo do eSocial | `importador_esocial`, `solicitacao_id`, `arquivo`, `data_importacao` |
+
+As 3 famílias condicionais (`pc`, `pv`, `se`) completam as 22 famílias de
+`wdp` inspecionadas — `pc`/`pv` são cálculo de provisão (férias/13º/
+encargos), não dado bruto a importar; `se` é só log de importação do
+eSocial do Alterdata, sem valor pra migração.
 
 **Achado crítico: `tb` é a tabela de sócios que estava faltando.**
 `wphd.empresa` (cadastro mestre) não tem nenhuma coluna de sócio — mas
