@@ -474,12 +474,26 @@ sem perda de dado, até o cadastro ser estendido.
 | `sc` | Saldo por centro de custo (idêntica a `ct`) | mesmas colunas de `ct` |
 | `sd` | Saldo de conta (idêntica a `cs`) | mesmas colunas de `cs` |
 
-**Achado a investigar depois:** várias dessas famílias são estruturalmente
-idênticas em pares (`cc`≈`mc`, `cl`≈`lt`, `cs`≈`sd`, `ct`≈`sc`, `cm`≈`mv`).
-Hipótese mais provável: um conjunto é do exercício/ano corrente e o outro
-é histórico de anos anteriores (prática comum em sistemas contábeis
-brasileiros) — não confirmado ainda, mas não é bloqueante porque o Contábil
-é o 2º passo do fluxo de importação (depois do DP).
+**Resolvido (05/11/2026): por que há pares estruturalmente idênticos
+(`cc`≈`mc`, `cl`≈`lt`, `cs`≈`sd`, `ct`≈`sc`, `cm`≈`mv`).** A hipótese de
+"exercício atual vs. histórico" não se confirmou. Testamos `count(*)` de
+`cc`/`cl`/`cs`/`ct`/`sc`/`cm` em várias empresas (sufixos `00001`, `00002`,
+`00003`, `00008`) e **todas deram zero linhas em todas elas** — inclusive
+pra `cc`, verificamos as 25 tabelas `cc*` que existem no banco e todas
+estão vazias. Já `lt`, `sd` e `mv` (os pares de `cl`, `cs`/`ct` e `cm`,
+respectivamente) têm dado de verdade (ex.: `lt00002`=146, `sd00002`=2031,
+`mv00002`=3370; `lt00008`=2, `sd00008`=110, `mv00008`=190). **Conclusão:
+`cc`, `cl`, `cs`, `ct`, `sc` e `cm` são tabelas mortas/vestigiais** —
+existem (provavelmente de uma convenção de nomenclatura antiga do
+Alterdata) mas nunca são populadas pela versão atual do sistema; `lt`,
+`sd` e `mv` são as tabelas realmente ativas de lote/saldo/lançamento. Não
+achamos uma tabela viva equivalente a `ct`/`sc` (saldo por centro de
+custo) — mesmo em empresas com `wphd.empresa.centrocusto = true` (ex.
+`cdempresa=60`) a tabela `wcont.cc00060` nem existe, então saldo por
+centro de custo parece não estar persistido em nenhuma tabela deste
+backup. **Impacto no importador: ignorar `cc`/`cl`/`cs`/`ct`/`sc`/`cm`
+por completo e ler só `lt`/`sd`/`mv`** quando chegar a vez do Contábil
+(2º passo do fluxo, depois do DP — não bloqueante agora).
 
 ### Módulos mais pesados (prioridade de mapeamento)
 
@@ -698,11 +712,11 @@ O importador precisa:
    seção acima): o sufixo numérico de 5 dígitos é exatamente o `cdempresa`
    de `wphd.empresa`, sem tabela de mapeamento à parte (com a ressalva de
    4 empresas cadastradas no mestre sem tabelas de DP).
-4. ~~Levantar estrutura de `wdp` e `wcont` por família de prefixo~~ — feito
-   pras 22 famílias de `wdp` e as 13 de `wcont` (ver tabelas acima). Falta
-   só entender por que `wcont` tem pares de famílias estruturalmente
-   idênticas (`cc`≈`mc`, `cl`≈`lt`, `cs`≈`sd`, `ct`≈`sc`, `cm`≈`mv`) — não
-   bloqueante, Contábil é o 2º passo do fluxo.
+4. ~~Levantar estrutura de `wdp` e `wcont` por família de prefixo~~ e
+   ~~entender os pares estruturalmente idênticos~~ — ambos feitos: 22
+   famílias de `wdp`, 13 de `wcont`, e confirmado (05/11/2026, ver seção
+   acima) que `cc`/`cl`/`cs`/`ct`/`sc`/`cm` são tabelas mortas (zero linhas
+   em toda empresa testada) — as ativas são `lt`/`sd`/`mv`.
 5. ~~Localizar a tabela de enquadramento tributário~~ — parcialmente
    feito: Simples Nacional achado em `wfiscal.empssimples`. Não achamos
    uma tabela separada pra Presumido vs. Real — mas confirmamos que o
