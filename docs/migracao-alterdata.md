@@ -105,12 +105,18 @@ colunas — lista completa (05/11/2026):
   coluna de sócio(s) em `wphd.empresa` — isso confirma que dados de sócios
   devem estar em uma tabela relacionada à parte (ainda não localizada; entra
   no próximo levantamento).
-- **Não tem "regime tributário" (Simples/Presumido/Real) direto.** A coluna
-  mais próxima é `tpcalculoir` (#24, tipo de cálculo de IR) — é um indício,
-  mas não necessariamente o enquadramento tributário geral da empresa. Vale
-  checar o conteúdo real dessa coluna e procurar se há tabela própria de
-  enquadramento (ex.: algo em `wcont` ou `wfiscal` ligado a Simples
-  Nacional/apuração).
+- **Não tem "regime tributário" (Simples/Presumido/Real) direto** — e
+  **achamos onde fica (05/11/2026)**: não é nenhuma coluna de
+  `wphd.empresa`. É a tabela `wfiscal.empssimples` (uma linha por período
+  em que a empresa esteve no Simples Nacional, chaveada por `idempresa`):
+  `dtinicial`/`dtfinal` (período no Simples), `tpempsfederal` (anexo/tabela
+  federal), `nrfaixasfederal` (faixa de alíquota), `aliqadicionalsfederal`,
+  `aliqmesocio`, `sticmssn` (ICMS pelo Simples), `pis_cofins_monofasico_...`,
+  `nao_optante_mei_caminhoneiro`. Ou seja: **se a empresa tem um registro
+  aberto (sem `dtfinal`) em `empssimples`, ela é Simples Nacional; se não
+  tem nenhum, é Lucro Presumido ou Lucro Real** — essa segunda distinção
+  (Presumido vs. Real) ainda não foi localizada, provavelmente fica em
+  alguma tabela de `wcont` ligada à ECF/ECD (regime de apuração do lucro).
 - Bastante coisa de "bureau" (`nmbureau`, `nmresponsavelbureau`,
   `nrtelefonebureau1-3`, `nmemailbureau`, `nmenderecobureau`, etc.) — parece
   ser dado do próprio escritório de contabilidade (o "bureau" prestador de
@@ -273,9 +279,9 @@ mais completo no módulo de DP/cadastro do cliente.
    (05/11/2026, lista completa das 70 colunas acima). Ainda falta
    confirmar a chave que liga esse cadastro mestre às tabelas de
    configuração `wfiscal.empresa` / `wdp.empdp` / `wcont.empcont` por
-   `cdempresa`/`idempresa`, e localizar a tabela de enquadramento
-   tributário (Simples/Presumido/Real — `tpcalculoir` não é exatamente
-   isso). A tabela de sócios já foi achada (`wdp.tb*`, ver acima).
+   `cdempresa`/`idempresa`. A tabela de sócios (`wdp.tb*`) e a de Simples
+   Nacional (`wfiscal.empssimples`) já foram achadas (ver acima); falta só
+   achar onde distingue Lucro Presumido de Lucro Real.
 2. ~~Checar `wdp.empcon`~~ — feito: não é ligação DP↔Contábil, é cadastro
    de empresa contratada/tomadora de serviço (terceirização). A ligação
    DP↔Contábil continua sem tabela identificada — próximo passo.
@@ -291,10 +297,11 @@ mais completo no módulo de DP/cadastro do cliente.
    `mv`, `sc`, `sd`, `con`, `lf`).
 5. Inspecionar as colunas das famílias de `wcont` e das 3 condicionais de
    `wdp` que faltaram.
-6. Localizar a tabela de enquadramento tributário (Simples Nacional/Lucro
-   Presumido/Lucro Real) — não achada ainda em `wphd.empresa` nem nas
-   famílias de `wdp` inspecionadas até agora; procurar em `wfiscal` ou
-   `wcont`.
+6. ~~Localizar a tabela de enquadramento tributário~~ — parcialmente
+   feito: Simples Nacional achado em `wfiscal.empssimples` (ver acima,
+   período + parâmetros por `idempresa`). Falta achar onde distingue
+   Lucro Presumido de Lucro Real pra quem não é Simples — candidato mais
+   provável é alguma tabela de `wcont` ligada à ECF/apuração do lucro.
 7. Depois de ter colunas + tipos de dado de tudo, desenhar o ETL real
    (provável abordagem: um robô/serviço batch que lê direto do Postgres
    restaurado — ou de um dump exportado — e grava no schema do Murade,
