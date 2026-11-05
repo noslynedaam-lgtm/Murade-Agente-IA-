@@ -40,6 +40,11 @@ export default function ChamadaPorVozAgente() {
   const geracaoRef = useRef(0);
   const janelaConversaRef = useRef(0);
   const pararRef = useRef<() => void>(() => {});
+  // Pergunta "em formação": junta os pedaços finais que já chegaram e só envia depois de um
+  // tempinho de silêncio de verdade — assim a pessoa pode fazer uma pausa no meio da pergunta
+  // (pensando, respirando) sem a assistente responder em cima de uma frase pela metade.
+  const bufferPerguntaRef = useRef('');
+  const tempoSubmissaoRef = useRef<number | undefined>(undefined);
 
   const mostrar = (texto: string) => {
     const limpo = textoSemMarcas(texto);
@@ -84,9 +89,36 @@ export default function ChamadaPorVozAgente() {
       ocupadoRef.current = false;
     }
   };
-  pararRef.current = () => { geracaoRef.current += 1; try { window.speechSynthesis?.cancel(); pararHumana(); } catch { /* ignora */ } aguardandoRef.current = false; setAviso(''); };
+  pararRef.current = () => {
+    geracaoRef.current += 1;
+    try { window.speechSynthesis?.cancel(); pararHumana(); } catch { /* ignora */ }
+    aguardandoRef.current = false;
+    setAviso('');
+    window.clearTimeout(tempoSubmissaoRef.current);
+    bufferPerguntaRef.current = '';
+  };
   const perguntarRef = useRef(perguntar);
   perguntarRef.current = perguntar;
+  // Dispara a pergunta acumulada (chamado só depois do tempo de silêncio sem fala nova).
+  const dispararPerguntaRef = useRef<() => void>(() => {});
+  dispararPerguntaRef.current = () => {
+    const pedido = bufferPerguntaRef.current.trim();
+    bufferPerguntaRef.current = '';
+    if (pedido) void perguntarRef.current(pedido);
+  };
+  // Novo pedaço final de fala: junta ao que já tinha e adia o envio.
+  const agendarSubmissao = (pedaco: string) => {
+    bufferPerguntaRef.current = bufferPerguntaRef.current ? `${bufferPerguntaRef.current} ${pedaco}`.trim() : pedaco.trim();
+    window.clearTimeout(tempoSubmissaoRef.current);
+    tempoSubmissaoRef.current = window.setTimeout(() => dispararPerguntaRef.current(), 1500);
+  };
+  // A pessoa ainda está falando (resultado parcial): só adia o envio do que já tem no forno,
+  // sem mudar o texto — o texto definitivo só entra quando o pedaço virar "final".
+  const adiarSubmissao = () => {
+    if (!bufferPerguntaRef.current) return;
+    window.clearTimeout(tempoSubmissaoRef.current);
+    tempoSubmissaoRef.current = window.setTimeout(() => dispararPerguntaRef.current(), 1500);
+  };
 
   useEffect(() => {
     try { localStorage.setItem('murade_chamada_voz', ligada ? '1' : '0'); } catch { /* ignora */ }
@@ -125,7 +157,12 @@ export default function ChamadaPorVozAgente() {
             }
             if (!ehFinal || parecidoComFala || palavrasDita.length < 2) continue;
           } else {
-            if (!ehFinal) continue;
+            if (!ehFinal) {
+              // Ainda falando: se já tem uma pergunta esperando o silêncio pra ser enviada,
+              // empurra o envio pra frente — a pessoa não terminou de falar ainda.
+              adiarSubmissao();
+              continue;
+            }
             // Ignora o eco da própria voz logo depois de falar.
             if (Date.now() - ultimaFalaRef.current < 1500) continue;
             if (Date.now() - ultimaFalaRef.current < 15000 && textoFaladoRef.current && ('pois nao' === texto || (palavrasDita.length >= 2 && palavrasDita.filter((w) => faladas.has(w)).length / palavrasDita.length >= 0.75))) continue;
@@ -137,10 +174,10 @@ export default function ChamadaPorVozAgente() {
             aguardandoRef.current = false;
             janelaConversaRef.current = 0;
             window.clearTimeout(tempoComando);
-            void perguntarRef.current(bruto.trim());
+            agendarSubmissao(bruto.trim());
           } else if (chamada.test(texto)) {
             const resto = bruto.replace(/^[\s,.!?]*(agente|murade|murad|consultor|consultora)[\s,.!?:-]*/i, '').trim();
-            if (resto.split(' ').length >= 3) void perguntarRef.current(resto);
+            if (resto.split(' ').length >= 3) agendarSubmissao(resto);
             else {
               bipRapido(); falar('Pois não?');
               aguardandoRef.current = true;
@@ -154,7 +191,14 @@ export default function ChamadaPorVozAgente() {
       try { rec.start(); } catch { /* já iniciado */ }
     };
     iniciar();
-    return () => { ativo = false; window.clearTimeout(tempoPreparo); window.clearTimeout(tempoComando); try { rec?.stop(); } catch { /* ignora */ } };
+    return () => {
+      ativo = false;
+      window.clearTimeout(tempoPreparo);
+      window.clearTimeout(tempoComando);
+      window.clearTimeout(tempoSubmissaoRef.current);
+      bufferPerguntaRef.current = '';
+      try { rec?.stop(); } catch { /* ignora */ }
+    };
   }, [ligada]);
 
   if (!suporta) return null;
