@@ -41,11 +41,48 @@ pra migração, com o número de tabelas de cada um:
 Total: **3475 tabelas** nesses 6 schemas (lista completa salva, ver seção
 "Fonte dos dados" abaixo).
 
-### Tabelas-chave de cadastro de empresa (ponto de partida do mapeamento)
+### Correção importante (05/11/2026): `empresa`/`empdp`/`empcont` NÃO são o cadastro mestre
 
-- `wfiscal.empresa` — cadastro mestre de empresa no Fiscal.
-- `wdp.empdp` — cadastro mestre de empresa no Departamento Pessoal.
-- `wcont.empcont` — cadastro mestre de empresa no Contábil.
+Inspecionamos as colunas reais de `wfiscal.empresa` (84 colunas), `wdp.empdp`
+(195 colunas) e `wcont.empcont` (36 colunas) via `information_schema.columns`.
+Nenhuma das três tem razão social, nome fantasia, CNPJ ou endereço — são
+tabelas de **configuração/parâmetro por módulo**, chaveadas por
+`cdempresa`/`idempresa` (livro fiscal, flags de regime tributário, dados de
+FGTS/eSocial/GPS, parâmetros de cálculo, etc.), não o cadastro da empresa em
+si.
+
+**O cadastro mestre de verdade é `wphd.empresa`** (schema `wphd` — não estava
+na lista dos 6 schemas iniciais, foi achado buscando por colunas tipo
+`%fantasia%`/`%razao%`/`%cnpj%` em todos os ~32 schemas do banco). Tem 70
+colunas; confirmadas até agora (ordinal 1 a 12):
+
+| # | Coluna | Tipo |
+|---|--------|------|
+| 1 | `cdempresa` | integer |
+| 2 | `nmempresa` | character varying |
+| 3 | `nmfantasia` | character varying |
+| 4 | `dsatividade` | character varying |
+| 5 | `dsendereco` | character varying |
+| 6 | `nmbairro` | character varying |
+| 7 | `nmcidade` | character varying |
+| 8 | `nrcep` | character varying |
+| 9 | `cduf` | character varying |
+| 10 | `nrtelefone` | character varying |
+| 11 | `nrinscrmunicipal` | character varying |
+| 12 | `nrinscrestadual` | character varying |
+
+Faltam as colunas 13-70 (inclui com certeza CNPJ e provavelmente sócios,
+e-mail, regime tributário geral) — ficou pendente porque o pgAdmin no
+notebook do Beny voltou a pedir senha do Postgres no meio da extração.
+Próxima sessão com acesso: terminar esse SELECT e também conferir se
+`wphd.empresa.cdempresa` é a chave que liga com `wfiscal.empresa.cdempresa` /
+`wdp.empdp.idempresa` / `wcont.empcont.idempresa` (os três módulos
+provavelmente referenciam o cadastro mestre do `wphd` pelo mesmo código).
+
+Também achamos `wdp.empcon` (schema `wdp`, nome parecido mas diferente de
+`empcont` que é do `wcont`) — ainda não inspecionado, mas o nome sugere que
+pode ser uma tabela de ligação DP↔Contábil, vale checar antes de montar o
+de-para final.
 
 ### Achado importante: dados particionados por empresa em tabelas separadas
 
@@ -99,20 +136,22 @@ mais completo no módulo de DP/cadastro do cliente.
 
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
-1. Inspecionar a estrutura de colunas de `wfiscal.empresa`, `wdp.empdp` e
-   `wcont.empcont` (via `information_schema.columns`) pra montar o
-   de-para com a tabela de empresas do Murade.
-2. Descobrir a tabela de mapeamento do sufixo numérico das tabelas
+1. Terminar de extrair as colunas 13-70 de `wphd.empresa` (o cadastro
+   mestre de verdade — ver seção acima) e confirmar a chave que liga esse
+   cadastro mestre às tabelas de configuração `wfiscal.empresa` /
+   `wdp.empdp` / `wcont.empcont` por `cdempresa`/`idempresa`.
+2. Checar `wdp.empcon` — pode ser a ligação DP↔Contábil.
+3. Descobrir a tabela de mapeamento do sufixo numérico das tabelas
    particionadas por empresa (`cc00001` etc.) — provavelmente alguma
    tabela de "empresa" ou "configuração" tem uma coluna com esse número.
-3. Levantar estrutura de `wdp` pras tabelas de funcionário/folha
+4. Levantar estrutura de `wdp` pras tabelas de funcionário/folha
    (candidatas: tabelas que começam com `func*`, `evento*`, `rpadrao`,
    `rporig`) pra desenhar o importador de DP.
-4. Depois de ter colunas + tipos de dado, desenhar o ETL real (provável
+5. Depois de ter colunas + tipos de dado, desenhar o ETL real (provável
    abordagem: um robô/serviço batch que lê direto do Postgres restaurado
    — ou de um dump exportado — e grava no schema do Murade, nunca
    reaproveitando lógica de cálculo do Alterdata, só os dados brutos).
-5. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
+6. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
    Nacional e agendamento automático de guias falham com frequência,
    segundo relato do Beny — motivo inclusive de multas em clientes dele).
    A migração traz só dado, nunca lógica de cálculo.
