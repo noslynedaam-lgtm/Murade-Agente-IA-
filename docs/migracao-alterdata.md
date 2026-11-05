@@ -471,6 +471,138 @@ Record<string,string>` pra guardar a ficha original lado a lado, o que
 não tiver campo próprio no Murade ainda pode ao menos ser preservado ali
 sem perda de dado, até o cadastro ser estendido.
 
+### Confirmado (05/11/2026): colunas completas de `wdp.tb*` (sócio), `wdp.a*` (férias), `wdp.fh*` (histórico de cargo) e `wdp.s*` (sindical) + tabelas de lookup de função/CBO
+
+Mesma extração via `information_schema.columns` feita pra `f*`, agora
+pras famílias que o importador (`alterdataMigracao.ts`) tinha marcado
+como "menos confiável" por falta de acesso ao banco real.
+
+**`wdp.tb00002` (sócio/pró-labore) — 112 colunas:**
+
+| # | Coluna | Tipo | # | Coluna | Tipo |
+|---|--------|------|---|--------|------|
+| 1 | `identificacontrib` | integer | 57 | `pai_nome` | varchar |
+| 2 | `cdmatricula` | varchar | 58 | `mae_nome` | varchar |
+| 3 | `sttipo` | varchar | 59 | `municipio_nascimento_codigo` | integer |
+| 4 | `idsocio` | integer | 60 | `uf_municipio_nascimento` | varchar |
+| 5 | `nmsocio` | varchar | 61 | `pais_nascimento_codigo` | smallint |
+| 6 | `dsendereco` | varchar | 62 | `pais_nacionalidade_codigo` | smallint |
+| 7 | `nmbairro` | varchar | 63 | `estrangeiro_data_chegada` | date |
+| 8 | `nmcidade` | varchar | 64 | `estrangeiro_data_naturalizacao` | date |
+| 9 | `cduf` | varchar | 65 | `estrangeiro_casado_brasileiro` | boolean |
+| 10 | `nrcep` | varchar | 66 | `estrangeiro_filhos_brasileiros` | boolean |
+| 11 | `nrtelefone` | varchar | 67 | `cnh_numero` | varchar |
+| 12 | `stpagaescritorio` | varchar | 68 | `cnh_orgao_emissor` | varchar |
+| 13 | `vlclasse` | integer | 69 | `cnh_expedicao` | date |
+| 14 | `vlclassealiq` | integer | 70 | `cnh_data_validade` | date |
+| 15 | `vlcotaspagas` | integer | 71 | `endereco_tipo` | varchar |
+| 16 | `nmsituacao` | varchar | 72 | `endereco_numero` | varchar |
+| 17 | `dtadmissao` | timestamp | 73 | `endereco_complemento` | varchar |
+| 18 | `dtopcao` | date | 74 | `endereco_municipio_codigo` | integer |
+| 19 | `dtdemissao` | timestamp | 75 | `endereco_pais_codigo` | smallint |
+| 20 | `vlsalario` | double | 76 | `endereco_codigo_postal` | varchar |
+| 21 | `vlqtminimos` | double | 77 | `residencia_propria` | boolean |
+| 22 | `tprecolhimento` | varchar | 78 | `residencia_recurso_fgts` | boolean |
+| 23 | `dtultimomes` | timestamp | 79 | `conta_tipo` | smallint |
+| 24 | `dtultimatrocaclasse` | timestamp | 80 | `deficiente_tipo` | smallint |
+| 25 | `dtiniciorecolhimento` | timestamp | 81 | `deficiente_reabilitado` | boolean |
+| 26 | `nrcategoria` | integer | 82 | `dirigente_categoria_origem` | smallint |
+| 27 | `cdcbo` | varchar | 83 | `dirigente_cnpj_origem` | varchar |
+| 28 | `stpagasobretabela` | varchar | 84 | `dirigente_admissao_origem` | date |
+| 29 | `dtnascimento` | timestamp | 85 | `dirigente_matricula_origem` | varchar |
+| 30 | `nrdependentes` | integer | 86 | `controlar_no_gerente_esocial` | boolean |
+| 31 | `stfgts` | varchar | 87 | `prestador_servico_odontologico` | boolean |
+| 32 | `stinss` | varchar | 88 | `contribuinte_mei` | boolean |
+| 33 | `nrctps` | varchar | 89 | `categoria_esocial` | smallint |
+| 34 | `srctps` | varchar | 90 | `condicao_trabalhador_estrangeiro_tipo` | smallint |
+| 35 | `ufctps` | varchar | 91 | `cnh_emissor_uf` | varchar |
+| 36 | `mudafaixa` | varchar | 92 | `cnh_data_primeira_emissao` | timestamp |
+| 37 | `stdeducao` | boolean | 93 | `cnh_categoria` | varchar |
+| 38 | `stdomestentragfip` | varchar | 94 | `identidade_tipo` | smallint |
+| 39 | `nrcdretencaoirrf` | varchar | 95 | `identidade_expedicao` | timestamp |
+| 40 | `nridentidade` | varchar | 96 | `orgao_classe_inscricao` | varchar |
+| 41 | `nmorgaoexp` | varchar | 97 | `orgao_classe_emissor` | varchar |
+| 42 | `nrcpf` | varchar | 98 | `orgao_classe_data_expedicao` | timestamp |
+| 43 | `dsobservacao` | text | 99 | `orgao_classe_data_validade` | timestamp |
+| 44 | `cdcbonovo` | varchar | 100 | `funcao_id` | varchar |
+| 45 | `tpocorrencia` | varchar | 101 | `salario_tipo` | varchar |
+| 46 | `tptransporte` | varchar | 102 | `salario_variavel_descricao` | text |
+| 47 | `idagencia` | varchar | 103 | `esocial_identificado_no_ret` | boolean |
+| 48 | `idbanco` | varchar | 104 | `natureza_atividade` | smallint |
+| 49 | `nrcontacorrente` | varchar | 105 | `matricula_esocial` | varchar |
+| 50 | `cdbanco_doc` | varchar | 106 | `sem_matricula_esocial` | boolean |
+| 51 | `iddepartamento` | varchar | 107 | `inscricao_entidade` | varchar |
+| 52 | `stfuncionario` | varchar | 108 | `nmsocial` | varchar |
+| 53 | `sexo` | varchar | 109 | `tipo_chave_pix` | smallint |
+| 54 | `raca_cor` | smallint | 110 | `chave_pix` | varchar |
+| 55 | `estado_civil` | varchar | 111 | `pis` | varchar |
+| 56 | `codigo_instrucao` | smallint | 112 | `forma_pagamento_id` | smallint |
+
+**`wdp.a00002` (férias/afastamento) — 42 colunas**, chave de vínculo
+confirmada: **coluna #1 é `idfuncionario`** (varchar) — ou seja, a
+família `a*` **tem**, sim, a coluna de ligação com o funcionário, ao
+contrário do que o importador assumiu. Outras colunas relevantes:
+`idafastamento`, `idespecial`, `dtinicial`/`dtfinal`,
+`dtperiodoaquisinicial`/`dtperiodoaquisfinal`, `dsmotivo`,
+`nravosperdidos`, `cdmotivorais`, `stferiascoletivas`,
+`nrdiasdireito`/`nrdiasgozado`/`nrdiasfaltas`, `stperiodoterminado`,
+`stperiodoparcial`, `motivo_afastamento_esocial`, `cid`,
+`dias_tratamento`, `tipo_acidente_transito`, `dias_abono_ferias`,
+`suspensaocontratomp936` + campos da MP 936, `gerou_beneficio_inss`,
+`mesmadoenca`, `reiniciou_per_aqui_antes_um_ano`.
+
+**`wdp.fh00002` (histórico de cargo/função) — 14 colunas**, chave de
+vínculo confirmada: **coluna #3 é `idfuncionario`** (varchar) — a
+chave primária própria é `idfuncoeshist` (#1). Colunas: `dtmudanca`,
+`funcaoant`/`funcaoatual` (nome do cargo), `cboant`/`cboatual`,
+`cargoant`/`cargoatual`, `idfuncaoant`/`idfuncaoatual` (ligam com
+`wdp.funcoesb.idfuncao`, ver abaixo), `cdchamada`/`cdchamadaant`,
+`dtfinal`.
+
+**`wdp.s00002` (contribuição sindical) — 10 colunas**, chave de
+vínculo confirmada: **coluna #1 é `idfuncionario`** (varchar).
+Colunas: `dtcontribsindical`, `idsindicato`, `vlcontribsindical`
+(double), `idevento`, `idhistorico`, `dsobservacao` (text),
+`stdescontorct`, `ano` (smallint), `id` (serial próprio da linha).
+
+**Achado novo: `wdp.funcoesb`/`wdp.funcoesr` resolvem o nome de
+cargo e o CBO.** `funcoesb` é o catálogo mestre de função/cargo (não
+particionado por empresa): `idfuncao`, `nmfuncao` (nome do cargo),
+`nrcbonovo` (código CBO), `nrgruposalarial`, `nrnivel`, `tpfuncao`.
+`funcoesr` é histórico de código CBO por data de referência:
+`idfuncao`, `nrcbo`, `nrcbonovo`, `dtreferencia`. Junto, resolvem o
+`idfuncao`/`funcao_id` que aparece em `wdp.f*` e `wdp.tb*` — basta
+`JOIN wdp.funcoesb ON idfuncao` pra obter nome do cargo e CBO atual,
+sem precisar de heurística por nome de coluna.
+
+**Gap que permanece aberto:** não existe, em nenhuma tabela
+`wdp`/`wphd` pesquisada (variações de nome tentadas: `setor`,
+`departament*`), uma tabela de lookup pro nome do departamento —
+`iddepartamento` (em `wdp.f*`/`wdp.tb*`) e `idsetoranterior`/
+`idsetoratual` (em `wdp.t*`) ficam sem nome legível, só o código.
+Pode ser que o Alterdata guarde nome de setor só dentro do cadastro
+de centro de custo (`wdp.fc*`) ou nem persista nome, só código. Não
+é bloqueante pro importador (grava o código e segue), mas o nome do
+departamento ficaria ausente no Murade até achar essa tabela (ou
+confirmar que ela não existe).
+
+**Impacto no importador:** os heurísticos por regex em
+`alterdataMigracao.ts` pra `cpf`, `rg`, `pis`, `ctpsNumero`,
+`ctpsSerie`, `ctpsUf`, `cargo`, `cbo`, `salarioBase`, `departamento`,
+`dataAdmissao` (funcionário) e `cpf` (sócio) agora têm mapeamento
+exato confirmado: `cpf`=`nrcpf`, `rg`=`nridentidade`,
+`pis`=`nrpispasep` (funcionário) / `pis` (sócio, nome direto),
+`ctpsNumero`=`nrctps`, `ctpsSerie`=`nrseriectps` (funcionário) /
+`srctps` (sócio), `ctpsUf`=`cdufctps` (funcionário) / `ufctps`
+(sócio), `salarioBase`=`vlsalariobase` (funcionário) / `vlsalario`
+(sócio), `dataAdmissao`=`dtadmissao` (ambos), `cargo`/`cbo` via
+`JOIN wdp.funcoesb` por `idfuncao`, `departamento`=`iddepartamento`
+(código, sem nome — ver gap acima). A "parte menos confiável" do
+importador (férias/histórico de cargo/sindical) também para de ser
+heurística: `a*`/`fh*`/`s*` **todas têm `idfuncionario`** como
+vínculo direto (férias e sindical na coluna #1, histórico de cargo
+na #3).
+
 ### Confirmado (05/11/2026): famílias de `wcont`
 
 | Prefixo | O que é | Colunas-chave |
@@ -708,29 +840,51 @@ O importador precisa:
    Postgres do Murade (Render) — hoje nenhum ambiente tem os dois ao
    mesmo tempo.
 
-**Decidido (05/11/2026): rodar o importador direto no notebook do Beny**,
-não expor o Postgres restaurado nem exportar dump. Justificativa: o
-notebook já enxerga os dois lados ao mesmo tempo — o restaurado por
-`localhost:5432` (rede local) e o Postgres do Murade no Render pela
-internet normal (todas as instâncias do Render usadas aqui têm
-`ipAllowList` liberado, então qualquer máquina com internet alcança).
-Isso evita criar infraestrutura nova (banco temporário no Render custa
-e dá outro lugar pra vazar dado) e evita expor a porta 5432 do
-restaurado pra internet (rede doméstica, sem necessidade). Passo a
-passo:
-1. Rodar primeiro em **modo dry-run** (só lê o Alterdata restaurado,
-   não escreve em lugar nenhum) — não precisa nem de
-   `DP_DATA_ENCRYPTION_KEY` nem de acesso de escrita ao Render, só o
-   Node.js instalado no notebook e o código do importador.
-2. Conferir o relatório do dry-run (quantas empresas, quantos
-   funcionários, o que ficaria só em `origemAlterdata` por falta de
-   campo no Murade) antes de cogitar escrever de verdade.
-3. Só depois disso, e com o Beny por perto (mesma régua que ele já usa
-   pra nota fiscal: operação sensível, quer acompanhar), rodar contra o
-   Murade DP **de homologação** primeiro (`murade-dp-homologacao`,
-   banco próprio, sem risco pra produção) — e só então, se tudo bater,
-   contra produção, com `DP_DATA_ENCRYPTION_KEY` de produção informada
-   na hora (não guardada solta no notebook).
+**Decidido em 05/11/2026, corrigido em 05/11/2026:** a ideia original
+era "rodar o importador direto no notebook do Beny" via Node.js,
+porque o notebook já enxerga os dois lados ao mesmo tempo (Alterdata
+restaurado em `localhost:5432` + Murade no Render, que tem
+`ipAllowList` liberado). **Essa parte específica — eu mesmo digitar e
+executar comandos Node.js no terminal do notebook por computer-use —
+não é possível**: terminais/IDEs (PowerShell, cmd, VS Code etc.) só
+são concedidos no nível "click" (vejo e clico, não digito nem aperto
+tecla) pra esse tipo de app, por restrição de segurança do próprio
+ambiente de computer-use — confirmado tentando abrir o PowerShell. O
+cliente de banco (pgAdmin III) não tem essa restrição — nele dá pra
+digitar query SQL normalmente, foi assim que toda a extração de
+colunas deste documento foi feita.
+
+Isso não muda a decisão de "entrada pelo DP, sem infra nova", só o
+**como** chegar no dado. Caminho revisado, ainda sem expor a porta
+5432 do restaurado pra internet:
+1. Usar o recurso de **Backup** do próprio pgAdmin III (interface
+   gráfica, não é terminal — totalmente operável por computer-use)
+   pra gerar um `pg_dump` dos schemas `wphd`/`wdp`/`wfiscal`/`wcont`
+   do banco restaurado, salvando o arquivo no mesmo tipo de pasta já
+   usada pra extrair os `.txt` de colunas (`Desktop > alterdata BKP
+   > 208852 > ALTERDATA_PACK`).
+2. Trazer o dump pra este ambiente via `device_stage_files` (mesmo
+   mecanismo já usado pra ler os `.txt`) e restaurá-lo com `pg_restore`
+   (já instalado neste sandbox, `/usr/bin/psql` 16.15) num Postgres que
+   este ambiente consiga alcançar — por exemplo um banco Render criado
+   só pra isso, ou um Postgres temporário dentro do próprio sandbox.
+3. Com os dados do Alterdata e o Murade DP de homologação ambos
+   alcançáveis a partir do mesmo lugar (este ambiente, via Bash), rodar
+   o importador em **modo dry-run** primeiro (só leitura, sem
+   `DP_DATA_ENCRYPTION_KEY`) pra conferir o relatório (quantas empresas,
+   quantos funcionários, o que ficaria só em `origemAlterdata`).
+4. Só depois disso, e com o Beny por perto (mesma régua que ele já usa
+   pra nota fiscal: operação sensível, quer acompanhar), rodar contra
+   **homologação** (`murade-dp-homologacao`, banco próprio, sem risco
+   pra produção) — e só então, se tudo bater, contra produção, com a
+   chave de produção informada na hora (nunca guardada solta).
+
+Vantagem adicional: um dump estático do restaurado também destrava
+trabalho em paralelo sem precisar do notebook do Beny ligado e do
+pgAdmin aberto o tempo todo — qualquer extração de coluna que ainda
+faltar continua sendo feita por computer-use (pgAdmin não tem a
+restrição de terminal), mas a leitura em massa pro importador de
+verdade passa a ser feita neste ambiente, contra a cópia restaurada.
 
 ## Próximos passos (bloqueados até ter mais acesso ao banco restaurado)
 
@@ -769,24 +923,44 @@ passo:
    cifrado (AES-256-GCM); faltam 4 tabelas no Murade pra não perder dado
    (férias por período, histórico de cargo, contribuição sindical mensal,
    histórico de regime tributário — ver tabela de gaps acima).
-7. ~~Decidir o caminho de execução do importador~~ — decidido (05/11/2026,
-   ver seção "Risco técnico" acima): importador novo lendo direto do
-   Postgres restaurado, rodando no próprio notebook do Beny (já enxerga
-   os dois bancos ao mesmo tempo), em 3 passos: dry-run → homologação →
-   produção. Não vai precisar adaptar os importadores CSV/XML que já
-   existem (`MuradeMigracao.ts`, `muradeDpMigracao.ts`,
+7. ~~Decidir o caminho de execução do importador~~ — decidido
+   (05/11/2026) e **corrigido** no mesmo dia (ver seção "Risco técnico"
+   acima): a ideia de eu rodar Node.js direto no terminal do notebook
+   do Beny por computer-use não é executável (terminais/IDEs só são
+   concedidos em modo "click": vejo e clico, não digito) — confirmado
+   tentando abrir o PowerShell. Caminho revisado: `pg_dump` do
+   restaurado via Backup do pgAdmin III (GUI, não é terminal) →
+   `device_stage_files` → `pg_restore` neste ambiente (Bash, `psql`
+   16.15 já instalado) → importador roda daqui, com dry-run →
+   homologação → produção. Não muda a decisão de entrada pelo DP nem
+   de evitar infra nova exposta à internet; só troca "digitar comando
+   no notebook" por "exportar dump pela interface gráfica". Não vai
+   precisar adaptar os importadores CSV/XML que já existem
+   (`MuradeMigracao.ts`, `muradeDpMigracao.ts`,
    `migracaoContabilService.ts`) — caminhos independentes.
-8. ~~Criar as tabelas novas de destino~~ e ~~escrever o código do
-   importador~~ — em andamento (05/11/2026): implementação disparada num
-   agente separado (tabelas `dp_ferias_periodos`/`dp_historico_cargo`/
-   `dp_contribuicao_sindical_mes` + `alterdataMigracao.ts`, modo dry-run
-   por padrão, sem push até revisão). **Pendência conhecida:** esse
-   agente recebeu só a lista parcial antiga de colunas de `wdp.f*`
-   (~25 campos); a lista completa (262 colunas, ver seção acima) só foi
-   extraída depois — o mapeamento de funcionário precisa ser revisado
-   contra a lista completa antes de considerar pronto. A 4ª tabela
-   (`fiscal_regime_tributario_historico`, no repo `murade-fiscal`) ainda
-   não foi criada — ficou fora do escopo desse agente (só DP).
+8. ~~Criar as tabelas novas de destino~~ — feito: as 3 de DP
+   (`dp_ferias_periodos`/`dp_historico_cargo`/
+   `dp_contribuicao_sindical_mes`, repo `departamento-pessoal`,
+   commit `a1cf94f`, ainda sem push) e a 4ª, de Fiscal
+   (`fiscal_regime_tributario_historico`, repo `murade-fiscal`, commit
+   `c63a1a5`, já em produção via deploy automático do Render).
+   ~~Escrever o código do importador~~ — primeira versão feita
+   (`alterdataMigracao.ts`, 592 linhas, 13/13 testes passando), mas
+   usando heurística por nome de coluna pra vários campos porque foi
+   escrita sem acesso ao banco real. **Resolvido (05/11/2026):** as
+   colunas completas de `tb*` (sócio, 112 colunas), `a*` (férias, 42),
+   `fh*` (histórico de cargo, 14) e `s*` (sindical, 10) foram extraídas
+   e documentadas na seção acima, junto com as tabelas de lookup
+   `wdp.funcoesb`/`funcoesr` (nome de cargo/CBO). Com isso, dá pra
+   trocar toda heurística de funcionário/sócio por mapeamento exato e
+   confirmar que `a*`/`fh*`/`s*` têm, sim, coluna de vínculo com
+   `idfuncionario` (ao contrário do que o importador assumiu) — ver
+   "Impacto no importador" na seção acima pro mapeamento campo a
+   campo. **Pendência:** aplicar essa correção no código de
+   `alterdataMigracao.ts` em si (ainda não feito) — ou reengajar o
+   agente que o escreveu, ou editar direto. Único gap que continua sem
+   resposta: não existe tabela de lookup pro nome do departamento
+   (`iddepartamento`) — só o código numérico mesmo.
 9. Testar o importador contra uma cópia/amostra dos dados antes de rodar
    contra os dados reais de produção.
 10. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
