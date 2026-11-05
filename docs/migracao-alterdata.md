@@ -261,6 +261,201 @@ societária. Ou seja: **o quadro societário mora no módulo de
 Departamento Pessoal, por empresa**, não no cadastro mestre do `wphd`.
 Isso resolve a dúvida de onde ficam os sócios, levantada na seção anterior.
 
+### Confirmado (05/11/2026): lista completa de colunas de `wdp.f*` (funcionário) — 262 colunas
+
+A lista parcial usada até aqui (só as ~25 colunas mais óbvias) estava
+muito incompleta. Extraímos a estrutura real completa de `wdp.f00002`
+via `information_schema.columns` — **262 colunas**, bem mais rica do que
+qualquer cadastro de funcionário do lado Murade hoje:
+
+| # | Coluna | Tipo | # | Coluna | Tipo |
+|---|--------|------|---|--------|------|
+| 1 | `idfuncionario` | varchar | 132 | `dtentrada` | timestamp |
+| 2 | `cdchamada` | varchar | 133 | `dsinformacoes` | varchar |
+| 3 | `nmfuncionario` | varchar | 134 | `tppagamentorais` | varchar |
+| 4 | `nmendereco` | varchar | 135 | `nrci` | double |
+| 5 | `nrendereco` | varchar | 136 | `tipodeficiencia` | varchar |
+| 6 | `nmcomplemento` | varchar | 137 | `dtinicialprocesso` | timestamp |
+| 7 | `nmbairro` | varchar | 138 | `dtfinalprocesso` | timestamp |
+| 8 | `nmcidade` | varchar | 139 | `nrprocesso` | varchar |
+| 9 | `cduf` | varchar | 140 | `nrvaraprocesso` | varchar |
+| 10 | `nrcep` | varchar | 141 | `nranoprocesso` | integer |
+| 11 | `nrddd` | varchar | 142 | `dtalteracaocad` | timestamp |
+| 12 | `nrtelefone` | varchar | 143 | `dtultrescisao` | timestamp |
+| 13 | `nrcelular` | varchar | 144 | `cdmotivorct` | varchar |
+| 14 | `dtnascimento` | timestamp | 145 | `tpcontrato` | varchar |
+| 15 | `tpestadocivil` | varchar | 146 | `motivo_estabilidade` | varchar |
+| 16 | `tpsexo` | varchar | 147 | `prorrogacao_tempo_determindado` | date |
+| 17 | `nmnacionalidade` | varchar | 148 | `alpensaofgts` | double |
+| 18 | `nranochegada` | integer | 149 | `tipo_conta` | smallint |
+| 19 | `tpinstrucao` | varchar | 150 | `tipo_certidao_civil` | smallint |
+| 20 | `tpinstrucaorais` | varchar | 151 | `data_certidao_civil` | date |
+| 21 | `dtvctoexperiencia` | timestamp | 152 | `termo_matricula_certidao_civil` | varchar |
+| 22 | `dtprorrogacaoexperiencia` | timestamp | 153 | `livro_certidao_civil` | varchar |
+| 23 | `dtadmissao` | timestamp | 154 | `folha_certidao_civil` | varchar |
+| 24 | `dttransferencia` | timestamp | 155 | `cartorio_certidao_civil` | varchar |
+| 25 | `tpcausatransferencia` | varchar | 156 | `uf_certidao_civil` | varchar |
+| 26 | `dtdemissao` | timestamp | 157 | `municipio_certidao_civil` | varchar |
+| 27 | `tpcausademissao` | varchar | 158 | `quantidade_dias_ferias` | smallint |
+| 28 | `stavisoindenizado` | varchar | 159 | `tipo_identidade` | smallint |
+| 29 | `stterminocontrato` | varchar | 160 | `inscricao_orgao_classe` | varchar |
+| 30 | `tpvinculo` | varchar | 161 | `emissor_orgao_classe` | varchar |
+| 31 | `dtvctoatestado` | timestamp | 162 | `data_expedicao_orgao_classe` | date |
+| 32 | `iddepartamento` | varchar | 163 | `data_validade_orgao_classe` | date |
+| 33 | `idfuncao` | varchar | 164 | `orgao_emissor_cnh` | varchar |
+| 34 | `vlsalariobase` | double | 165 | `data_expedicao_cnh` | date |
+| 35 | `tpformapgto` | varchar | 166 | `tipo_logradouro` | varchar |
+| 36 | `nrminpordia` | integer | 167 | `residencia_propria` | boolean |
+| 37 | `stprimtrabcaged` | varchar | 168 | `utilizou_recursos_fgts` | boolean |
+| 38 | `tpreintegracao` | varchar | 169 | `data_chegada` | date |
+| 39 | `nrlivroficharegistro` | integer | 170 | `casado_com_brasileiro` | boolean |
+| 40 | `tplivroficharegistro` | varchar | 171 | `filho_com_brasileiro` | boolean |
+| 41 | `nrfolhalivroficharegistro` | integer | 172 | `data_naturalizacao` | date |
+| 42 | `dsobservacaorecibo` | varchar | 173 | `pais_nascimento_id` | integer |
+| 43 | `idagencia` | varchar | 174 | `pais_residencia_id` | integer |
+| 44 | `nrcontacorrente` | varchar | 175 | `municipio_nascimento_ibge_codigo` | varchar |
+| 45 | `idbanco` | varchar | 176 | `municipio_residencia_ibge_codigo` | varchar |
+| 46 | `cdcamaracompensacao` | varchar | 177 | `codigo_postal` | varchar |
+| 47 | `tpcontribuicaosindical` | varchar | 178 | `tipo_admissao` | smallint |
+| 48 | `cdretencaoirrf` | varchar | 179 | `indicativo_admissao` | smallint |
+| 49 | `tpfaixainss` | varchar | 180 | `cnpj_vinculo_anterior` | varchar |
+| 50 | `stadiantamento` | varchar | 181 | `matricula_vinculo_anterior` | varchar |
+| 51 | `aladiantamento` | double | 182 | `data_inicio_vinculo_anterior` | date |
+| 52 | `alvaletransporte` | double | 183 | `observacao_transferencia` | varchar |
+| 53 | `idsindicatogrcs` | varchar | 184 | `admissao_especial_caged` | boolean |
+| 54 | `nridentidade` | varchar | 185 | `aviso_trabalhado_fixo_30_dias` | boolean |
+| 55 | `nmorgaoexpedidor` | varchar | 186 | `uf_emissor_cnh` | varchar |
+| 56 | `dtexpedicao` | timestamp | 187 | `data_primeira_cnh` | timestamp |
+| 57 | `tpidentifpispasep` | varchar | 188 | `tipo_condicao_trabalhador_estrangeiro` | smallint |
+| 58 | `cdufexpedicao` | varchar | 189 | `tipo_jornada_trabalho` | smallint |
+| 59 | `nrpispasep` | varchar | 190 | `tipo_contratacao_temporaria` | smallint |
+| 60 | `dtpis` | timestamp | 191 | `tipo_provimento` | smallint |
+| 61 | `nrcpf` | varchar | 192 | `numero_recibo_admissao_preliminar` | varchar |
+| 62 | `nrctps` | varchar | 193 | `banco_adicional_id` | varchar |
+| 63 | `nrseriectps` | varchar | 194 | `agencia_adicional_id` | varchar |
+| 64 | `cdufctps` | varchar | 195 | `numero_conta_corrente_adicional` | varchar |
+| 65 | `dtexpedicaoctps` | timestamp | 196 | `tipo_conta_adicional` | smallint |
+| 66 | `nrcertificadoreservista` | varchar | 197 | `deficiencia_fisica` | boolean |
+| 67 | `nrserie` | varchar | 198 | `deficiencia_auditiva` | boolean |
+| 68 | `nrcategoriamilitar` | varchar | 199 | `deficiencia_visual` | boolean |
+| 69 | `nrtituloeleitor` | varchar | 200 | `deficiencia_mental` | boolean |
+| 70 | `nrzonaeleitoral` | varchar | 201 | `deficiencia_intelectual` | boolean |
+| 71 | `nrsecaoeleitoral` | varchar | 202 | `tipo_cumprimento_aviso` | smallint |
+| 72 | `nrcarteirahabilitacao` | varchar | 203 | `rescisao_sabado_compensado` | boolean |
+| 73 | `dtvctohabilitacao` | timestamp | 204 | `categoria_trabalhador_esocial` | smallint |
+| 74 | `tphabilitacao` | varchar | 205 | `sem_horario_fixo` | boolean |
+| 75 | `dtvalcarteiraidentest` | timestamp | 206 | `nao_atualiza_salario` | boolean |
+| 76 | `tpvistoestrangeiro` | varchar | 207 | `mensagem_escala_id` | varchar |
+| 77 | `dtvalidadecarttrabest` | timestamp | 208 | `tipo_transportador` | varchar |
+| 78 | `nrcontafgts` | varchar | 209 | `cota_deficiente` | boolean |
+| 79 | `cdufcontafgts` | varchar | 210 | `temporario_justificativa_legal` | text |
+| 80 | `stmudouenderecofgts` | varchar | 211 | `temporario_tipo_inclusao` | smallint |
+| 81 | `dtopcaofgts` | timestamp | 212 | `matricula_esocial` | varchar |
+| 82 | `vlsaldofgts` | double | 213 | `salario_variavel_descricao` | text |
+| 83 | `dsobservacao` | text | 214 | `regime_previdenciario` | smallint |
+| 84 | `idhorario` | varchar | 215 | `lei_anistia` | varchar |
+| 85 | `dsfoto` | varchar | 216 | `remuneracoes_pagas_juizo` | boolean |
+| 86 | `nmmae` | varchar | 217 | `transferencia_esocial_causa` | smallint |
+| 87 | `nmpai` | varchar | 218 | `reintegracao_tipo` | smallint |
+| 88 | `vllimitecredito` | double | 219 | `natureza_atividade_trabalhador` | smallint |
+| 89 | `nrcartaoponto` | varchar | 220 | `cheque_pagamento` | boolean |
+| 90 | `dtavisoprevio` | timestamp | 221 | `cheque_banco_id` | varchar |
+| 91 | `stavisoprevio` | varchar | 222 | `caged_regime_de_tempo_parcial` | boolean |
+| 92 | `tpocorrencia` | varchar | 223 | `indicador_aviso_previo` | smallint |
+| 93 | `tpcategoria` | integer | 224 | `cnpj_empresa_sucessora` | varchar |
+| 94 | `tpcartaosalario` | varchar | 225 | `observacao_esocial` | text |
+| 95 | `nmagenciabkfolha` | varchar | 226 | `forma_pagamento_id` | integer |
+| 96 | `nrcepagenciabkfolha` | varchar | 227 | `orgao_classe_uf` | varchar |
+| 97 | `cddocbkfolha` | varchar | 228 | `horas_semanais` | smallint |
+| 98 | `nrbancobkfolha` | varchar | 229 | `jornada_tipo_descricao` | text |
+| 99 | `stfgtsmesanterior` | varchar | 230 | `controlar_no_gerente_esocial` | boolean |
+| 100 | `tpfuncaposentado` | varchar | 231 | `reintegracao_processo_numero` | varchar |
+| 101 | `tpcorraca` | varchar | 232 | `reintegracao_data_efeito_financeiro` | date |
+| 102 | `stdeficiente` | varchar | 233 | `reintegracao_data_retorno` | date |
+| 103 | `streabilitado` | varchar | 234 | `dados_contrato_determinado` | varchar |
+| 104 | `strestantecontrato` | varchar | 235 | `possui_clausula_assecuratoria` | boolean |
+| 105 | `qtdiastrabalhados` | integer | 236 | `esocial_identificado_no_ret` | boolean |
+| 106 | `qtdiassalariofamilia` | integer | 237 | `inativo_folha` | boolean |
+| 107 | `qtdiasfaltasproporcionais` | integer | 238 | `tempo_residencia` | integer |
+| 108 | `qtdiasfaltas` | integer | 239 | `horario_noturno` | boolean |
+| 109 | `qtfaltasperiodoaquisitivo` | integer | 240 | `tipo_jornada_esocial` | smallint |
+| 110 | `usuarioswmail` | varchar | 241 | `reintegracao_avos_13_pagos` | integer |
+| 111 | `stsituacaolegal` | varchar | 242 | `curso_cetpp` | integer |
+| 112 | `cdocupacaoprincipal` | varchar | 243 | `pontuacao_cnh` | integer |
+| 113 | `cdnaturezaocupacao` | varchar | 244 | `data_consulta_cnh` | date |
+| 114 | `cdufnascimento` | varchar | 245 | `observacao_cnh` | text |
+| 115 | `nmmunnascimento` | varchar | 246 | `sem_matricula_esocial` | boolean |
+| 116 | `idbancopis` | varchar | 247 | `cargo_funcao_acumulavel` | boolean |
+| 117 | `idagenciapis` | varchar | 248 | `temporario_estab_nrinscricao` | varchar |
+| 118 | `nrdecretonaturalizado` | varchar | 249 | `processo_trabalhista_demissao` | varchar |
+| 119 | `qtavosperdidos` | varchar | 250 | `processo_trabalhista_2200` | boolean |
+| 120 | `qtdiastrabnaopagos` | integer | 251 | `contratacao_por_empresa_cotista` | boolean |
+| 121 | `stgerarais` | varchar | 252 | `nrhorames` | integer |
+| 122 | `dtvenctoaprendizagem` | timestamp | 253 | `inscricao_entidade` | varchar |
+| 123 | `tranfpoutraemp` | varchar | 254 | `tipo_chave_pix` | smallint |
+| 124 | `dscausademissao` | varchar | 255 | `chave_pix` | varchar |
+| 125 | `stindalvara` | varchar | 256 | `nmsocial` | varchar |
+| 126 | `nmcurto` | varchar | 257 | `indicativo_nif` | smallint |
+| 127 | `tipobeneficioticket` | varchar | 258 | `nif` | varchar |
+| 128 | `dtestabilidade` | timestamp | 259 | `forma_tributacao` | varchar |
+| 129 | `stimprimeetiqueta` | boolean | 260 | `qtdiasindenizados` | integer |
+| 130 | `stimprimefolhaponto` | boolean | 261 | `processo_inventario` | boolean |
+| 131 | `nrcartaoticket` | varchar | 262 | `motivo_desligamento_esocial` | varchar |
+**Conclusões da lista completa:**
+
+- **Pix na folha**: `tipo_chave_pix` (#254) + `chave_pix` (#255) — o
+  Alterdata já guarda a chave Pix do funcionário pra pagamento de salário.
+  Não existe campo equivalente hoje no `Funcionario` do Murade DP.
+- **Nome social**: `nmsocial` (#256) — campo específico pra pessoas trans,
+  usado no eSocial (evento S-2200/S-2300). Gap direto se o Murade DP não
+  tiver esse campo.
+- **NIF de estrangeiro**: `indicativo_nif` (#257) + `nif` (#258) — dado de
+  funcionário estrangeiro sem CPF, usado no eSocial. Vem junto com vários
+  outros campos de estrangeiro já na lista (`tpvistoestrangeiro`,
+  `data_naturalizacao`, `pais_nascimento_id`, `pais_residencia_id`,
+  `tipo_condicao_trabalhador_estrangeiro`, etc.).
+- **`forma_tributacao` (#259) é por funcionário**, não só por empresa —
+  achado importante porque a seção "Regime tributário" abaixo falava só
+  do regime da empresa; aqui existe uma granularidade por pessoa também
+  (provavelmente relevante pra autônomo/contribuinte individual dentro da
+  folha).
+- **Vale-transporte tem número de cartão direto no funcionário**:
+  `nrcartaoticket` (#131) + `tipobeneficioticket` (#127) — diferente do que
+  a tabela de prefixos acima sugeria (que seria só em `wdp.p*`); o
+  Alterdata guarda isso também na ficha principal do funcionário.
+- **Deficiência granular**: além de `tipodeficiencia` (#136, texto livre),
+  existem 5 booleanos específicos — `deficiencia_fisica`,
+  `deficiencia_auditiva`, `deficiencia_visual`, `deficiencia_mental`,
+  `deficiencia_intelectual` (#197-201) — mais `cota_deficiente` (#209) pra
+  cota legal de PCD.
+- **Conta bancária adicional**: além de `idbanco`/`idagencia`/
+  `nrcontacorrente` (#43-45, conta principal), existem `banco_adicional_id`,
+  `agencia_adicional_id`, `numero_conta_corrente_adicional`,
+  `tipo_conta_adicional` (#193-196) — segunda conta, cenário não mapeado
+  no Murade DP hoje.
+- **Bastante campo específico de eSocial** (`categoria_trabalhador_esocial`,
+  `tipo_jornada_esocial`, `transferencia_esocial_causa`, `matricula_esocial`,
+  `sem_matricula_esocial`, `esocial_identificado_no_ret`,
+  `observacao_esocial`, `controlar_no_gerente_esocial`,
+  `motivo_desligamento_esocial`) — confirma o padrão já visto nas tabelas
+  auxiliares: o Alterdata é fortemente orientado a eSocial em todo o DP.
+- **Reintegração** tem seu próprio grupo de campos (`reintegracao_tipo`,
+  `reintegracao_processo_numero`, `reintegracao_data_efeito_financeiro`,
+  `reintegracao_data_retorno`, `reintegracao_avos_13_pagos`) — caso de
+  readmissão por decisão judicial, não coberto hoje no cadastro resumido
+  do Murade.
+
+**Impacto no importador:** o agente que está implementando o importador
+(`alterdataMigracao.ts`, em andamento) recebeu só a lista parcial antiga.
+O mapeamento origem→destino de funcionário precisa ser revisado contra
+esta lista completa antes de considerar o import pronto — principalmente
+os campos novos listados acima (Pix, nome social, NIF, forma de
+tributação por pessoa, deficiência granular, conta bancária adicional).
+Como o `Funcionario` do Murade já tem o campo `origemAlterdata?:
+Record<string,string>` pra guardar a ficha original lado a lado, o que
+não tiver campo próprio no Murade ainda pode ao menos ser preservado ali
+sem perda de dado, até o cadastro ser estendido.
+
 ### Confirmado (05/11/2026): famílias de `wcont`
 
 | Prefixo | O que é | Colunas-chave |
@@ -360,6 +555,17 @@ eSocial). **Já existe um campo pronto pra isso**: `origemAlterdata?:
 Record<string,string>` — guarda a ficha original do sistema de origem
 lado a lado com os campos convertidos, pra conferência.
 
+**Atenção:** o lado Alterdata é bem mais rico — `wdp.f*` tem **262
+colunas** confirmadas (ver seção "lista completa de colunas de `wdp.f*`"
+acima), quase 4x o que o `Funcionario` do Murade tem campo próprio hoje.
+Destaques sem equivalente direto no Murade: chave Pix (`tipo_chave_pix`/
+`chave_pix`), nome social (`nmsocial`), NIF de estrangeiro
+(`indicativo_nif`/`nif`), `forma_tributacao` por funcionário (não só por
+empresa), deficiência granular (5 booleanos por tipo), conta bancária
+adicional. Tudo que não tiver campo próprio cai em `origemAlterdata` sem
+perda de dado, mas o mapeamento do importador precisa ser revisado contra
+a lista completa, não contra a lista parcial usada inicialmente.
+
 ### Dependente
 
 **Não é tabela separada** — é array `dependentesDetalhe[]` dentro do
@@ -410,9 +616,12 @@ payroll.ts` — não é uma tabela de rubricas normalizada linha a linha.
 
 Só dois campos no `Funcionario` (`valeTransporte: boolean,
 valeTransporteValor: number`) — sem número de cartão/matrícula como no
-Alterdata (`wdp.p*`). **Achado importante:** o cálculo de folha hoje
-**ainda não desconta VT automaticamente** (há um `throw` explícito dizendo
-que não está implementado).
+Alterdata. **Correção (05/11/2026):** o número do cartão não está só em
+`wdp.p*` — a própria ficha do funcionário (`wdp.f*`) já tem
+`nrcartaoticket` + `tipobeneficioticket` direto (ver lista completa de
+colunas acima). **Achado importante:** o cálculo de folha hoje **ainda
+não desconta VT automaticamente** (há um `throw` explícito dizendo que
+não está implementado).
 
 ### Contribuição sindical
 
@@ -514,12 +723,19 @@ O importador precisa:
    `muradeDpMigracao.ts`, `migracaoContabilService.ts`) pra também aceitar
    um export do Postgres restaurado. Ver seção "Risco técnico" acima —
    precisa also de `DP_DATA_ENCRYPTION_KEY` pra gravar funcionário/sócio.
-8. Criar as 4 tabelas novas de destino listadas acima nos repositórios
-   Murade DP/Fiscal, seguindo o padrão `CREATE TABLE IF NOT EXISTS`
-   já usado em cada módulo.
-9. Escrever o código do importador (mapeamento origem→destino já
-   documentado nas seções acima) e testar contra uma cópia/amostra dos
-   dados antes de rodar contra os dados reais de produção.
+8. ~~Criar as tabelas novas de destino~~ e ~~escrever o código do
+   importador~~ — em andamento (05/11/2026): implementação disparada num
+   agente separado (tabelas `dp_ferias_periodos`/`dp_historico_cargo`/
+   `dp_contribuicao_sindical_mes` + `alterdataMigracao.ts`, modo dry-run
+   por padrão, sem push até revisão). **Pendência conhecida:** esse
+   agente recebeu só a lista parcial antiga de colunas de `wdp.f*`
+   (~25 campos); a lista completa (262 colunas, ver seção acima) só foi
+   extraída depois — o mapeamento de funcionário precisa ser revisado
+   contra a lista completa antes de considerar pronto. A 4ª tabela
+   (`fiscal_regime_tributario_historico`, no repo `murade-fiscal`) ainda
+   não foi criada — ficou fora do escopo desse agente (só DP).
+9. Testar o importador contra uma cópia/amostra dos dados antes de rodar
+   contra os dados reais de produção.
 10. Nunca replicar bugs conhecidos do Alterdata (cálculo de Simples
     Nacional e agendamento automático de guias falham com frequência,
     segundo relato do Beny — motivo inclusive de multas em clientes
