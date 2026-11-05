@@ -818,14 +818,70 @@ Investigação na cópia restaurada do `ALTERDATA_PACK.backup` (empresa de teste
   no código: ele precisa ler o catálogo `wdp.evento` de CADA backup e classificar por nome/padrão,
   gerando pendência (nunca um valor chutado) pra qualquer evento ambíguo.
 
-**Caminho recomendado (ainda não implementado):** reusar o mesmo padrão que o Contábil já usa pro plano
-de contas — mapeamento conferido uma vez por quem está migrando (tela simples: "achei estes eventos,
-classifiquei assim, confirma?"), e só depois disso os robôs fecham e lançam sozinhos, mês a mês, pelas
-competências de 2026 daquela empresa, reaproveitando o `dp_accounting_outbox`/`enfileirarResumoContabilDP`
-já existente (sem precisar de nenhuma rota nova no Contábil). Ainda falta: decidir onde fica essa tela de
-confirmação (DP, já que é lá que a migração entra), e decidir tratamento separado de férias/13º/rescisão
-(hoje `mapeamentosOrigem` só tem chaves de folha mensal normal, não tem chave própria pra 13º/férias
-vindos da folha — outro gap a somar, não bloqueante pra fase 1).
+**Caminho recomendado:** reusar o mesmo padrão que o Contábil já usa pro plano de contas — mapeamento
+conferido uma vez por quem está migrando ("achei estes eventos, classifiquei assim, confirma?"), e só
+depois disso os robôs fecham e lançam sozinhos, mês a mês, pelas competências de 2026 daquela empresa,
+reaproveitando o `dp_accounting_outbox`/`enfileirarResumoContabilDP` já existente (sem precisar de
+nenhuma rota nova no Contábil).
+
+**Implementado e testado (05/11/2026) — `departamento-pessoal/src/services/alterdataFolhaHistorica.ts`:**
+duas peças, as duas só-leitura/dry-run por padrão, validadas contra a mesma cópia restaurada do backup
+de demonstração (empresa de teste, 125 competências mensais de 2013 a 2024):
+1. **Classificador do catálogo** (`classificarEventoAlterdata`/`classificarCatalogoAlterdata`): lê
+   `wdp.evento` do backup e classifica cada evento por padrão de NOME normalizado (nunca por
+   `cdchamada`/`idevento` fixo, pelo risco já descrito acima) em categorias que batem com o contrato do
+   Contábil (`provento`, `outroProvento`, `descontoINSS`, `descontoIRRF`, `descontoVT`,
+   `descontoPensao`, `descontoAdiantamento`, `outroDesconto`, `fgtsDeposito`, `inssPatronal`), ou
+   `indefinido` com motivo explícito quando o nome não bate com nada conhecido. Alguns achados conferidos
+   contra a fórmula real (`dsformulafolha`) do catálogo, pra não adivinhar direção (provento vs.
+   desconto): "Repouso Remunerado" (sttipoevento `DR`) é o DSR PAGO sobre comissão/hora extra — provento,
+   diferente do "DSR" abreviado isolado, que é desconto por perda de DSR; "Triênio"/"Quinquênio"/
+   "Anuênio" (e as variantes "s/ Seguro Acidente", "s/ Maternidade" etc.) são adicional por tempo de
+   serviço — provento; "Contribuição Sindical" (sttipoevento `CS`, confirmado pelo próprio `dsobs`: "o
+   sistema irá descontar automaticamente") e "Contribuição assistencial" (`CA`) são desconto do
+   empregado. Rodando contra o catálogo de 383 eventos do backup de teste: 280 classificados com
+   confiança alta, 103 ficaram `indefinido` (ex.: "Seguro Acidente" base, "Auxílio Natalidade",
+   "Participação nos Lucros", "Vale" isolado — ambíguo demais pra adivinhar, fica pendência mesmo).
+   **Confirmado por teste real (consulta direta a `vlevento`):** o valor de cada rubrica já carrega o
+   próprio sinal (achada uma linha "IRRF Férias" com `vlevento = -49.5`, um estorno) — então somar por
+   categoria já trata estorno/correção certo, sem precisar de lógica especial por nome "Estorno de X".
+2. **Agregador por competência** (`agruparTotaisHistoricosPorCompetencia`) + **relatório de confirmação**
+   (`gerarRelatorioFolhaHistoricaAlterdata`, ponto de entrada, só leitura): junta `wdp.r*` com `wdp.h*`
+   (só rodadas `tpprocessamento='M'`, folha mensal normal — férias/13º/rescisão ficam de fora por ora,
+   gap já citado acima), agrupa por competência (`AAAA-MM` de `dtrefinicial`) e soma por categoria,
+   produzindo o `resumo` EXATAMENTE no formato que `normalizarResumoDPContrato`
+   (`murade-contabil/src/server/dadosDpStore.ts`) já valida — `folhaBruta`/`outrosProventos`/
+   `descontosINSS`/`descontosIRRF`/`descontosOutros`/`liquidoFolha`/`fgts` somados dos eventos
+   classificados; `inssPatronal` só quando achado com confiança alta, senão `null`; `provisaoFerias`/
+   `provisao13`/`encargosOutros` sempre `null` — mesmo valor-padrão que o fechamento AO VIVO
+   (`montarResumoAgregadoDP`, `departamento-pessoal/server.ts`) já usa pra esses três campos hoje, não é
+   gap novo. Nenhum evento `indefinido` entra na soma: o valor fica separado em
+   `valorIgnoradoPorPendencia`, pra o relatório mostrar exatamente o que ficou de fora e por quê, em vez
+   de arredondar. Testado: das 125 competências, 106 fecharam com ZERO pendência (prontas pra lançar) e
+   19 têm pendência nomeada e pequena (a maioria é "Vale" isolado, ambíguo entre adiantamento/benefício —
+   certo ficar pendente mesmo).
+3. **Lançamento** (`lancarFolhaHistoricaNoContabil`, write path): só depois da confirmação humana —
+   recebe os totais já confirmados e enfileira cada competência pronta (sem pendência) no MESMO
+   `dp_accounting_outbox` que o fechamento ao vivo usa, pelo robô `integrador_contabil` (30s) já em
+   produção — zero código novo no Contábil. Protegido por `gravar` explícito (dry-run por padrão, mesma
+   convenção do resto do importador) e por uma checagem extra que impede sobrescrever qualquer
+   competência que já tenha lançamento em `dp_accounting_outbox` (ao vivo ou de outra importação) —
+   histórico só entra onde não existe nada ainda. Deliberadamente NÃO grava em `dp_payroll_closures`
+   (imutável por trigger, exige usuário real; fechar lá também bloqueia edição no DP) — se o histórico
+   importado deve trancar a competência pra edição no DP é decisão de produto separada, ainda não
+   combinada com o Beny.
+
+**Ainda falta (não implementado):**
+- A tela/fluxo de confirmação humana propriamente dito (hoje a migração roda via script, não
+  self-service pelo Beny — `migrarEmpresaAlterdata` também não está ligada a nenhuma rota HTTP ainda,
+  só a testes; então por ora a "confirmação" é eu mostrar o relatório pro Beny/contador em texto e
+  rodar o lançamento depois do "sim, pode lançar" — uma tela de verdade é melhoria futura, não bloqueia
+  o uso).
+- Tratamento de férias/13º/rescisão vindos do histórico (hoje só folha mensal normal `tpprocessamento='M'`
+  entra) — `mapeamentosOrigem` do Contábil também não tem chave própria pra isso ainda.
+- Decisão sobre `dp_payroll_closures` (trancar ou não a competência importada pra edição no DP).
+- Resolver "Seguro Acidente" e os poucos nomes tipo "Vale" isolado — ficam pendência até decisão humana
+  por empresa/backup (o nome pode significar coisas diferentes em convenções coletivas diferentes).
 
 ### Vale-transporte
 
