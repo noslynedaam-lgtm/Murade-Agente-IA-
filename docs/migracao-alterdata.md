@@ -86,21 +86,55 @@ de-para final.
 
 ### Achado importante: dados particionados por empresa em tabelas separadas
 
-Em vários pontos (principalmente `wcont`), a Alterdata não guarda os dados
-de todas as empresas numa tabela só com uma coluna `empresa_id` — ela cria
-uma tabela física por empresa, numerada, por tipo de dado. Exemplos vistos:
+Em vários pontos, a Alterdata não guarda os dados de todas as empresas numa
+tabela só com uma coluna `empresa_id` — ela cria uma tabela física por
+empresa, numerada, por tipo de dado (prefixo de 1-3 letras + sufixo numérico
+de 5 dígitos). Isso muda a estratégia do importador: não dá pra simplesmente
+fazer um `SELECT * FROM tabela WHERE empresa_id = X` — para esses grupos de
+tabela, o importador tem que ler a tabela certa por empresa usando o código
+dela como sufixo.
 
-- `cc00001`, `cc00002`, ..., `cc99999` (um tipo de dado, provavelmente conta
-  corrente ou centro de custo — ainda não confirmado)
-- `cl00001`, `cl00002`, ... (outro tipo de dado)
-- `cm00001`, `cm00002`, ... (outro tipo de dado)
+**Confirmado em 05/11/2026, só analisando os nomes das 3475 tabelas (sem
+precisar de acesso ao banco):** dentro de um mesmo schema, o conjunto de
+sufixos numéricos é **idêntico** entre as famílias de prefixo — ou seja, o
+sufixo é o código interno da empresa na Alterdata, e vale igual pra todo
+tipo de dado daquele schema. Isso elimina a dúvida de "como saber qual
+sufixo corresponde a qual empresa por tipo de tabela": é o mesmo número em
+todas.
 
-Isso muda a estratégia do importador: não dá pra simplesmente fazer um
-`SELECT * FROM tabela WHERE empresa_id = X` — para esses grupos de tabela,
-o importador vai ter que descobrir o sufixo numérico que corresponde a cada
-empresa (provavelmente existe uma tabela de mapeamento tipo "código interno
-da empresa → sufixo", ainda não localizada) e ler a tabela certa por
-empresa.
+**Em `wdp`** (Departamento Pessoal), 19 famílias de prefixo —
+`a`, `d`, `e`, `f`, `fc`, `fh`, `h`, `hr`, `ih`, `im`, `ir`, `l`, `m`, `p`,
+`r`, `s`, `t`, `tb`, `v` — compartilham exatamente os mesmos **51 códigos de
+empresa**:
+
+```
+00001-00012, 00014-00023, 00026, 00028-00030, 00032-00034, 00036-00042,
+00044-00049, 00051-00055, 00057, 00058, 00060, 00061
+```
+
+Outras 3 famílias (`pc`, `pv`, `se`) compartilham um subconjunto de **38**
+desses mesmos códigos (empresas que usam aquele recurso específico —
+hipótese a confirmar: `pc`/`pv` parecem ligados a ponto eletrônico e `se` a
+algo opcional tipo sindicato/escala).
+
+**Em `wcont`** (Contábil), o padrão se repete em escala menor: famílias
+`cc`/`cl`/`cm`/`cs`/`ct` compartilham 24 códigos (21 reais + `99997`/`99998`/
+`99999`, que parecem ser contas de template/demonstração da própria
+Alterdata, não empresa real); famílias `lk`/`lt`/`mc`/`mv`/`sc`/`sd`
+compartilham 30; `con` compartilha 30; `lf` compartilha 25. Ou seja, nem
+toda empresa do Contábil usa todos os módulos — mas o conjunto de códigos de
+empresa é um subconjunto fechado do mesmo grupo em todos os casos.
+
+**O que ainda falta confirmar (precisa de acesso ao banco):** o significado
+de cada prefixo de 1-3 letras (hipóteses, não confirmadas: `a`=admissão,
+`d`=demissão/desligamento, `f`=funcionário/ficha, `r`=rescisão, `s`=salário,
+`t`=tomador de serviço, `v`=vínculo — mas isso precisa ser checado olhando
+as colunas de uma tabela de cada família) e se o sufixo numérico bate
+exatamente com `wphd.empresa.cdempresa` (ex.: empresa de código `00001` →
+tabelas `a00001`, `d00001`, `f00001` etc. são dela). Essa segunda
+confirmação é crítica pra montar o importador: se bater, o importador já
+sabe exatamente quais tabelas ler pra cada empresa, sem precisar de nenhuma
+tabela de mapeamento à parte.
 
 ### Módulos mais pesados (prioridade de mapeamento)
 
@@ -141,12 +175,19 @@ mais completo no módulo de DP/cadastro do cliente.
    cadastro mestre às tabelas de configuração `wfiscal.empresa` /
    `wdp.empdp` / `wcont.empcont` por `cdempresa`/`idempresa`.
 2. Checar `wdp.empcon` — pode ser a ligação DP↔Contábil.
-3. Descobrir a tabela de mapeamento do sufixo numérico das tabelas
-   particionadas por empresa (`cc00001` etc.) — provavelmente alguma
-   tabela de "empresa" ou "configuração" tem uma coluna com esse número.
+3. ~~Descobrir a tabela de mapeamento do sufixo numérico~~ — já não é mais
+   necessário descobrir uma tabela de mapeamento à parte: confirmado (só
+   pelos nomes das tabelas, ver seção acima) que o sufixo numérico é o
+   mesmo código de empresa em todo prefixo de um schema. O que falta é só
+   confirmar que esse código bate com `cdempresa` de `wphd.empresa`, e
+   inspecionar as colunas de uma tabela de cada família de prefixo em
+   `wdp` (`a00001`, `d00001`, `f00001`, `r00001`, `s00001`, `v00001` etc.)
+   pra descobrir o que cada uma guarda de fato.
 4. Levantar estrutura de `wdp` pras tabelas de funcionário/folha
-   (candidatas: tabelas que começam com `func*`, `evento*`, `rpadrao`,
-   `rporig`) pra desenhar o importador de DP.
+   (candidatas, pelas famílias de prefixo achadas: `f*` = provável
+   ficha/funcionário, `a*`/`d*` = admissão/desligamento, `r*` = rescisão,
+   `s*` = salário, `v*` = vínculo — tudo hipótese, confirmar pelas colunas)
+   pra desenhar o importador de DP.
 5. Depois de ter colunas + tipos de dado, desenhar o ETL real (provável
    abordagem: um robô/serviço batch que lê direto do Postgres restaurado
    — ou de um dump exportado — e grava no schema do Murade, nunca
