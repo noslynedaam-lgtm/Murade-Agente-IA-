@@ -773,6 +773,60 @@ Fragmentada em várias tabelas por estágio (`dp_payroll_previews`,
 de `calculateMonthlyCltPreview` em `departamento-pessoal/src/server/
 payroll.ts` — não é uma tabela de rubricas normalizada linha a linha.
 
+**Confirmado (05/11/2026): DP → Contábil (folha e pró-labore) já é automático hoje, pra qualquer
+empresa, independente de ter vindo do Alterdata.** Dois caminhos já existem em produção, não é preciso
+criar nada novo pra isso:
+- Folha de funcionário: `fecharFolhaEscopada` (`departamento-pessoal/src/server/auth.ts`) grava o
+  snapshot em `dp_payroll_closures` e, na mesma chamada, enfileira em `dp_accounting_outbox`
+  (`enfileirarResumoContabilDP`). Um robô (`integrador_contabil`, a cada 30s) drena essa fila e `POST`s
+  pra `murade-contabil`, rota `/api/integracao/dp/folhas` — token de integração, com retry/backoff e
+  marcação de falha definitiva vs. temporária.
+- Pró-labore de sócio: mesma ideia, caminho separado (`proLaboreEnvio.ts` → `/api/integracao/dp/prolabore`,
+  robô `prolabore` a cada 1h).
+- Do lado do Contábil, `prepararRascunhosContabeis.ts` (robô `reconciliador`, a cada 60s) transforma isso
+  em pré-lançamento, usando os campos `dp_folha_bruta`/`dp_descontos_inss`/`dp_inss_patronal`/
+  `dp_descontos_irrf`/`dp_fgts` do dicionário `mapeamentosOrigem`. Pré-lançamento só vira lançamento
+  definitivo com aprovação humana (`contabilizador`, por regra, nunca automático) — é assim de propósito.
+
+**Gap real identificado (05/11/2026): histórico de folha JÁ FECHADA no Alterdata, antes da migração.**
+Beny quer que pelo menos o ano corrente (2026, ainda não fechado) seja recalculado e lançado pelos robôs
+assim que a empresa for migrada; anos anteriores ficam só como referência (PDF antigo), com uma opção
+manual futura do contador pedir pra "refazer" o livro de uma empresa antiga quando precisar.
+
+Investigação na cópia restaurada do `ALTERDATA_PACK.backup` (empresa de teste, schema `wdp`, sufixo
+`00002`, 2.346 linhas em `wdp.r00002` cobrindo 2013–2024):
+- A folha do Alterdata **não guarda total do mês pronto** — é rubrica por rubrica. `wdp.r*` (uma linha
+  por evento por funcionário por rodada) tem `idfuncionario`, `idhistorico` (liga em `wdp.h*` = cada
+  rodada de processamento, com `dtrefinicial/dtreffinal` = a competência real e `tpprocessamento`:
+  `M`=folha mensal normal, `1`/`2`=1ª/2ª parcela de 13º, `F`=férias, `R`=rescisão), `idevento`, `nmevento`,
+  `vlevento` (o valor da rubrica) e flags `stcomputainss`/`stcomputafgts`/`stcomputairrf` (se o valor
+  desse evento compõe a BASE de cálculo daquele tributo — não é o valor retido).
+- `wdp.evento` é **um catálogo único por instalação** (sem coluna de empresa, `idevento` único na
+  tabela — 383 linhas na empresa de teste), com `cdchamada` (código numérico da rotina interna do
+  Alterdata, ex.: 903=INSS Folha, 917=FGTS em Folha, 914=IRRF Folha, 001=Salário Base, 899=INSS 13º,
+  901=INSS 13º Rescisão) e até a fórmula de cálculo (`dsformulafolha`) de cada rubrica. É bem mais
+  granular que o esperado: tem variação por situação (INSS Folha ≠ INSS Férias ≠ INSS Rescisão ≠ INSS
+  13º, cada um com seu próprio `cdchamada`), incluindo rubricas de ajuste/diferença que não devem ser
+  somadas junto com o valor principal sem cuidado (ex.: "Diferença de INSS", "INSS 13º Diferenças
+  Salariais").
+- Como a tabela é por instalação (não por empresa dentro da mesma instalação), dá pra ler o catálogo de
+  evento **uma vez só por backup/contadora**, não por empresa migrada dela.
+- **Risco a evitar:** não dá pra confiar que `cdchamada`/`idevento` sejam idênticos em TODAS as
+  instalações de Alterdata (cada contadora tem o próprio backup/banco) — são consistentes com o nome e a
+  fórmula dentro de uma mesma instalação, mas isso não foi confirmado contra uma fonte oficial da
+  Alterdata, só por inspeção. Por isso o importador não deve vir com um mapa fixo tipo "903 = INSS" embutido
+  no código: ele precisa ler o catálogo `wdp.evento` de CADA backup e classificar por nome/padrão,
+  gerando pendência (nunca um valor chutado) pra qualquer evento ambíguo.
+
+**Caminho recomendado (ainda não implementado):** reusar o mesmo padrão que o Contábil já usa pro plano
+de contas — mapeamento conferido uma vez por quem está migrando (tela simples: "achei estes eventos,
+classifiquei assim, confirma?"), e só depois disso os robôs fecham e lançam sozinhos, mês a mês, pelas
+competências de 2026 daquela empresa, reaproveitando o `dp_accounting_outbox`/`enfileirarResumoContabilDP`
+já existente (sem precisar de nenhuma rota nova no Contábil). Ainda falta: decidir onde fica essa tela de
+confirmação (DP, já que é lá que a migração entra), e decidir tratamento separado de férias/13º/rescisão
+(hoje `mapeamentosOrigem` só tem chaves de folha mensal normal, não tem chave própria pra 13º/férias
+vindos da folha — outro gap a somar, não bloqueante pra fase 1).
+
 ### Vale-transporte
 
 Só dois campos no `Funcionario` (`valeTransporte: boolean,
