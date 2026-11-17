@@ -95,9 +95,8 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   if (!sessao) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
-        <form onSubmit={enviar} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 border-t-4 border-t-marca shadow-xl p-7 space-y-4">
-          <img src="/icone-app-192.png?v=5" alt="" width={64} height={64} className="mx-auto rounded-2xl shadow-[0_0_14px_rgba(8,145,178,.5)]" />
-          <h1 className="text-xl font-black text-marca-escura text-center">Murade Agente IA</h1>
+        <form onSubmit={enviar} className="w-full max-w-sm rounded-2xl bg-white border border-slate-200 shadow-xl p-7 space-y-4">
+          <h1 className="text-xl font-black text-slate-900 text-center">Murade Agente IA</h1>
           <p className="text-sm text-slate-600 text-center">
             {redefinirSenha ? 'Defina uma nova senha para sua conta.' : convite ? 'Você foi convidado. Crie sua senha para entrar.' : primeiroAcesso ? 'Primeiro acesso: crie o usuário do dono do sistema.' : 'Entre com seu usuário e senha.'}
           </p>
@@ -118,7 +117,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
               <input type="password" value={confirmacao} onChange={(e) => setConfirmacao(e.target.value)} autoComplete="new-password" required className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 font-normal" />
             </label>
           )}
-          <button type="submit" disabled={enviando} className="w-full rounded-lg bg-marca-escura hover:bg-marca-forte text-white font-bold py-2.5 disabled:opacity-60">
+          <button type="submit" disabled={enviando} className="w-full rounded-lg bg-[#0f2444] hover:bg-[#1b3d6f] text-white font-bold py-2.5 disabled:opacity-60">
             {enviando ? 'Aguarde…' : convite ? 'Salvar senha e entrar' : primeiroAcesso ? 'Criar e entrar' : 'Entrar'}
           </button>
           {!convite && !primeiroAcesso && <div className="pt-1 text-center"><EsqueciSenha /></div>}
@@ -131,7 +130,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   const urlDP = 'https://murade-dp.onrender.com/#acessos';
   return (
     <AcessoContext.Provider value={{ usuario: sessao.usuario, empresas: sessao.empresas, empresaAtiva, escolherEmpresa, sair }}>
-      <div className="top-0 z-[100] flex min-h-7 flex-nowrap items-center justify-between gap-2 bg-marca-escura border-t-[3px] border-marca px-3 py-0.5 text-xs text-white md:sticky md:min-h-10 md:flex-wrap md:px-4 md:py-1.5">
+      <div className="top-0 z-[100] flex min-h-7 flex-nowrap items-center justify-between gap-2 bg-slate-950 px-3 py-0.5 text-xs text-white md:sticky md:min-h-10 md:flex-wrap md:px-4 md:py-1.5">
         <span className="min-w-0 truncate">Conta: <strong>{sessao.usuario}</strong></span>
         <div className="flex shrink-0 gap-2">
           {(flags.ehEscritorio || flags.donoSistema) && <button type="button" onClick={() => setPainel((v) => !v)} className="rounded bg-white/15 px-2 py-0.5 hover:bg-white/25 md:px-3 md:py-1"><span className="md:hidden">Usuários</span><span className="hidden md:inline">Usuários e empresas</span></button>}
