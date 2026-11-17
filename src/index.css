@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* Cor de marca do Murade Agente IA (ciano/turquesa). Para trocar, altere aqui e em src/marca.ts. */
+@theme {
+  --color-marca: #0891b2;
+  --color-marca-escura: #155e75;
+  --color-marca-forte: #0e7490;
+  --color-marca-clara: #cffafe;
+}

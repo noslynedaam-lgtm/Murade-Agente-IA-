@@ -17,9 +17,9 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const { usuario, empresas, empresaAtiva, escolherEmpresa, sair } = useAcesso();
   return (
-    <header className="bg-[#0f2444] border-b border-[#1b3d6f] sticky top-0 z-40 text-white shadow-md">
+    <header className="bg-marca-escura border-b border-marca border-t-4 border-t-marca sticky top-0 z-40 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-end py-1 border-b border-[#1b3d6f]">
+        <div className="flex justify-end py-1 border-b border-marca/50">
       {/* Bloco padrão Murade: Usuário | Empresa | Licença | Sair */}
       <div className="flex items-center gap-2 shrink-0">
         <CabecalhoPadrao
@@ -49,9 +49,9 @@ export const Header: React.FC<HeaderProps> = ({
                 src={muradeemblemLogo}
                 alt="Murade Emblema"
                 referrerPolicy="no-referrer"
-                className="w-9 h-9 rounded-full object-cover border-2 border-blue-400/40 shadow-xs"
+                className="w-9 h-9 rounded-full object-cover border-2 border-cyan-300/70 shadow-[0_0_10px_rgba(34,211,238,.55)]"
               />
-              <span className="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-blue-200 transition-colors whitespace-nowrap">
+              <span className="text-base sm:text-lg font-bold tracking-tight text-white group-hover:text-marca-clara transition-colors whitespace-nowrap">
                 Murade Agente IA
               </span>
             </button>
@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('legislacao')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer flex items-center gap-1.5 ${
                 currentTab === 'legislacao'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('chat')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer ${
                 currentTab === 'chat'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -84,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('knowledge')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer ${
                 currentTab === 'knowledge'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('simulators')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer ${
                 currentTab === 'simulators'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('calendar')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer ${
                 currentTab === 'calendar'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onSelectTab('legal')}
               className={`transition-colors whitespace-nowrap py-1 cursor-pointer ${
                 currentTab === 'legal'
-                  ? 'text-white font-semibold border-b-2 border-blue-400'
+                  ? 'text-white font-semibold border-b-2 border-cyan-300'
                   : 'hover:text-white'
               }`}
             >
@@ -126,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={onNewConsultation}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 active:scale-98 transition-all cursor-pointer whitespace-nowrap shadow-xs"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 text-xs font-semibold text-white bg-marca-escura ring-1 ring-cyan-300/70 rounded-lg hover:bg-marca-forte active:scale-98 transition-all cursor-pointer whitespace-nowrap shadow-xs"
             >
               <MessageSquarePlus className="w-3.5 h-3.5" />
               <span>Nova Consulta</span>
@@ -135,40 +135,40 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile secondary navigation strip */}
-        <div className="xl:hidden flex items-center gap-4 py-2 border-t border-[#1b3d6f] overflow-x-auto text-xs font-medium text-slate-300 no-scrollbar">
+        <div className="xl:hidden flex items-center gap-4 py-2 border-t border-marca/50 overflow-x-auto text-xs font-medium text-slate-300 no-scrollbar">
           <button
             onClick={() => onSelectTab('legislacao')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'legislacao' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'legislacao' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             🏛️ Legislação
           </button>
           <button
             onClick={() => onSelectTab('chat')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'chat' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'chat' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             Consultor
           </button>
           <button
             onClick={() => onSelectTab('knowledge')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'knowledge' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'knowledge' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             Base Conhecimento
           </button>
           <button
             onClick={() => onSelectTab('simulators')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'simulators' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'simulators' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             Simuladores
           </button>
           <button
             onClick={() => onSelectTab('calendar')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'calendar' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'calendar' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             Prazos
           </button>
           <button
             onClick={() => onSelectTab('legal')}
-            className={`whitespace-nowrap pb-1 ${currentTab === 'legal' ? 'text-white font-bold border-b-2 border-blue-400' : ''}`}
+            className={`whitespace-nowrap pb-1 ${currentTab === 'legal' ? 'text-white font-bold border-b-2 border-cyan-300' : ''}`}
           >
             Aviso Legal
           </button>
