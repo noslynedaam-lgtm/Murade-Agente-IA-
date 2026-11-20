@@ -641,7 +641,7 @@ O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacio
     title: 'eSocial: Calendário de Eventos, Prazos Oficiais e DCTFWeb',
     summary: 'Tabela de eventos periódicos e não periódicos (S-2190, S-2200, S-2210, S-2220, S-2240, S-2299, S-1200) e transmissão para DCTFWeb; fases do eSocial e onde cadastrar S-1000/S-1005/S-1010/S-1020 (lotação tributária) no portal.',
     tags: ['eSocial', 'DCTFWeb', 'S-2200 Admissão', 'S-2299 Desligamento', 'Prazos', 'lotação tributária', 'S-1020', 'S-1010', 'S-1005', 'S-1000', 'tabelas do eSocial', 'fase 1 eSocial', 'cadastro inicial eSocial', 'S-1200 rejeitado'],
-    lastUpdated: '2026-11-03',
+    lastUpdated: '2026-11-20',
     officialLink: 'https://www.esocial.gov.br',
     officialLinkLabel: 'Portal Oficial do eSocial',
     content: `# eSocial - Calendário Oficial, Prazos de Eventos e DCTFWeb
@@ -650,7 +650,7 @@ O Departamento Pessoal (DP) deve estruturar todos os seus procedimentos operacio
 > - [Manual de Orientação do eSocial (MOS) S-1.3, consolidado até a NO S-1.3-07/2026 (gov.br)](https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-s-1-3-consolidada-ate-a-no-s-1-3-07-2026.pdf), itens 10.3.2 e 10.3.4.1
 > - [Nota Orientativa 2019.18, prazo de envio de eventos (gov.br)](https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/nota-orientativa-018-2019-prazo-de-envio-de-eventos.pdf)
 > - [Notícia oficial do Comitê Gestor sobre o prazo (gov.br, 04/06/2019)](https://www.gov.br/esocial/pt-br/noticias/comite-gestor-confirma-que-havera-mudanca-no-prazo-de-envio-do-fechamento-de-folha)
-> **Não conferido nesta revisão:** prazos de S-2205, S-2206, S-2210, S-2220, S-2230, S-2240 e S-2300 (o capítulo III do MOS, que traz o prazo de cada evento, não veio no texto lido); seção da DCTFWeb; qualquer regra para empregador doméstico. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o MOS.**
+> **Não conferido nesta revisão:** prazos de S-2205, S-2206, S-2210, S-2220, S-2230, S-2240 e S-2300 (o capítulo III do MOS, que traz o prazo de cada evento, não veio no texto lido); (a seção da DCTFWeb foi conferida em 20/11/2026); qualquer regra para empregador doméstico. **Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar o MOS.**
 
 ---
 
@@ -707,12 +707,12 @@ São os eventos disparados por atos pontuais da rotina trabalhista. **Conferidos
 
 ## 2. A Integração com DCTFWeb e Fechamento Previdenciário
 
-> **Seção não reconferida nesta revisão** (as páginas oficiais consultadas exigiam login ou não traziam o texto): **preciso confirmar** na Receita Federal (Manual da DCTFWeb e IN RFB 2.005/2021) antes de afirmar prazos.
+> **Conferido em 20/11/2026:** [gov.br, "Declarar débitos e créditos tributários federais" (DCTFWeb/MIT), modificado em 12/11/2026](https://www.gov.br/pt-br/servicos/declarar-debitos-e-creditos-tributarios-federais) (IN RFB 2.237/2024) e [Lei 8.212/1991, art. 30, I, b (texto atualizado na Câmara)](https://www2.camara.leg.br/legin/fed/lei/1991/lei-8212-24-julho-1991-363647-normaatualizada-pl.html).
+> **Não conferido:** o valor da multa por atraso da DCTFWeb (MAED) e a regra do vencimento em dia sem expediente bancário.
 
-Informação da versão anterior, mantida como referência:
-1. A transmissão do fechamento (S-1299) no eSocial, junto com os eventos da EFD-Reinf, alimenta a **DCTFWeb**.
-2. O **DARF previdenciário** gerado na DCTFWeb substituiu a GPS.
-3. Vencimento informado antes: **dia 20 do mês seguinte**, com antecipação se o dia não for útil. **Não conferido**: confirme na Receita.
+1. A transmissão do fechamento (S-1299) no eSocial, junto com os eventos da EFD-Reinf e do MIT, alimenta a **DCTFWeb**. A DCTF e a DCTFWeb foram **unificadas** (IN RFB 2.237/2024).
+2. **Prazo de entrega da DCTFWeb (regra mensal): até o último dia útil do mês seguinte** ao dos fatos geradores. **Correção:** o prazo do dia 15 valeu só até o período de apuração 12/2024; versões anteriores desta base diziam dia 15.
+3. O **DARF previdenciário** é gerado na DCTFWeb. **Vencimento do recolhimento:** contribuições da empresa **até o dia 20 do mês seguinte** à competência (Lei 8.212, art. 30, I, b). Entrega da declaração e pagamento têm prazos diferentes.
 
 ---
 
@@ -1235,7 +1235,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     title: 'eSocial & FGTS Digital: Manual MOS S-1.3, Prazos de Eventos e DCTFWeb',
     summary: 'Manual oficial do eSocial (Decreto nº 8.373/2014) e do FGTS Digital (Lei nº 14.438/2022): admissão S-2200, demissão S-2299, fechamento S-1299, DARF Previdenciário DCTFWeb e recolhimento via Pix no dia 20.',
     tags: ['eSocial', 'FGTS Digital', 'Pix', 'DCTFWeb', 'S-2200', 'S-2299', 'S-1200', 'MOS S-1.3'],
-    lastUpdated: '2026-10-21',
+    lastUpdated: '2026-11-20',
     officialLink: 'https://www.esocial.gov.br',
     officialLinkLabel: 'Portal Oficial do eSocial (Governo Federal)',
     content: `# eSocial e FGTS Digital — Manual de Operação e Prazos Oficiais
@@ -1265,7 +1265,8 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 
 ## 2. DCTFWeb e Unificação dos Encargos Previdenciários
 - Após o fechamento do evento S-1299 no eSocial e da EFD-Reinf, os débitos previdenciários e de terceiros são consolidados na DCTFWeb.
-- **DARF Previdenciário Numerado:** Vencimento no **dia 20 do mês subsequente** ao da competência (antecipando-se para o dia útil anterior se cair em fim de semana ou feriado).
+- **Entrega da DCTFWeb (conferido em 20/11/2026, gov.br e IN RFB 2.237/2024):** até o **último dia útil do mês seguinte** ao dos fatos geradores (o dia 15 valeu só até 12/2024).
+- **DARF Previdenciário:** recolhimento **até o dia 20 do mês subsequente** à competência (Lei 8.212, art. 30, I, b, conferido em 20/11/2026). A regra para dia sem expediente bancário **não foi conferida**: preciso confirmar.
 
 ---
 
