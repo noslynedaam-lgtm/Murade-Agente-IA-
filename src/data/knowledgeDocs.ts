@@ -492,6 +492,7 @@ Na Substituição Tributária, a responsabilidade pelo recolhimento do ICMS de t
 
 > **Legislação Base:** Emenda Constitucional nº 132/2023, Leis Complementares regulamentadoras e Diretrizes do Comitê Gestor do IBS.
 >
+> **ATENÇÃO (20/11/2026):** para IBS, CBS, Imposto Seletivo, crédito, split payment, Simples Nacional, reduções e cashback, **prevalece o bloco conferido artigo por artigo na LC 214/2025 (com a LC 227/2026): id reforma-tributaria-ibs-cbs-lc214-conferido**. Ex.: o crédito de IBS/CBS **depende da extinção (pagamento) do débito** do fornecedor (LC 214, art. 47), não é "imediato" em qualquer caso.
 > **Fontes oficiais (conferidas em 21/10/2026):**
 > - [Emenda Constitucional 132/2023, ADCT arts. 124 a 133 (Planalto)](https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm)
 > - [Agência Senado, 16/12/2024: novos tributos começam a ser testados em 2026 e a transição vai até 2033](https://www12.senado.leg.br/noticias/materias/2024/12/16/novos-tributos-comecam-a-ser-testados-em-2026-e-transicao-vai-ate-2033)
@@ -1340,6 +1341,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
     officialLinkLabel: 'Portal da Reforma Tributária (Câmara e Senado)',
     content: `# Reforma Tributária do Consumo — EC nº 132/2023 e Leis Complementares
 
+> **ATENÇÃO (20/11/2026):** para IBS, CBS, Imposto Seletivo, crédito, split payment, Simples Nacional, reduções e cashback, **prevalece o bloco conferido artigo por artigo na LC 214/2025 (com a LC 227/2026): id reforma-tributaria-ibs-cbs-lc214-conferido**. Ex.: o crédito de IBS/CBS **depende da extinção (pagamento) do débito** do fornecedor (LC 214, art. 47), não é "imediato" em qualquer caso.
 > **Status de conferência (21/10/2026):** este é um resumo anterior, **não reconferido artigo por artigo** em fonte oficial. Em caso de divergência, **prevalecem os documentos marcados como conferidos** (ids: reforma-tributaria). Pontos específicos abaixo marcados com "preciso confirmar" devem ser confirmados antes de afirmar. Diante de dúvida, o agente deve dizer "preciso confirmar" e indicar a fonte oficial.
 > **Observações:** O conteúdo sobre IBS, CBS, IS e split payment é descritivo e **não teve cada artigo da LC 214/2025 reconferido**; datas de transição devem ser lidas no documento "reforma-tributaria", que tem a revisão de 20/10/2026.
 
