@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "test:consultor": "tsx --test src/server/consultor/*.test.ts"
+    "test:consultor": "tsx --test src/server/consultor/*.test.ts",
+    "test:agente": "tsx --test src/server/agenteEtapas.test.ts src/server/sessaoCelular.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

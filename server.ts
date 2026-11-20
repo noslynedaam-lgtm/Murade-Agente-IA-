@@ -9,6 +9,7 @@ import { KNOWLEDGE_BASE_DOCS } from './src/data/knowledgeDocs.ts';
 dotenv.config();
 
 import { exigirAcesso, registrarRotasDeAcesso } from './src/server/acesso';
+import { ArmazemDeEtapas, REGRA_PEDIDO_LONGO, chaveDeEtapas, prepararPedido } from './src/server/agenteEtapas';
 import { criarGerador } from './src/server/consultor/cerebro';
 import { agendarConferidor } from './src/server/consultor/conferidor';
 import { criarArmazem } from './src/server/consultor/registro';
@@ -31,6 +32,8 @@ app.use((req, res, next) => {
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
+// Chat: corpo maior para nunca recusar texto longo (até 500.000 caracteres + histórico; o servidor corta e avisa).
+app.use('/api/chat', express.json({ limit: '25mb' }));
 app.use(express.json({ limit: '10mb' }));
 registrarRotasDeAcesso(app);
 // Chat, voz e transcrição gastam a chave Gemini: só para usuários autenticados.
@@ -138,17 +141,25 @@ ${contextText}
   return { instruction, matchedDocs: docsToInject };
 }
 
+// Pedidos longos por etapas: texto completo guardado na memória, por usuário/sessão, por algumas horas.
+const etapasChat = new ArmazemDeEtapas();
 // Endpoint: Consult AI Agent
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, history = [], category = 'all' } = req.body;
+    const { history = [], category = 'all' } = req.body;
+    const recebida = req.body?.message;
 
-    if (!message || typeof message !== 'string') {
+    if (!recebida || typeof recebida !== 'string' || !recebida.trim()) {
       res.status(400).json({ error: 'Mensagem inválida ou ausente.' });
       return;
     }
+    // Nunca recusa por tamanho: até 500.000 caracteres (acima disso lê o começo e avisa); texto longo vai por etapas.
+    const sessaoEtapas = (req as any).sessaoAgente;
+    const pedido = prepararPedido(etapasChat, sessaoEtapas ? chaveDeEtapas('agente-ia', sessaoEtapas.uid || sessaoEtapas.usuario, sessaoEtapas.sid) : '', recebida);
+    const message = pedido.mensagem;
 
-    const { instruction: dynamicInstruction, matchedDocs } = buildSystemInstruction(message, category);
+    const { instruction: instrucaoBase, matchedDocs } = buildSystemInstruction(message, category);
+    const dynamicInstruction = instrucaoBase + REGRA_PEDIDO_LONGO;
 
     // If Gemini API is available, invoke it
     if (ai) {
@@ -203,7 +214,9 @@ app.post('/api/chat', async (req, res) => {
           });
         }
 
-        const replyText = response.text || 'Não foi possível gerar uma resposta detalhada no momento.';
+        const respostaModelo = response.text || 'Não foi possível gerar uma resposta detalhada no momento.';
+        const fimEtapa = pedido.concluir(respostaModelo);
+        const replyText = fimEtapa.resposta;
 
         // Detect referenced documents
         const referencedDocs = KNOWLEDGE_BASE_DOCS.filter(
@@ -232,6 +245,8 @@ app.post('/api/chat', async (req, res) => {
           reply: replyText,
           referencedDocs,
           fontesWeb,
+          ...(fimEtapa.etapas ? { etapas: fimEtapa.etapas } : {}),
+          ...(fimEtapa.textoCortado ? { textoCortado: true } : {}),
         });
         return;
       } catch (geminiError: any) {
@@ -240,8 +255,8 @@ app.post('/api/chat', async (req, res) => {
       }
     }
 
-    // Deterministic fallback complying with the golden rule
-    const query = message.toLowerCase().trim();
+    // Deterministic fallback complying with the golden rule (sobre o texto da pessoa, não sobre as marcas da etapa)
+    const query = recebida.slice(0, 500_000).toLowerCase().trim();
     let matchedDoc = KNOWLEDGE_BASE_DOCS.find(
       (d) =>
         query.includes(d.id.toLowerCase()) ||
