@@ -191,7 +191,15 @@ export function criarGerador(ai: GoogleGenAI | null) {
         const texto = r.text ?? '';
         if (!texto.trim()) throw new Error('Resposta vazia do modelo.');
         const chunks = (r as any).candidates?.[0]?.groundingMetadata?.groundingChunks;
-        return { texto, fontesPesquisa: fontesDaPesquisa(chunks).fontes, modelo: t.modelo };
+        const u = (r as any).usageMetadata;
+        const uso = u
+          ? {
+              entrada: Number(u.promptTokenCount) || 0,
+              saida: (Number(u.candidatesTokenCount) || 0) + (Number(u.thoughtsTokenCount) || 0),
+              total: Number(u.totalTokenCount) || 0,
+            }
+          : undefined;
+        return { texto, fontesPesquisa: fontesDaPesquisa(chunks).fontes, modelo: t.modelo, uso };
       } catch (e) {
         ultimoErro = e;
       }

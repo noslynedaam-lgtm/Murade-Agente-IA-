@@ -1,5 +1,6 @@
 // Validação do corpo da pergunta e da resposta do modelo.
 import { filtrarFontesOficiais, urlOficial } from './fontes';
+import { cnpjValido, normalizarCnpj } from './liberacao';
 import { mascararTexto } from './mascarar';
 import {
   AREAS,
@@ -94,7 +95,12 @@ export function validarPergunta(corpo: unknown): Ok<PerguntaConsultor> | Erro {
   }
 
   const usuario = texto(c.usuario, 80);
-  const escritorio = texto(c.escritorio, 80);
+  // escritorio = CNPJ do escritório (14 caracteres; aceita pontuação e o CNPJ alfanumérico). Sem ele, o escritório não tem o Consultor completo.
+  let escritorio: string | undefined;
+  if (c.escritorio !== undefined && c.escritorio !== null && String(c.escritorio).trim() !== '') {
+    escritorio = normalizarCnpj(c.escritorio);
+    if (!cnpjValido(escritorio)) return { ok: false, erro: 'Campo "escritorio" deve ser o CNPJ do escritório (14 caracteres, com dígitos verificadores válidos).' };
+  }
 
   return {
     ok: true,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PainelEquipe } from './PainelEquipe';
 import { PainelEscritorios } from './PainelEscritorios';
+import { PainelConsultor } from './PainelConsultor';
 
 // Equipe do escritório (responsável) e escritórios clientes (dono do sistema).
 async function chamar(url: string, metodo = 'GET', corpo?: object) {
@@ -41,6 +42,7 @@ export const PainelContas: React.FC<{ ehEscritorio: boolean; donoSistema: boolea
       <div className="mb-3 flex items-center justify-between"><h2 className="text-lg font-black">Usuários e empresas</h2><button onClick={onFechar} className="rounded bg-slate-200 px-3 py-1 text-sm">Fechar</button></div>
       {msg && <p role="alert" className="mb-2 text-sm text-red-700">{msg}</p>}
       {donoSistema && <PainelEscritorios />}
+      {donoSistema && <PainelConsultor />}
       {ehEscritorio && <PainelEquipe />}
     </div>
   );

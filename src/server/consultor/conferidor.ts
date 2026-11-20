@@ -1,5 +1,6 @@
 // Robô conferidor do Consultor: 1x por dia faz perguntas-teste com resposta-chave conferida em fonte oficial
 // e registra se o consultor ainda acerta (palavras-chave). Com o Gemini fora, registra "não testado".
+import { conferirRespostasProntas } from './economia';
 import type { Armazem, ResultadoTeste, SaudeConsultor } from './registro';
 import type { Consultor } from './servico';
 import type { PerguntaConsultor } from './tipos';
@@ -51,6 +52,14 @@ export const PERGUNTAS_TESTE: PerguntaTeste[] = [
   { id: 'ecd-prazo', sistema: 'contabil', pergunta: 'Qual o prazo de entrega da ECD?', chaves: [['junho']], fonte: 'gov.br Entregar ECD; IN RFB 2.003/2021' },
   { id: 'plr-pagamentos', sistema: 'dp', pergunta: 'Quantas vezes por ano posso pagar PLR aos empregados?', chaves: [['2', 'duas', 'dois']], fonte: 'Lei 10.101/2000, art. 3º, § 2º' },
   { id: 'mei-limite-2027', sistema: 'fiscal', pergunta: 'Qual será o limite de faturamento do MEI em 2027?', chaves: [['110']], fonte: 'LC 238/2026, art. 2º' },
+  // Reforma Tributária (LC 214/2025 com LC 227/2026 e EC 132/2023, conferidas no Planalto em 20/11/2026).
+  { id: 'rt-2026-aliquotas', sistema: 'fiscal', pergunta: 'Quais são as alíquotas de teste da CBS e do IBS em 2026?', chaves: [['0,9'], ['0,1']], fonte: 'LC 214/2025, arts. 343 e 346' },
+  { id: 'rt-2026-dispensa', sistema: 'fiscal', pergunta: 'Em 2026 a empresa precisa recolher a CBS e o IBS de teste?', chaves: [['dispensad'], ['obrigacoes acessorias', 'obrigacao acessoria']], fonte: 'LC 214/2025, art. 348, § 1º' },
+  { id: 'rt-pis-cofins-fim', sistema: 'fiscal', pergunta: 'Quando o PIS e a Cofins acabam com a reforma tributária?', chaves: [['2027']], fonte: 'EC 132/2023, ADCT art. 126; LC 214/2025, art. 542' },
+  { id: 'rt-icms-iss-fim', sistema: 'fiscal', pergunta: 'Em que ano o ICMS e o ISS são extintos pela reforma tributária?', chaves: [['2033']], fonte: 'EC 132/2023, ADCT art. 129' },
+  { id: 'rt-simples-opcao', sistema: 'fiscal', pergunta: 'Em quais meses o optante do Simples faz a opção pelo regime regular do IBS e da CBS?', chaves: [['setembro'], ['marco']], fonte: 'LC 123/2006, art. 13, § 10 (redação da LC 227/2026)' },
+  { id: 'rt-reducao-contador', sistema: 'fiscal', pergunta: 'Qual a redução de alíquota do IBS e da CBS para serviços de contabilistas?', chaves: [['30%', '30 %', 'trinta por cento']], fonte: 'LC 214/2025, art. 127' },
+  { id: 'rt-cashback-energia', sistema: 'fiscal', pergunta: 'No cashback da reforma tributária, quanto da CBS é devolvido na conta de energia elétrica?', chaves: [['100%', '100 %']], fonte: 'LC 214/2025, art. 118, I' },
   { id: 'cpp-patronal', sistema: 'dp', pergunta: 'Qual a contribuição patronal do INSS sobre a folha de empregados de empresa do Lucro Presumido (sem contar RAT e terceiros)?', chaves: [['20%', '20 %', 'vinte por cento']], fonte: 'Lei 8.212 art. 22, I' },
 ];
 
@@ -64,21 +73,30 @@ export function conferirResposta(resposta: string, chaves: string[][]): string[]
 
 export async function rodarConferidor(consultor: Consultor | null, perguntas: PerguntaTeste[] = PERGUNTAS_TESTE): Promise<SaudeConsultor> {
   const resultados: ResultadoTeste[] = [];
-  let geminiFora = !consultor;
+  let geminiFora = false;
   for (const t of perguntas) {
-    if (geminiFora) {
+    if (!consultor) {
       resultados.push({ id: t.id, pergunta: t.pergunta, situacao: 'nao_testado', detalhe: 'Gemini indisponível' });
       continue;
     }
     try {
-      const { resposta, indisponivel } = await consultor!.perguntar({ pergunta: t.pergunta, sistema: t.sistema, contextoEmpresa: t.contextoEmpresa }, { registrar: false });
-      if (indisponivel) {
-        geminiFora = true; // não insiste: os próximos também ficam "não testado"
+      // Interno (não depende de liberação), sem registro nem consumo. Com o Gemini fora, ainda confere as respostas prontas e o cache.
+      const r = await consultor.perguntar(
+        { pergunta: t.pergunta, sistema: t.sistema, contextoEmpresa: t.contextoEmpresa },
+        { registrar: false, interno: true, permitirIA: !geminiFora },
+      );
+      if (r.indisponivel || r.precisaIA) {
+        if (r.indisponivel) geminiFora = true; // não insiste: as próximas só testam o que não gasta IA
         resultados.push({ id: t.id, pergunta: t.pergunta, situacao: 'nao_testado', detalhe: 'Gemini indisponível' });
         continue;
       }
-      const faltou = conferirResposta(resposta.resposta, t.chaves);
-      resultados.push(faltou.length ? { id: t.id, pergunta: t.pergunta, situacao: 'errou', faltou, detalhe: `Conferir em: ${t.fonte}` } : { id: t.id, pergunta: t.pergunta, situacao: 'acertou' });
+      const origem = r.resposta.origem === 'pronta' || r.resposta.origem === 'cache' ? r.resposta.origem : 'ia';
+      const faltou = conferirResposta(r.resposta.resposta, t.chaves);
+      resultados.push(
+        faltou.length
+          ? { id: t.id, pergunta: t.pergunta, situacao: 'errou', faltou, detalhe: `Conferir em: ${t.fonte}`, origem }
+          : { id: t.id, pergunta: t.pergunta, situacao: 'acertou', origem },
+      );
     } catch (e) {
       resultados.push({ id: t.id, pergunta: t.pergunta, situacao: 'nao_testado', detalhe: `Falha técnica: ${(e as Error)?.message ?? e}` });
     }
@@ -94,6 +112,7 @@ export async function rodarConferidor(consultor: Consultor | null, perguntas: Pe
     erros,
     naoTestados,
     resultados,
+    respostasProntas: conferirRespostasProntas(),
   };
 }
 
@@ -114,6 +133,9 @@ export function agendarConferidor(consultor: Consultor | null, armazem: Armazem,
       const saude = await rodarConferidor(consultor);
       await armazem.salvarSaude(saude);
       console.log(`[consultor] conferidor: ${saude.situacao} (${saude.acertos}/${saude.total} acertos, ${saude.erros} erros, ${saude.naoTestados} não testados)`);
+      const rp = saude.respostasProntas;
+      if (rp && rp.situacao !== 'ok')
+        console.warn(`[consultor] respostas prontas: ${rp.situacao} — sem fonte oficial: ${rp.semFonteOficial.join(', ') || '-'}; sem data: ${rp.semData.join(', ') || '-'}; mais de 180 dias: ${rp.maisDe180Dias.map((x) => x.id).join(', ') || '-'}`);
     } catch (e) {
       console.error('[consultor] conferidor falhou:', (e as Error)?.message);
     } finally {

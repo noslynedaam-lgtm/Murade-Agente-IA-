@@ -8,11 +8,11 @@ import { KNOWLEDGE_BASE_DOCS } from './src/data/knowledgeDocs.ts';
 
 dotenv.config();
 
-import { exigirAcesso, registrarRotasDeAcesso } from './src/server/acesso';
+import { exigirAcesso, exigirDono, registrarRotasDeAcesso } from './src/server/acesso';
 import { criarGerador } from './src/server/consultor/cerebro';
 import { agendarConferidor } from './src/server/consultor/conferidor';
 import { criarArmazem } from './src/server/consultor/registro';
-import { registrarRotasConsultor } from './src/server/consultor/rotas';
+import { registrarRotasConsultor, registrarRotasDonoConsultor } from './src/server/consultor/rotas';
 import { criarConsultor } from './src/server/consultor/servico';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +53,8 @@ const ai = apiKey
 const armazemConsultor = criarArmazem();
 const consultorMurade = criarConsultor({ gerar: criarGerador(ai), armazem: armazemConsultor });
 registrarRotasConsultor(app, { consultor: consultorMurade, armazem: armazemConsultor });
+// Tela do dono (liberação paga por escritório e produto + consumo): só o dono do sistema.
+registrarRotasDonoConsultor(app, { consultor: consultorMurade, armazem: armazemConsultor, exigirDono });
 // Robô conferidor 1x por dia (só quando o consultor está configurado; sem Gemini registra "não testado").
 if (process.env.MURADE_CONSULTOR_TOKEN && process.env.CONSULTOR_CONFERIDOR !== 'desligado') {
   agendarConferidor(ai ? consultorMurade : null, armazemConsultor);

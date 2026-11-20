@@ -63,7 +63,20 @@ export type RespostaConsultor = {
   divergencia?: Divergencia;
   /** true quando o pedido do contador é claramente ilegal/fraude: o consultor recusa e explica. */
   recusado?: boolean;
+  /** De onde veio a resposta: 'pronta' (banco conferido), 'cache' (IA guardada), 'ia' (Gemini agora) ou 'bloqueado' (precisava de IA e o escritório não tem o adicional). */
+  origem?: Origem;
+  /** true quando a resposta gastou (ou pode ter gastado) crédito do Gemini. */
+  custoIA?: boolean;
+  /** Se o escritório tem o Consultor completo (adicional pago) liberado. */
+  liberado?: boolean;
+  /** Resposta pronta: id e data em que foi conferida na fonte oficial. */
+  respostaProntaId?: string;
+  conferidoEm?: string;
 };
+
+export const ORIGENS = ['pronta', 'cache', 'ia', 'bloqueado'] as const;
+export type Origem = (typeof ORIGENS)[number];
+export type UsoTokens = { entrada: number; saida: number; total: number };
 
 export type Decisao = {
   id?: string;
@@ -84,6 +97,8 @@ export type RespostaBruta = {
   texto: string; // JSON gerado pelo modelo
   fontesPesquisa: Fonte[]; // fontes da pesquisa Google (groundingChunks)
   modelo?: string;
+  /** Tokens informados pelo SDK (usageMetadata), quando vierem. */
+  uso?: UsoTokens;
 };
 
 /** Erro que indica que o Gemini está fora/indisponível (não é erro do consultor). */
