@@ -5,7 +5,7 @@ import { urlOficial } from './fontes';
 import { mascararTexto } from './mascarar';
 import { RESPOSTAS_PRONTAS, type RespostaPronta } from './respostasProntas';
 import { numeros, pareceCasoConcreto, pareceDivergencia, pareceSeguimento, pedeCalculo, perguntaNormalizada, semelhanca, termos } from './similaridade';
-import { AVISO_RESPONSABILIDADE, type Area, type ContextoEmpresa, type PerguntaConsultor, type RespostaConsultor } from './tipos';
+import { AVISO_RESPONSABILIDADE, type Area, type ContextoEmpresa, type OndeFazer, type PerguntaConsultor, type RespostaConsultor, type TelaSistema } from './tipos';
 
 // ── Busca da resposta pronta ─────────────────────────────────────
 /** Semelhança mínima (Dice) entre a pergunta e uma das variações. Conservador: na dúvida, vai para a IA. */
@@ -82,9 +82,41 @@ export type DecisaoPronta =
   | { tipo: 'geral'; resposta: RespostaConsultor; pronta: RespostaPronta }
   | { tipo: 'nenhuma'; motivo: string };
 
-function montar(pr: RespostaPronta, texto: string): RespostaConsultor {
+/** Tela do sistema chamador que faz o procedimento da resposta pronta (pelas palavras da tela), ou nenhuma. */
+export function acharTela(pr: RespostaPronta, telas: TelaSistema[] | undefined, pergunta = ''): TelaSistema | undefined {
+  if (!pr.ondeFazer || !telas?.length) return undefined;
+  const grupos = pr.ondeFazer.palavrasTela.map((g) => g.map(termos).filter((t) => t.length > 0));
+  const q = termos(`${pergunta} ${pr.perguntas.join(' ')}`);
+  const candidatas = telas
+    .map((t) => ({ t, ts: termos(`${t.nome} ${t.caminho} ${t.oQueFaz}`) }))
+    .filter(({ ts }) => {
+      const set = new Set(ts);
+      return grupos.every((g) => g.some((alt) => alt.every((x) => set.has(x))));
+    })
+    .map(({ t, ts }) => ({ t, nota: semelhanca(q, ts) }))
+    .sort((a, b) => b.nota - a.nota);
+  return candidatas[0]?.t;
+}
+
+/** Texto e ondeFazer do procedimento: tela do sistema quando houver; senão portal oficial. */
+function procedimento(pr: RespostaPronta, texto: string, p: PerguntaConsultor): { texto: string; ondeFazer?: OndeFazer } {
+  if (!pr.ondeFazer) return { texto };
+  const tela = acharTela(pr, p.telasDoSistema, p.pergunta);
+  if (tela) {
+    const inicio = `No sistema: abra ${tela.caminho} (${tela.nome})${tela.oQueFaz ? ` — ${tela.oQueFaz}` : ''}.`;
+    return {
+      texto: `${inicio}\n\nRegras oficiais e o caminho fora do sistema, se precisar:\n${texto}`,
+      ondeFazer: { tipo: 'sistema', tela: tela.id, passos: [`Abra ${tela.caminho}.`, ...pr.ondeFazer.passos.slice(-1)] },
+    };
+  }
+  return { texto, ondeFazer: { tipo: 'externo', url: pr.ondeFazer.url, passos: [...pr.ondeFazer.passos] } };
+}
+
+function montar(pr: RespostaPronta, texto: string, p?: PerguntaConsultor): RespostaConsultor {
+  const proc = p ? procedimento(pr, texto, p) : { texto };
   return {
-    resposta: texto,
+    ...(proc.ondeFazer ? { ondeFazer: proc.ondeFazer } : {}),
+    resposta: proc.texto,
     area: pr.area,
     fontes: pr.fontes.map((f) => ({ ...f })),
     confianca: 'alta',
@@ -114,11 +146,12 @@ export function decidirPronta(p: PerguntaConsultor, prontas?: RespostaPronta[]):
   if (ctx?.regime && pr.aplicaA && !pr.aplicaA.includes(ctx.regime)) return { tipo: 'nenhuma', motivo: 'regime_diferente' };
   if (pareceCasoConcreto(p.pergunta)) {
     if (temContexto(ctx) && (ctx.regime || !pr.aplicaA)) {
-      return { tipo: 'pronta', resposta: montar(pr, `${aberturaEmpresa(ctx)}\n\n${pr.resposta}`), pronta: pr, personalizada: true };
+      const r = montar(pr, pr.resposta, p);
+      return { tipo: 'pronta', resposta: { ...r, resposta: `${aberturaEmpresa(ctx)}\n\n${r.resposta}` }, pronta: pr, personalizada: true };
     }
-    return { tipo: 'geral', resposta: montar(pr, `${pr.resposta}\n\n${AVISO_RESPOSTA_GERAL}`), pronta: pr };
+    return { tipo: 'geral', resposta: montar(pr, `${pr.resposta}\n\n${AVISO_RESPOSTA_GERAL}`, p), pronta: pr };
   }
-  return { tipo: 'pronta', resposta: montar(pr, pr.resposta), pronta: pr, personalizada: false };
+  return { tipo: 'pronta', resposta: montar(pr, pr.resposta, p), pronta: pr, personalizada: false };
 }
 
 // ── Cache das respostas da IA ────────────────────────────────────
@@ -144,6 +177,8 @@ const DADO_ESPECIFICO = /\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}|\d{5,}|r\$\s*\d|@/
 /** Pergunta genérica, sem dados de empresa/pessoa: pode usar o cache. */
 export function perguntaGenerica(p: PerguntaConsultor): boolean {
   if (p.historico?.length) return false;
+  // "Como faço…" com mapa de telas: a resposta depende das telas do sistema chamador.
+  if (p.telasDoSistema?.length && termos(p.pergunta).includes('comofazer')) return false;
   const t = p.pergunta;
   if (t.length > 400 || mascararTexto(t) !== t || DADO_ESPECIFICO.test(t)) return false;
   if (pareceCasoConcreto(t) || pedeCalculo(t) || pareceDivergencia(t)) return false;
@@ -152,7 +187,7 @@ export function perguntaGenerica(p: PerguntaConsultor): boolean {
 
 /** Pode gravar no cache: pergunta genérica SEM contexto de empresa e resposta segura (confiança alta, com fonte oficial). */
 export function podeGravarCache(p: PerguntaConsultor, r: RespostaConsultor): boolean {
-  if (!perguntaGenerica(p) || temContexto(p.contextoEmpresa)) return false;
+  if (!perguntaGenerica(p) || temContexto(p.contextoEmpresa) || p.telasDoSistema?.length) return false;
   if (r.confianca !== 'alta' || r.encaminharContador || r.divergencia || r.recusado || !r.fontes.length) return false;
   if (mascararTexto(r.resposta) !== r.resposta || DADO_ESPECIFICO.test(r.resposta.replace(/\b(19|20)\d\d\b/g, ''))) return false;
   return true;
@@ -160,8 +195,8 @@ export function podeGravarCache(p: PerguntaConsultor, r: RespostaConsultor): boo
 
 /** O que vai para o cache: sem ações (dependem das ferramentas do sistema chamador) e sem campos da consulta. */
 export function respostaParaCache(r: RespostaConsultor): RespostaConsultor {
-  const { origem: _o, custoIA: _c, liberado: _l, divergencia: _d, ...resto } = r;
-  return { ...resto, acoesSugeridas: [] };
+  const { origem: _o, custoIA: _c, liberado: _l, divergencia: _d, ondeFazer, ...resto } = r;
+  return { ...resto, ...(ondeFazer && ondeFazer.tipo === 'externo' ? { ondeFazer } : {}), acoesSugeridas: [] };
 }
 
 // ── Conferência das respostas prontas (robô diário) ──────────────
@@ -186,7 +221,7 @@ export function conferirRespostasProntas(prontas: RespostaPronta[] = RESPOSTAS_P
   for (const pr of prontas) {
     if (vistos.has(pr.id)) idsRepetidos.push(pr.id);
     vistos.add(pr.id);
-    if (!pr.fontes.length || pr.fontes.some((f) => !urlOficial(f.url))) semFonteOficial.push(pr.id);
+    if (!pr.fontes.length || pr.fontes.some((f) => !urlOficial(f.url)) || (pr.ondeFazer && !urlOficial(pr.ondeFazer.url))) semFonteOficial.push(pr.id);
     const t = Date.parse(`${pr.conferidoEm}T00:00:00Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(pr.conferidoEm ?? '') || Number.isNaN(t) || t > hoje.getTime()) {
       semData.push(pr.id);

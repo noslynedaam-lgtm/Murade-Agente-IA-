@@ -32,6 +32,9 @@ Corpo (JSON):
   },
   "historico": [{ "papel": "usuario", "texto": "..." }, { "papel": "consultor", "texto": "..." }],   // usa só os 8 últimos
   "ferramentasDisponiveis": [{ "nome": "gerar_das", "descricao": "Gera o DAS da competência" }],
+  "telasDoSistema": [                                  // opcional: mapa resumido das telas do sistema chamador (até 80)
+    { "id": "fgts-guias", "nome": "Guias do FGTS", "caminho": "DP > FGTS > Guias", "oQueFaz": "Gera a guia do FGTS mensal e rescisória" }
+  ],
   "usuario": "contadora.ana",                          // opcional: login/ID (não nome, não CPF) — vai para o registro de decisões
   "escritorio": "11.222.333/0001-81"                   // CNPJ do ESCRITÓRIO (14 caracteres, aceita pontuação e CNPJ alfanumérico)
 }
@@ -60,15 +63,28 @@ Resposta **200**:
   "origem": "pronta",                     // 'pronta' (banco conferido) | 'cache' (IA guardada) | 'ia' (Gemini agora) | 'bloqueado' (precisava de IA e o escritório não tem o adicional)
   "custoIA": false,                       // true quando gastou (ou pode ter gastado) crédito do Gemini
   "liberado": true,                       // o escritório tem o Consultor completo?
-  "respostaProntaId": "sn-pgdas-das-prazo", "conferidoEm": "2026-11-20"   // só nas respostas prontas
+  "respostaProntaId": "sn-pgdas-das-prazo", "conferidoEm": "2026-11-20",  // só nas respostas prontas
+  "ondeFazer": {                          // perguntas de "como faço…": onde e como fazer
+    "tipo": "sistema",                    // 'sistema' (tela do sistema chamador) | 'externo' (portal oficial)
+    "tela": "fgts-guias",                 // id de telasDoSistema (só quando tipo = 'sistema')
+    "url": "https://fgtsdigital.sistema.gov.br",   // portal oficial (só quando tipo = 'externo')
+    "passos": ["Abra DP > FGTS > Guias.", "Pague por Pix até 10 dias do fim do contrato (dia útil anterior se não for útil)."]
+  }
 }
 ```
+
+### Perguntas de "como faço…" (procedimentos)
+
+- **Respostas prontas de procedimento** (7, conferidas em 20/11/2026 nas páginas oficiais): emitir a CND (gov.br/Receita, e-CAC "Consulta Pendências"), parcelar o Simples (gov.br; Portal do Simples/e-CAC), emitir DAS do mês, vencido e avulso (gov.br + Manual do PGDAS-D, item 6.8), retificar o PGDAS-D (Manual, itens 6.10, 6.8.4 e 6.6.7; Perguntão 5.16), dar baixa no MEI (gov.br/Portal do Empreendedor), guia do FGTS rescisório e do FGTS mensal (Manual do FGTS Digital 1.50). Cada uma tem o portal oficial e os passos em `ondeFazer`.
+- **Com `telasDoSistema`:** se uma tela do sistema chamador faz o procedimento (casamento pelas palavras da tela: nome, caminho e "oQueFaz"), a resposta começa com **"No sistema: abra <caminho> (<nome>)…"** e `ondeFazer = { tipo: 'sistema', tela: <id> }`, mantendo depois as regras e o caminho oficial. Sem tela que faça, `ondeFazer = { tipo: 'externo', url: <portal oficial>, passos }`.
+- **Pela IA:** a instrução manda preferir a tela do sistema e nunca inventar tela/botão. O servidor só aceita `ondeFazer.tipo = 'sistema'` com `tela` que exista em `telasDoSistema`; `url` só de domínio oficial (senão é descartada). Pergunta "como faço…" com mapa de telas **não usa nem grava cache** (depende do sistema chamador); do cache nunca sai `ondeFazer` de sistema.
+- **Ainda sem resposta pronta (vão para a IA):** cancelamento de NF-e em Goiás e carta de correção (CC-e) — as páginas oficiais (SEFAZ-GO/CONFAZ) não puderam ser lidas nesta revisão, então prazos e regras não foram afirmados.
 
 ### Economia de crédito (regra do dono: não gastar o Gemini à toa)
 
 Ordem de cada pergunta (`src/server/consultor/servico.ts`):
 
-1. **Resposta pronta** (`respostasProntas.ts`, **119 respostas**, custo zero): escritas e conferidas a partir dos blocos da base (cada uma com fontes oficiais, data de conferência e o bloco de origem). Cobrem Simples/PGDAS-D/DAS/DEFIS/Fator R/anexos, MEI (LC 238/2026), Presumido (LC 224/2025), retenções, DCTFWeb/Reinf, eSocial, INSS/IRRF/salário-família 2026, FGTS, férias, 13º, rescisão, aviso prévio, jornada e adicionais, licenças, PLR, seguro-desemprego, consignado, ECD/ECF/NBC TG 1001-1002, livro caixa, DIRBI, CND, ICMS-GO (alíquota, prazos, ST, DIFAL), ISS Goiânia (SGISS) e **Reforma Tributária** (13 respostas).
+1. **Resposta pronta** (`respostasProntas.ts`, **126 respostas**, custo zero): escritas e conferidas a partir dos blocos da base (cada uma com fontes oficiais, data de conferência e o bloco de origem). Cobrem Simples/PGDAS-D/DAS/DEFIS/Fator R/anexos, MEI (LC 238/2026), Presumido (LC 224/2025), retenções, DCTFWeb/Reinf, eSocial, INSS/IRRF/salário-família 2026, FGTS, férias, 13º, rescisão, aviso prévio, jornada e adicionais, licenças, PLR, seguro-desemprego, consignado, ECD/ECF/NBC TG 1001-1002, livro caixa, DIRBI, CND, ICMS-GO (alíquota, prazos, ST, DIFAL), ISS Goiânia (SGISS) e **Reforma Tributária** (13 respostas).
    - Busca por semelhança sem IA (`similaridade.ts` + `economia.ts`): texto normalizado (sem acento), sinônimos de contador ("vencimento"="prazo", "funcionário"="empregado", "DAS" guia x "das" preposição...), **grupos de palavras obrigatórias** em cada resposta, limiar conservador (Dice ≥ 0,5, 60% das palavras da pergunta conhecidas, margem sobre a 2ª colocada). **Na dúvida vai para a IA.**
    - Nunca usa resposta pronta quando: a pergunta pede **cálculo/valor** (R$, "calcule", "quanto fica"), cita **número que a resposta não trata** (ex.: "o DAS vence dia 25?"), é **discordância** do contador, é **seguimento** de conversa curta ("e se for MEI?"), ou a empresa informada é de **outro regime** (`aplicaA`).
    - Pergunta sobre o caso da empresa ("na minha empresa…"): com `contextoEmpresa`, a resposta pronta é **personalizada por modelo de texto** ("Para a Ferragista JE, que é do Simples Nacional, Anexo III: …"), sem IA. Sem os dados: escritório liberado → IA; não liberado → regra geral com o aviso "Esta é a regra geral…".
@@ -152,7 +168,7 @@ Lista (mais recentes primeiro, até 500) as consultas com confiança baixa, enca
 
 ## `GET /api/consultor/saude`
 
-Resultado do **robô conferidor**: 43 perguntas-teste (7 de IBS/CBS) com resposta-chave conferida em fonte oficial (lista em `src/server/consultor/conferidor.ts`, cada uma com a fonte). Roda 10 minutos após subir o serviço (se a última conferência tiver mais de 20 horas) e depois a cada 24 horas.
+Resultado do **robô conferidor**: 45 perguntas-teste (7 de IBS/CBS, 2 de procedimentos) com resposta-chave conferida em fonte oficial (lista em `src/server/consultor/conferidor.ts`, cada uma com a fonte). Roda 10 minutos após subir o serviço (se a última conferência tiver mais de 20 horas) e depois a cada 24 horas.
 
 ```json
 {
@@ -162,13 +178,13 @@ Resultado do **robô conferidor**: 43 perguntas-teste (7 de IBS/CBS) com respost
 }
 ```
 
-O robô testa a resposta que o usuário recebe (pronta, cache ou IA), como uso interno (sem liberação, sem registro e sem consumo); com o Gemini fora, continua conferindo as respostas prontas e marca só o que precisa de IA como "não testado". `respostasProntas` (também na conferência diária) confere **todas as respostas prontas**: fonte oficial, data de conferência e aviso das que têm **mais de 180 dias** sem conferir (`maisDe180Dias`); `situacao` `ok` | `com_avisos` | `com_falhas`.
+O robô testa a resposta que o usuário recebe (pronta, cache ou IA), como uso interno (sem liberação, sem registro e sem consumo); com o Gemini fora, continua conferindo as respostas prontas e marca só o que precisa de IA como "não testado". `respostasProntas` (também na conferência diária) confere **todas as respostas prontas**: fonte oficial (inclusive o portal de `ondeFazer`), data de conferência e aviso das que têm **mais de 180 dias** sem conferir (`maisDe180Dias`); `situacao` `ok` | `com_avisos` | `com_falhas`.
 
 `situacao`: `ok`, `com_falhas` (alguma resposta perdeu a palavra-chave: veja `faltou` e a fonte em `detalhe`), `nao_testado` (Gemini fora — não é erro do consultor) ou `ainda_nao_rodou`. As perguntas do robô **não** entram no registro de não respondidas.
 
 ## Testes
 
-`npm run test:consultor` (node:test com tsx), 32 testes. `economia.test.ts`: banco de prontas (≥80, fontes oficiais, datas, cada variação acha a própria resposta, reformulações e perguntas que devem ir à IA, perguntas do robô), personalização, conferência de 180 dias, cache (repetida sem custo, nunca com dados de empresa/pessoa, versão da base), liberação por produto (prontas sem liberação, `liberado:false` sem gastar IA, GET /liberado, tabela x lista padrão, CNPJ alfanumérico), consumo por produto/mês com tokens e usos da Escola, tela do dono (403 para cliente, segunda confirmação, CSV). `consultor.test.ts`: autenticação, validação do corpo, filtro de fontes, ações só de ferramentas recebidas, mascaramento/registro, Gemini fora, conferidor sem Gemini, divergência (aceite, recusa de pedido ilegal, registro e listagem de decisões por escritório) e escolha dos blocos da base.
+`npm run test:consultor` (node:test com tsx), 35 testes (inclui procedimentos, `telasDoSistema` e `ondeFazer`). `economia.test.ts`: banco de prontas (≥80, fontes oficiais, datas, cada variação acha a própria resposta, reformulações e perguntas que devem ir à IA, perguntas do robô), personalização, conferência de 180 dias, cache (repetida sem custo, nunca com dados de empresa/pessoa, versão da base), liberação por produto (prontas sem liberação, `liberado:false` sem gastar IA, GET /liberado, tabela x lista padrão, CNPJ alfanumérico), consumo por produto/mês com tokens e usos da Escola, tela do dono (403 para cliente, segunda confirmação, CSV). `consultor.test.ts`: autenticação, validação do corpo, filtro de fontes, ações só de ferramentas recebidas, mascaramento/registro, Gemini fora, conferidor sem Gemini, divergência (aceite, recusa de pedido ilegal, registro e listagem de decisões por escritório) e escolha dos blocos da base.
 
 ## Base de conhecimento acrescentada (conferida em 20/11/2026)
 

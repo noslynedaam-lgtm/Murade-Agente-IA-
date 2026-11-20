@@ -139,6 +139,7 @@ export function criarConsultor(deps: { gerar: Gerador; armazem: Armazem; liberac
         ferramentas: p.ferramentasDisponiveis,
         fontesExtras: bruta.fontesPesquisa,
         sistema: p.sistema,
+        telas: p.telasDoSistema,
       });
       resultado = { resposta, indisponivel: false };
     } catch (e) {

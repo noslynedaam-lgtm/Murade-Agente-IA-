@@ -116,6 +116,9 @@ export function termos(texto: string): string[] {
     .replace(/\b(o|do|no|ao|um|pagar|pago|paguei|gerar|guia|boleto|vencimento)\s+das\b/g, '$1 guiadas')
     .replace(/\bdas\s+(do simples|da empresa|atrasad|vence|vencid|mensal)/g, 'guiadas $1');
   t = t.replace(/(\d)\s*%/g, '$1 %').replace(/(\d)[.,](\d)/g, '$1_$2');
+  // Pergunta de procedimento ("como faço…", "passo a passo", "onde tiro…") ganha o termo "comofazer".
+  if (/\b(como|onde)\s+(eu\s+)?(faco|fazer|faz|emito|emitir|gero|gerar|tiro|tirar|pego|pegar|dou|dar|cancelo|cancelar|retifico|retificar|parcelo|parcelar|peco|pedir|solicito|solicitar|consigo|corrijo|corrigir|fecho|fechar|encerro|encerrar|pago|pagar|transmito|transmitir|envio|enviar)\b|\bpasso a passo\b/.test(t))
+    t += ' comofazer ';
   for (const [re, troca] of EXPRESSOES) t = t.replace(re, troca);
   const saida: string[] = [];
   for (const cru of t.split(/[^a-z0-9_%]+/)) {

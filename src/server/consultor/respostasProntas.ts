@@ -20,6 +20,11 @@ export type RespostaPronta = {
   blocoBase: string;
   /** Termos que, se aparecerem na pergunta, indicam outro assunto (a resposta pronta não é usada). */
   exceto?: string[];
+  /**
+   * Procedimento ("como faço…"): portal oficial e passos. Se o sistema chamador mandar uma tela cujo nome/caminho/função
+   * tenha estas palavras (palavrasTela), a resposta manda para a tela do sistema (ondeFazer.tipo = 'sistema').
+   */
+  ondeFazer?: { url: string; passos: string[]; palavrasTela: string[][] };
   /** Regimes a que a resposta se aplica; se a empresa informada for de outro regime, a resposta pronta não é usada. */
   aplicaA?: Regime[];
 };
@@ -70,6 +75,11 @@ const F = {
   juceg: { titulo: 'JUCEG: passo a passo LTDA (abertura)', url: 'https://goias.gov.br/juceg/passo-a-passo-sociedade-empresaria-limitada-ltda-abertura/' },
   lc214: { titulo: 'LC 214/2025, texto compilado com a LC 227/2026 (Planalto)', url: 'https://planalto.gov.br/ccivil_03/leis/lcp/lcp214compilado.htm' },
   ec132: { titulo: 'Emenda Constitucional 132/2023 (Planalto)', url: 'https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm' },
+  govCertidao: { titulo: 'gov.br: Emitir certidão de regularidade fiscal perante a Fazenda Nacional', url: 'https://www.gov.br/pt-br/servicos/emitir-certidao-de-regularidade-fiscal-perante-a-fazenda-nacional' },
+  govDas: { titulo: 'gov.br: Emitir DAS do Simples Nacional', url: 'https://www.gov.br/pt-br/servicos/emitir-das-para-pagamento-de-tributos-do-simples-nacional' },
+  manualPgdas: { titulo: 'Manual do PGDAS-D 2018 (Receita Federal)', url: 'https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/MANUAL_PGDAS-D_2018_V4.pdf' },
+  govBaixaMei: { titulo: 'gov.br: Portal do Empreendedor – Quero deixar de ser MEI', url: 'https://www.gov.br/pt-br/servicos/portal-do-empreendedor-quero-deixar-de-ser-mei' },
+  manualFgts150: { titulo: 'Manual de Orientação do FGTS Digital 1.50 (MTE)', url: 'https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/fgtsdigital/manual-e-documentacao-tecnica/manual-do-orientacao-do-fgts-digital-versao-1-50-20-03-2026.pdf' },
   ntNfse: { titulo: 'NFS-e Nacional: Nota Técnica SE/CGNFS-e 004 (gov.br/nfse)', url: 'https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/rtc-producao-restrita-piloto/nt-004-se-cgnfse-novo-layout-rtc-v2-00-20251210.pdf' },
 } satisfies Record<string, Fonte>;
 
@@ -96,6 +106,7 @@ const B = {
   fgtsInss: 'fgts-inss',
   cltPrincipios: 'clt-principios',
   reforma: 'reforma-tributaria-ibs-cbs-lc214-conferido',
+  procedimentos: 'procedimentos-oficiais (páginas gov.br, Manual do PGDAS-D e Manual do FGTS Digital)',
 };
 
 const SN: Regime[] = ['simples'];
@@ -178,8 +189,8 @@ export const RESPOSTAS_PRONTAS: RespostaPronta[] = [
     resposta: 'Depende de a empresa ser substituída ou substituta (Perguntão do Simples, perguntas 7.1, 7.6 e 7.9):\n- Substituída (comprou com ICMS-ST já retido): informe a receita como sujeita à ST no PGDAS-D, para não pagar o ICMS dentro do DAS.\n- Substituta (ela retém o ICMS-ST): o ICMS-ST é recolhido fora do DAS (Resolução CGSN 140, arts. 25, § 8º, II, e 28) e não integra a receita bruta.\n\nEm Goiás, o ICMS-ST do remetente do Simples inscrito vence até o dia 2 do segundo mês seguinte à saída (calendário oficial da SEFAZ-GO).',
   },
   {
-    id: 'sn-parcelamento', area: 'fiscal', aplicaA: SN, conferidoEm: NOV, blocoBase: B.federais, fontes: [F.parcSN],
-    perguntas: ['Em quantas parcelas posso parcelar débitos do Simples Nacional?', 'Qual a parcela mínima do parcelamento do Simples?', 'Como parcelar DAS atrasado do Simples Nacional?'],
+    id: 'sn-parcelamento', area: 'fiscal', exceto: ['comofazer'], aplicaA: SN, conferidoEm: NOV, blocoBase: B.federais, fontes: [F.parcSN],
+    perguntas: ['Em quantas parcelas posso parcelar débitos do Simples Nacional?', 'Qual a parcela mínima do parcelamento do Simples?', 'Quantas parcelas no máximo no parcelamento do Simples?'],
     chaves: [['parcelamento', 'parcela'], ['simples', 'DAS', 'pgdas']],
     resposta: 'No parcelamento ordinário do Simples (IN RFB 1.508/2014; serviço "Parcelar débitos do Simples Nacional" no gov.br), os débitos declarados no PGDAS-D e ainda não enviados à Dívida Ativa podem ser parcelados em até 60 parcelas, com parcela mínima de R$ 300,00. Se já foram para a Dívida Ativa, o pedido é feito na PGFN.\n\nAtenção: o parcelamento é rescindido com a falta de pagamento de 3 parcelas, seguidas ou não, ou da última; aí os débitos vão para a Dívida Ativa. Reparcelamento é permitido com primeira parcela de 10% do total (20% se já houve reparcelamento).',
   },
@@ -718,7 +729,7 @@ export const RESPOSTAS_PRONTAS: RespostaPronta[] = [
     resposta: 'A DIRBI é entregue até o dia 20 do segundo mês seguinte ao período de apuração, de forma centralizada pela matriz (IN RFB 2.198/2024; página da Receita). É obrigada a pessoa jurídica que usufrui de incentivos, renúncias, benefícios ou imunidades tributárias.\n\nDispensados: ME/EPP do Simples Nacional (salvo as sujeitas à CPRB), MEI e PJ em início de atividade (até o mês anterior à inscrição no CNPJ).',
   },
   {
-    id: 'cnd', area: 'fiscal', conferidoEm: NOV, blocoBase: B.federais, fontes: [F.certidao],
+    id: 'cnd', area: 'fiscal', exceto: ['comofazer'], conferidoEm: NOV, blocoBase: B.federais, fontes: [F.certidao],
     perguntas: ['Qual a diferença entre CND e CPEND?', 'Por que não consigo emitir a certidão negativa federal?', 'Falta de declaração impede a certidão negativa?'],
     chaves: [['cnd', 'cpend', 'certidao']],
     resposta: 'A certidão federal é emitida em conjunto pela Receita e pela PGFN (Portaria Conjunta RFB/PGFN 1.751/2014; gov.br):\n- CND (negativa): sem pendências;\n- CPEND (positiva com efeitos de negativa): dívidas com exigibilidade suspensa ou garantidas (ex.: parceladas em dia);\n- CPD (positiva): dívidas em aberto ou declarações não entregues.\n\nSim: a falta de declaração também impede a CND. O que fazer: entregue as declarações que faltam e regularize ou parcele os débitos; parcelamento em dia permite a CPEND.',
@@ -768,6 +779,86 @@ export const RESPOSTAS_PRONTAS: RespostaPronta[] = [
     resposta: 'Passo a passo oficial da JUCEG (LTDA, processo digital):\n1. Viabilidade no Portal do Empreendedor Goiano (com conta gov.br): gera o protocolo GOP.\n2. Depois da aprovação, DBE da Receita Federal com o GOP.\n3. Acompanhar pelo GOP.\n4. FCN (Ficha de Cadastro Nacional).\n5. Gerar e pagar as taxas.\n6. Contrato social (Contrato Eletrônico).\n7. Anexar contrato e documentos e só então assinar digitalmente.\n8. Protocolar depois da assinatura de todos os sócios.\n9. Deferido, seguir nos demais órgãos da REDESIM (Prefeitura, Bombeiros, Vigilância Sanitária).\n\nAtenção: a página da JUCEG é de 2019 e há manuais de 2026; confira o manual mais recente e as taxas antes de protocolar.',
   },
 
+
+  // ───────────────────────── PROCEDIMENTOS ("COMO FAÇO…") — conferidos nas páginas oficiais em 20/11/2026 ─────────────────────────
+  {
+    id: 'proc-emitir-cnd', area: 'fiscal', conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.govCertidao],
+    perguntas: ['Como emito a CND federal da empresa?', 'Como pego a certidão negativa da Receita Federal?', 'Onde tiro a certidão de regularidade fiscal federal?', 'Não consigo emitir a CND, o que faço?'],
+    chaves: [['cnd', 'certidao'], ['comofazer', 'emitir', 'consigo']],
+    resposta: 'Passo a passo (gov.br, "Emitir certidão de regularidade fiscal perante a Fazenda Nacional"; serviço gratuito):\n1. Abra o emissor da Receita para pessoa jurídica: https://solucoes.receita.fazenda.gov.br/Servicos/certidaointernet/PJ/Emitir\n2. Informe o CNPJ.\n3. Se a situação estiver regular, a certidão sai na hora (CND, ou CPEND se houver débito suspenso/garantido, como parcelamento em dia).\n\nSe não sair: entre no e-CAC (https://cav.receita.fazenda.gov.br/autenticacao/login) → "Certidões e Situação Fiscal" → "Consulta Pendências - Situação Fiscal" para ver o que impede. Regularize (entregue declarações em falta, pague ou parcele). Pendência indevida: peça a liberação à Receita e/ou à PGFN (dívida inscrita: serviço "Liberar emissão de certidão de regularidade fiscal perante a PGFN" no gov.br).',
+    ondeFazer: {
+      url: 'https://solucoes.receita.fazenda.gov.br/Servicos/certidaointernet/PJ/Emitir',
+      passos: ['Abra o emissor de certidão PJ da Receita.', 'Informe o CNPJ.', 'Se não emitir, veja as pendências no e-CAC em "Certidões e Situação Fiscal" > "Consulta Pendências - Situação Fiscal".'],
+      palavrasTela: [['certidao'], ['cnd']],
+    },
+  },
+  {
+    id: 'proc-parcelar-simples', area: 'fiscal', aplicaA: SN, conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.parcSN],
+    perguntas: ['Como faço o parcelamento do Simples Nacional?', 'Como parcelo o DAS atrasado?', 'Onde peço o parcelamento dos débitos do Simples?', 'Como emito a parcela do parcelamento do Simples?'],
+    chaves: [['parcelamento', 'parcelo', 'parcela'], ['simples', 'DAS', 'pgdas'], ['comofazer']],
+    resposta: 'Passo a passo (gov.br, "Parcelar débitos do Simples Nacional"):\n1. Entre no Portal do Simples Nacional (https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1) ou em "Meus Parcelamentos do Simples" no e-CAC (https://cav.receita.fazenda.gov.br/autenticacao/login/index/188), com conta gov.br prata ou ouro.\n2. Selecione os débitos.\n3. Informe o número de parcelas (até 60, mínimo de R$ 300,00).\n4. Emita e pague o DAS da 1ª parcela até o vencimento: sem esse pagamento o pedido não vale.\n5. Depois, no mesmo sistema, consulte o extrato e emita as parcelas que não forem debitadas em conta.\n\nAtenção: 3 parcelas sem pagar (seguidas ou não), ou a última, rescindem o parcelamento e os débitos vão para a Dívida Ativa. Débito já na Dívida Ativa: o pedido é na PGFN.',
+    ondeFazer: {
+      url: 'https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1',
+      passos: ['Portal do Simples ou e-CAC (Meus Parcelamentos do Simples), conta gov.br prata/ouro.', 'Selecione os débitos e o número de parcelas (até 60, mínimo R$ 300).', 'Pague a 1ª parcela até o vencimento.', 'Emita as demais parcelas pelo extrato.'],
+      palavrasTela: [['parcelamento'], ['parcela']],
+    },
+  },
+  {
+    id: 'proc-emitir-das', area: 'fiscal', aplicaA: SN, conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.govDas, F.manualPgdas],
+    perguntas: ['Como emito o DAS do Simples Nacional?', 'Como gero o DAS de um mês vencido?', 'Como tirar o DAS atrasado com multa e juros?', 'Como gerar DAS avulso?'],
+    chaves: [['DAS'], ['emito', 'emitir', 'gero', 'gerar', 'tirar', 'tiro', 'avulso', 'segunda via']],
+    resposta: 'Passo a passo (gov.br, "Emitir DAS"; Manual do PGDAS-D, item 6.8):\n- DAS do mês: no PGDAS-D (Portal do Simples Nacional ou "Minhas Declarações do Simples Nacional" no e-CAC), depois de transmitir a apuração: "Declaração Mensal" → "Gerar DAS".\n- DAS vencido, pagando dentro do mês corrente: "Declaração Mensal" → "Gerar DAS" → informe o período → "Consolidar para outra data" (um dia útil do mês corrente) → "Gerar DAS". O DAS sai com os acréscimos.\n- Período já em cobrança (ex.: venceu em mês anterior ao atual) ou com compensação: "Débitos" → "Consultar/Gerar DAS".\n- DAS avulso (quando não dá pelo PGDAS-D): "Emissão de DAS Avulso" no Portal do Simples ou "Gerar DAS Avulso" no e-CAC.\n\nAtenção: o "Gerar DAS" fica bloqueado para período enviado à PGFN (Dívida Ativa) ou transferido ao ente convenente.',
+    ondeFazer: {
+      url: 'https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1',
+      passos: ['PGDAS-D: Declaração Mensal > Gerar DAS.', 'Vencido no mês corrente: Consolidar para outra data.', 'Já em cobrança: Débitos > Consultar/Gerar DAS.', 'Sem PGDAS-D: Emissão de DAS Avulso.'],
+      palavrasTela: [['DAS'], ['guia', 'simples']],
+    },
+  },
+  {
+    id: 'proc-retificar-pgdas', area: 'fiscal', aplicaA: SN, conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.manualPgdas, F.perguntaoSN],
+    perguntas: ['Como retifico o PGDAS-D?', 'Como fazer a retificação de uma apuração do Simples Nacional?', 'Errei a receita no PGDAS-D, como corrijo?', 'Retificar PGDAS-D com DAS já pago'],
+    chaves: [['pgdas', 'simples', 'apuracao'], ['retifico', 'retificar', 'retificacao', 'retificadora', 'corrijo', 'corrigir', 'errei']],
+    resposta: 'Passo a passo (Manual do PGDAS-D, item 6.10):\n1. No PGDAS-D, abra "Declaração Mensal" → "Declarar/Retificar" e informe o período.\n2. O sistema avisa que já existe declaração e pergunta se quer retificar: clique "Sim".\n3. Corrija os dados e clique "Transmitir".\n\nO que acontece:\n- DAS já pago é descontado no cálculo da retificadora; se aumentar o valor, sai DAS da diferença (Perguntão 5.16). Mudar a receita de um mês muda a RBT12 dos meses seguintes: retransmita as declarações posteriores para recalcular (item 6.10.1).\n- Débito já enviado à PGFN/ente convenente: a diferença sai por DAS Avulso (item 6.8.4).\n- Com parcelamento ou compensação ativa, retificadora com valor menor não é carregada automaticamente (item 6.10.1).\n\nCuidado: retificar para reduzir débito de forma indevida pode gerar autuação (item 6.6.7).',
+    ondeFazer: {
+      url: 'https://www8.receita.fazenda.gov.br/SimplesNacional/Servicos/Grupo.aspx?grp=t&area=1',
+      passos: ['PGDAS-D: Declaração Mensal > Declarar/Retificar.', 'Informe o período e confirme "Sim" para retificar.', 'Corrija e clique Transmitir.', 'Gere o DAS da diferença, se houver, e retransmita os meses seguintes quando mudar a receita.'],
+      palavrasTela: [['pgdas'], ['apuracao', 'simples']],
+    },
+  },
+  {
+    id: 'proc-baixa-mei', area: 'societario', aplicaA: ['mei'], conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.govBaixaMei],
+    perguntas: ['Como dou baixa no MEI?', 'Como fechar o CNPJ do MEI?', 'Como cancelar o MEI?', 'Passo a passo para encerrar o MEI'],
+    chaves: [['mei'], ['baixa', 'fechar', 'cancelar', 'encerrar', 'deixar', 'extinguir']],
+    resposta: 'Passo a passo (gov.br, "Portal do Empreendedor – Quero deixar de ser MEI"; gratuito):\n1. Portal do Empreendedor (https://www.gov.br/empresas-e-negocios/pt-br/empreendedor) → "Já Sou MEI" → "Baixa de MEI" → "Solicitar baixa". Entre com a conta gov.br, preencha, revise, marque a declaração de baixa e finalize (atendimento imediato).\n2. Gere e pague os DAS-MEI em aberto no PGMEI, no Portal do Simples Nacional.\n3. Entregue a DASN-SIMEI de situação especial no Portal do Simples Nacional.\n\nA baixa do CNPJ MEI também baixa as inscrições estadual e municipal e cancela licenças e alvarás.',
+    ondeFazer: {
+      url: 'https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/servicos-para-mei/baixa-de-mei',
+      passos: ['Portal do Empreendedor: Já Sou MEI > Baixa de MEI > Solicitar baixa (conta gov.br).', 'Pague os DAS-MEI em aberto (PGMEI).', 'Entregue a DASN-SIMEI de situação especial.'],
+      palavrasTela: [['baixa'], ['encerramento', 'encerrar']],
+    },
+  },
+  {
+    id: 'proc-guia-fgts-rescisorio', area: 'dp', conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.manualFgts150, F.fgtsPrazo],
+    perguntas: ['Como emito a guia do FGTS rescisório?', 'Como gerar a guia da multa de 40% no FGTS Digital?', 'Como tirar a guia de rescisão no FGTS Digital?', 'A guia rescisória não aparece no FGTS Digital, o que faço?'],
+    chaves: [['fgts', 'gfd'], ['rescisao', 'rescisorio', 'rescisoria', 'multa', '40'], ['guia', 'emito', 'gerar', 'tirar', 'aparece']],
+    resposta: 'Passo a passo (Manual de Orientação do FGTS Digital, Cap. I itens 5.1 e 5.1.4; Cap. II itens 1 e 3):\n1. Envie o desligamento (S-2299) no eSocial. É ele que gera o débito rescisório; o débito aparece no FGTS Digital depois que o eSocial processa o evento (retorno S-5003).\n2. Entre no FGTS Digital (https://fgtsdigital.sistema.gov.br) com gov.br ou certificado digital (o contador entra por procuração cadastrada).\n3. Emissão de Guias → Guia Rápida → Rescisória (ou Emissão de Guia Parametrizada, escolhendo os débitos e o vencimento).\n4. Pague por Pix, pelo QR Code da guia.\n\nPrazo: 10 dias do término do contrato; se cair em dia não útil, vale o dia útil ANTERIOR. Para a multa, o FGTS Digital usa as remunerações do eSocial; se faltar histórico, informe em "Histórico de Remunerações" (item 4.1).',
+    ondeFazer: {
+      url: 'https://fgtsdigital.sistema.gov.br',
+      passos: ['Envie o S-2299 no eSocial e aguarde o processamento.', 'FGTS Digital: Emissão de Guias > Guia Rápida > Rescisória.', 'Pague por Pix até 10 dias do fim do contrato (dia útil anterior se não for útil).'],
+      palavrasTela: [['fgts'], ['rescisao', 'rescisoria', 'guia']],
+    },
+  },
+  {
+    id: 'proc-guia-fgts-mensal', area: 'dp', conferidoEm: NOV, blocoBase: B.procedimentos, fontes: [F.manualFgts150, F.fgtsPrazo],
+    perguntas: ['Como emito a guia do FGTS mensal no FGTS Digital?', 'Como gerar a GFD do mês?', 'Como pago o FGTS do mês pelo FGTS Digital?'],
+    chaves: [['fgts', 'gfd'], ['guia', 'emito', 'gerar', 'gfd', 'pago', 'pagar'], ['mensal', 'mes', 'gfd']],
+    exceto: ['rescisao', 'rescisorio', 'rescisoria'],
+    resposta: 'Passo a passo (Manual de Orientação do FGTS Digital, Cap. I item 5.1; Cap. II itens 1 e 3):\n1. Envie a folha (S-1200) no eSocial: é ela que alimenta o débito mensal (e o do 13º); cada evento retorna o S-5003 sem precisar fechar a folha.\n2. Entre no FGTS Digital (https://fgtsdigital.sistema.gov.br) com gov.br ou certificado digital (contador por procuração).\n3. Emissão de Guias → Guia Rápida (ou Emissão de Guia Parametrizada, para escolher débitos e vencimento).\n4. Pague por Pix, pelo QR Code da guia.\n\nPrazo: dia 20 do mês seguinte; se não for dia útil, antecipa.',
+    ondeFazer: {
+      url: 'https://fgtsdigital.sistema.gov.br',
+      passos: ['Envie o S-1200 no eSocial.', 'FGTS Digital: Emissão de Guias > Guia Rápida.', 'Pague por Pix até o dia 20 (antecipa se não for dia útil).'],
+      palavrasTela: [['fgts'], ['guia', 'mensal']],
+    },
+  },
   // ───────────────────────── REFORMA TRIBUTÁRIA (IBS/CBS/IS) ─────────────────────────
   {
     id: 'rt-o-que-e', area: 'fiscal', conferidoEm: NOV, blocoBase: B.reforma, fontes: [F.lc214, F.ec132],

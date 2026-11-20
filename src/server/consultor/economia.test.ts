@@ -367,3 +367,65 @@ test('saúde: inclui a conferência das respostas prontas', async () => {
     await s.fechar();
   }
 });
+
+// ── Procedimentos ("como faço…") e ondeFazer ────────────────────
+const TELAS = [
+  { id: 'fgts-guias', nome: 'Guias do FGTS', caminho: 'DP > FGTS > Guias', oQueFaz: 'Gera a guia do FGTS mensal e rescisória' },
+  { id: 'simples-das', nome: 'Gerar DAS', caminho: 'Fiscal > Simples Nacional > Gerar DAS', oQueFaz: 'Gera o DAS do Simples, inclusive vencido' },
+];
+
+test('procedimentos: "como faço" acha o passo a passo com portal oficial; com a tela do sistema, manda para o sistema', () => {
+  const procs = RESPOSTAS_PRONTAS.filter((p) => p.ondeFazer);
+  assert.ok(procs.length >= 7);
+  for (const p of procs) assert.ok(urlOficial(p.ondeFazer!.url), p.id);
+  const casos: [string, string][] = [
+    ['como pego a CND?', 'proc-emitir-cnd'],
+    ['como parcelo o DAS?', 'proc-parcelar-simples'],
+    ['como dou baixa no MEI?', 'proc-baixa-mei'],
+    ['como retifico o PGDAS-D?', 'proc-retificar-pgdas'],
+    ['como emito a guia do FGTS rescisório?', 'proc-guia-fgts-rescisorio'],
+    ['como gero o DAS de um mês vencido?', 'proc-emitir-das'],
+  ];
+  for (const [q, id] of casos) {
+    const d = decidirPronta({ pergunta: q, sistema: 'fiscal' });
+    assert.ok(d.tipo === 'pronta' && d.pronta.id === id, q);
+    assert.equal(d.tipo === 'pronta' && d.resposta.ondeFazer?.tipo, 'externo', q);
+  }
+  // Regra (não procedimento) continua com a resposta de regra.
+  assert.equal(buscarPronta('Em quantas parcelas posso parcelar débitos do Simples Nacional?')?.pronta.id, 'sn-parcelamento');
+
+  const sis = decidirPronta({ pergunta: 'como emito a guia do FGTS rescisório?', sistema: 'dp', telasDoSistema: TELAS });
+  assert.equal(sis.tipo, 'pronta');
+  if (sis.tipo !== 'pronta') return;
+  assert.deepEqual([sis.resposta.ondeFazer?.tipo, sis.resposta.ondeFazer?.tela], ['sistema', 'fgts-guias']);
+  assert.ok(sis.resposta.resposta.startsWith('No sistema: abra DP > FGTS > Guias'));
+  assert.ok(sis.resposta.resposta.includes('fgtsdigital.sistema.gov.br'), 'mantém a regra oficial');
+  const das = decidirPronta({ pergunta: 'como gero o DAS de um mês vencido?', sistema: 'fiscal', telasDoSistema: TELAS });
+  assert.equal(das.tipo === 'pronta' && das.resposta.ondeFazer?.tela, 'simples-das');
+  const fora = decidirPronta({ pergunta: 'como dou baixa no MEI?', sistema: 'fiscal', telasDoSistema: TELAS });
+  assert.equal(fora.tipo === 'pronta' && fora.resposta.ondeFazer?.tipo, 'externo', 'o sistema não faz baixa de MEI: portal oficial');
+});
+
+test('ondeFazer da IA: tela só se existir no mapa; portal só oficial; telasDoSistema validado; não vai para o cache', async () => {
+  const texto = respostaIA({ resposta: 'No sistema: abra Fiscal > NF-e > Cancelar.', ondeFazer: { tipo: 'sistema', tela: 'nfe-cancelar', passos: ['Abra Fiscal > NF-e > Cancelar.'] } });
+  const s = await subir({ texto });
+  try {
+    const telas = [{ id: 'nfe-cancelar', nome: 'Cancelar NF-e', caminho: 'Fiscal > NF-e > Cancelar', oQueFaz: 'Cancela a NF-e autorizada' }];
+    const a = await s.perguntar({ pergunta: 'Como cancelo uma NF-e?', escritorio: LIB, telasDoSistema: telas as any });
+    assert.deepEqual(a.j.ondeFazer, { tipo: 'sistema', tela: 'nfe-cancelar', passos: ['Abra Fiscal > NF-e > Cancelar.'] });
+    const b = await s.perguntar({ pergunta: 'Como cancelo uma NF-e?', escritorio: LIB, telasDoSistema: [{ id: 'outra', nome: 'x', caminho: 'y', oQueFaz: 'z' }] as any });
+    assert.equal(b.j.ondeFazer, undefined, 'tela inexistente no mapa é descartada');
+    assert.equal(s.chamadasIA(), 2, 'com mapa de telas não usa cache');
+    assert.equal((await s.perguntar({ pergunta: 'x', telasDoSistema: 'telas' as any })).status, 400);
+  } finally {
+    await s.fechar();
+  }
+});
+
+test('ondeFazer externo: url não oficial é descartada', async () => {
+  const { validarOndeFazer } = await import('./validar');
+  assert.deepEqual(validarOndeFazer({ tipo: 'externo', url: 'https://blog.com/x', passos: ['a'] }), { tipo: 'externo', passos: ['a'] });
+  assert.deepEqual(validarOndeFazer({ tipo: 'externo', url: 'https://fgtsdigital.sistema.gov.br', passos: [] }), { tipo: 'externo', url: 'https://fgtsdigital.sistema.gov.br', passos: [] });
+  assert.equal(validarOndeFazer({ tipo: 'externo', url: 'https://blog.com', passos: [] }), undefined);
+  assert.equal(validarOndeFazer({ tipo: 'sistema', tela: 'x', passos: ['a'] }, []), undefined);
+});

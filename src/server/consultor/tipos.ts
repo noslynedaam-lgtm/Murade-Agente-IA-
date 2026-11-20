@@ -29,6 +29,12 @@ export type ContextoEmpresa = {
   outros?: Record<string, string | number | boolean>;
 };
 
+/** Tela do sistema chamador (mapa resumido): o consultor prefere mandar a pessoa para a tela do próprio sistema. */
+export type TelaSistema = { id: string; nome: string; caminho: string; oQueFaz: string };
+
+/** Onde a pessoa faz o procedimento: numa tela do sistema chamador ou num portal oficial. */
+export type OndeFazer = { tipo: 'sistema' | 'externo'; tela?: string; url?: string; passos: string[] };
+
 export type MensagemHistorico = { papel: 'usuario' | 'consultor'; texto: string };
 export type Ferramenta = { nome: string; descricao: string };
 
@@ -38,6 +44,8 @@ export type PerguntaConsultor = {
   contextoEmpresa?: ContextoEmpresa;
   historico?: MensagemHistorico[];
   ferramentasDisponiveis?: Ferramenta[];
+  /** Mapa resumido das telas do sistema chamador (para responder "no sistema: abra <caminho>"). */
+  telasDoSistema?: TelaSistema[];
   /** Identificação (login/ID, não nome nem CPF) de quem pergunta e do escritório: usada no registro de decisões. */
   usuario?: string;
   escritorio?: string;
@@ -69,6 +77,8 @@ export type RespostaConsultor = {
   custoIA?: boolean;
   /** Se o escritório tem o Consultor completo (adicional pago) liberado. */
   liberado?: boolean;
+  /** Onde fazer (procedimentos "como faço…"): tela do sistema chamador ou portal oficial, com os passos. */
+  ondeFazer?: OndeFazer;
   /** Resposta pronta: id e data em que foi conferida na fonte oficial. */
   respostaProntaId?: string;
   conferidoEm?: string;

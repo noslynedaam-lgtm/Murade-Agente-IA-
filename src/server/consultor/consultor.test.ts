@@ -184,7 +184,7 @@ test('ações: só ferramentas recebidas; argumentos em texto JSON viram objeto'
   const s = await subir(geradorFixo());
   try {
     const r = await s.chamar('/api/consultor/perguntar', {
-      corpo: { pergunta: 'Como gerar o DAS de uma competência atrasada no sistema?', sistema: 'fiscal', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'Gera o DAS' }] },
+      corpo: { pergunta: 'Em qual conta contábil lanço o DAS pago?', sistema: 'fiscal', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'Gera o DAS' }] },
     });
     assert.equal(r.status, 200);
     const j = await r.json();
@@ -193,7 +193,7 @@ test('ações: só ferramentas recebidas; argumentos em texto JSON viram objeto'
     assert.equal(j.fontes.length, 1);
     assert.equal(j.avisoResponsabilidade, AVISO_RESPONSABILIDADE);
 
-    const sem = await (await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Como gerar o DAS de uma competência atrasada no sistema?', sistema: 'fiscal' } })).json();
+    const sem = await (await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Em qual conta contábil lanço o DAS pago?', sistema: 'fiscal' } })).json();
     assert.deepEqual(sem.acoesSugeridas, []);
   } finally {
     await s.fechar();

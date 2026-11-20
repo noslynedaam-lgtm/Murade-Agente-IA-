@@ -60,6 +60,9 @@ export const PERGUNTAS_TESTE: PerguntaTeste[] = [
   { id: 'rt-simples-opcao', sistema: 'fiscal', pergunta: 'Em quais meses o optante do Simples faz a opção pelo regime regular do IBS e da CBS?', chaves: [['setembro'], ['marco']], fonte: 'LC 123/2006, art. 13, § 10 (redação da LC 227/2026)' },
   { id: 'rt-reducao-contador', sistema: 'fiscal', pergunta: 'Qual a redução de alíquota do IBS e da CBS para serviços de contabilistas?', chaves: [['30%', '30 %', 'trinta por cento']], fonte: 'LC 214/2025, art. 127' },
   { id: 'rt-cashback-energia', sistema: 'fiscal', pergunta: 'No cashback da reforma tributária, quanto da CBS é devolvido na conta de energia elétrica?', chaves: [['100%', '100 %']], fonte: 'LC 214/2025, art. 118, I' },
+  // Procedimentos ("como faço"), conferidos no Manual do PGDAS-D e no Manual do FGTS Digital em 20/11/2026.
+  { id: 'proc-retificar-pgdas', sistema: 'fiscal', pergunta: 'Como retifico o PGDAS-D?', chaves: [['declarar/retificar']], fonte: 'Manual do PGDAS-D 2018, item 6.10' },
+  { id: 'proc-fgts-rescisorio', sistema: 'dp', pergunta: 'Como emito a guia do FGTS rescisório?', chaves: [['s-2299'], ['guia rapida']], fonte: 'Manual do FGTS Digital 1.50, Cap. I 5.1 e Cap. II 3.1.1.2' },
   { id: 'cpp-patronal', sistema: 'dp', pergunta: 'Qual a contribuição patronal do INSS sobre a folha de empregados de empresa do Lucro Presumido (sem contar RAT e terceiros)?', chaves: [['20%', '20 %', 'vinte por cento']], fonte: 'Lei 8.212 art. 22, I' },
 ];
 
