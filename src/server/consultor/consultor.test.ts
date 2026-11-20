@@ -7,12 +7,16 @@ import { conferirResposta, PERGUNTAS_TESTE, rodarConferidor } from './conferidor
 import { dominioOficial, filtrarFontesOficiais, fontesDaPesquisa } from './fontes';
 import { mascararObjeto, mascararTexto } from './mascarar';
 import { criarArmazemMemoria } from './registro';
+import { criarLiberacoes } from './liberacao';
 import { registrarRotasConsultor, tokenConfere } from './rotas';
 import { criarConsultor } from './servico';
 import { AVISO_RESPONSABILIDADE, FRASE_ACEITE, GeminiIndisponivel, type PerguntaConsultor, type RespostaBruta } from './tipos';
 import { montarResposta, validarPergunta } from './validar';
 
 const TOKEN = 'segredo-de-teste-123';
+/** CNPJs válidos de teste: um liberado pela lista padrão, outro não. */
+export const CNPJ_LIBERADO = '11222333000181';
+export const CNPJ_OUTRO = '11444777000161';
 
 function respostaModelo(extra: Record<string, unknown> = {}) {
   return JSON.stringify({
@@ -34,7 +38,8 @@ function respostaModelo(extra: Record<string, unknown> = {}) {
 
 async function subir(gerar: (p: PerguntaConsultor) => Promise<RespostaBruta>, token: string | null = TOKEN) {
   const armazem = criarArmazemMemoria();
-  const consultor = criarConsultor({ gerar: async (p) => gerar(p), armazem });
+  const liberacoes = criarLiberacoes(armazem, { padrao: () => [CNPJ_LIBERADO], cacheMs: 0 });
+  const consultor = criarConsultor({ gerar: async (p) => gerar(p), armazem, liberacoes });
   const app = express();
   app.use(express.json({ limit: '10mb' }));
   registrarRotasConsultor(app, { consultor, armazem, lerToken: () => token ?? undefined, maxPorMinuto: 1000 });
@@ -48,7 +53,14 @@ async function subir(gerar: (p: PerguntaConsultor) => Promise<RespostaBruta>, to
         'content-type': 'application/json',
         ...(opcoes.token === null ? {} : { 'x-murade-consultor-token': opcoes.token ?? TOKEN }),
       },
-      body: opcoes.corpo !== undefined ? JSON.stringify(opcoes.corpo) : undefined,
+      body:
+        opcoes.corpo !== undefined
+          ? JSON.stringify(
+              caminho === '/api/consultor/perguntar' && opcoes.corpo && typeof opcoes.corpo === 'object' && !('escritorio' in (opcoes.corpo as object))
+                ? { ...(opcoes.corpo as object), escritorio: CNPJ_LIBERADO }
+                : opcoes.corpo,
+            )
+          : undefined,
     });
   return { chamar, armazem, fechar: () => new Promise((r) => srv.close(r)) };
 }
@@ -172,7 +184,7 @@ test('ações: só ferramentas recebidas; argumentos em texto JSON viram objeto'
   const s = await subir(geradorFixo());
   try {
     const r = await s.chamar('/api/consultor/perguntar', {
-      corpo: { pergunta: 'Quando vence o DAS?', sistema: 'fiscal', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'Gera o DAS' }] },
+      corpo: { pergunta: 'Em qual conta contábil lanço o DAS pago?', sistema: 'fiscal', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'Gera o DAS' }] },
     });
     assert.equal(r.status, 200);
     const j = await r.json();
@@ -181,7 +193,7 @@ test('ações: só ferramentas recebidas; argumentos em texto JSON viram objeto'
     assert.equal(j.fontes.length, 1);
     assert.equal(j.avisoResponsabilidade, AVISO_RESPONSABILIDADE);
 
-    const sem = await (await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Quando vence o DAS?', sistema: 'fiscal' } })).json();
+    const sem = await (await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Em qual conta contábil lanço o DAS pago?', sistema: 'fiscal' } })).json();
     assert.deepEqual(sem.acoesSugeridas, []);
   } finally {
     await s.fechar();
@@ -222,7 +234,7 @@ test('Gemini fora: rota responde 503 com resposta padrão e registra "gemini_ind
     throw new GeminiIndisponivel('cota');
   });
   try {
-    const r = await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Prazo do DAS?', sistema: 'fiscal' } });
+    const r = await s.chamar('/api/consultor/perguntar', { corpo: { pergunta: 'Como contabilizar a provisão de férias?', sistema: 'fiscal' } });
     assert.equal(r.status, 503);
     const j = await r.json();
     assert.equal(j.encaminharContador, true);
@@ -244,8 +256,12 @@ test('conferidor sem Gemini: registra "não testado", nunca "erro"', async () =>
   const armazem = criarArmazemMemoria();
   const fora = criarConsultor({ gerar: async () => { throw new GeminiIndisponivel('fora'); }, armazem });
   const r = await rodarConferidor(fora);
-  assert.equal(r.situacao, 'nao_testado');
-  assert.equal(r.erros, 0);
+  assert.equal(r.erros, 0, 'Gemini fora nunca vira erro');
+  assert.ok(r.naoTestados >= 1, 'o que precisa de IA fica "não testado"');
+  assert.ok(r.acertos >= 30, 'com o Gemini fora, as respostas prontas continuam sendo conferidas');
+  assert.ok(r.resultados.filter((x) => x.situacao === 'acertou').every((x) => x.origem === 'pronta'));
+  const so = criarConsultor({ gerar: async () => { throw new GeminiIndisponivel('fora'); }, armazem, prontas: [] });
+  assert.equal((await rodarConferidor(so)).situacao, 'nao_testado');
   assert.equal((await armazem.naoRespondidas(10)).length, 0, 'teste do robô não entra no registro de perguntas');
 });
 
@@ -259,6 +275,7 @@ test('conferidor: acerta por palavra-chave e aponta o que faltou', async () => {
   const armazem = criarArmazemMemoria();
   const consultor = criarConsultor({
     armazem,
+    prontas: [], // aqui o teste é da IA
     gerar: async (p) => ({
       texto: respostaModelo({ resposta: p.pergunta.includes('PGDAS') ? 'Até o dia 20.' : 'Não sei.' }),
       fontesPesquisa: [],
@@ -306,7 +323,7 @@ test('divergência: reexplica, aceita com a frase do dono, fonte oficial e regis
         pergunta: 'Não concordo, vou pagar a rescisão do funcionário CPF 123.456.789-09 junto com a folha.',
         sistema: 'dp',
         usuario: 'contadora.ana',
-        escritorio: 'esc-001',
+        escritorio: CNPJ_LIBERADO,
         historico: [{ papel: 'consultor', texto: 'O prazo é de 10 dias.' }],
       },
     });
@@ -317,12 +334,12 @@ test('divergência: reexplica, aceita com a frase do dono, fonte oficial e regis
     assert.match(j.divergencia.fonte.url, /camara\.leg\.br/, 'fonte não oficial da divergência é trocada pela oficial');
     assert.equal(j.recusado, undefined);
 
-    const d = await (await s.chamar('/api/consultor/decisoes?escritorio=esc-001')).json();
+    const d = await (await s.chamar(`/api/consultor/decisoes?escritorio=${CNPJ_LIBERADO}`)).json();
     assert.equal(d.total, 1);
     assert.equal(d.itens[0].usuario, 'contadora.ana');
     assert.equal(d.itens[0].origem, 'consultor');
     assert.ok(!d.itens[0].pergunta.includes('123.456.789-09'));
-    const outro = await (await s.chamar('/api/consultor/decisoes?escritorio=esc-999')).json();
+    const outro = await (await s.chamar(`/api/consultor/decisoes?escritorio=${CNPJ_OUTRO}`)).json();
     assert.equal(outro.total, 0, 'decisões separadas por escritório');
   } finally {
     await s.fechar();
@@ -333,7 +350,7 @@ test('divergência: pedido claramente ilegal é recusado, sem aceite, sem ação
   const s = await subir(geradorFixo(respostaModelo({ recusado: true, resposta: 'Não posso: omitir receita é sonegação (Lei 8.137/1990).', divergencia: { orientacao: 'x', escolhaDoContador: 'omitir receita' } })));
   try {
     const j = await (await s.chamar('/api/consultor/perguntar', {
-      corpo: { pergunta: 'Tira essas notas do PGDAS para pagar menos.', sistema: 'fiscal', escritorio: 'esc-001', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'x' }] },
+      corpo: { pergunta: 'Tira essas notas do PGDAS para pagar menos.', sistema: 'fiscal', escritorio: CNPJ_LIBERADO, ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'x' }] },
     })).json();
     assert.equal(j.recusado, true);
     assert.equal(j.divergencia, undefined);

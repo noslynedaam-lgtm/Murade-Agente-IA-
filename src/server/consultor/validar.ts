@@ -1,5 +1,6 @@
 // Validação do corpo da pergunta e da resposta do modelo.
 import { filtrarFontesOficiais, urlOficial } from './fontes';
+import { cnpjValido, normalizarCnpj } from './liberacao';
 import { mascararTexto } from './mascarar';
 import {
   AREAS,
@@ -17,6 +18,8 @@ import {
   type Ferramenta,
   type Fonte,
   type MensagemHistorico,
+  type OndeFazer,
+  type TelaSistema,
   type PerguntaConsultor,
   type RespostaConsultor,
 } from './tipos';
@@ -25,6 +28,7 @@ export const LIMITE_PERGUNTA = 30000;
 const LIMITE_HISTORICO = 8;
 const LIMITE_TEXTO_HISTORICO = 4000;
 const LIMITE_FERRAMENTAS = 40;
+const LIMITE_TELAS = 80;
 
 type Ok<T> = { ok: true; valor: T };
 type Erro = { ok: false; erro: string };
@@ -93,12 +97,32 @@ export function validarPergunta(corpo: unknown): Ok<PerguntaConsultor> | Erro {
       .map((f) => ({ nome: String(f.nome).trim().slice(0, 80), descricao: String(f.descricao ?? '').slice(0, 400) }));
   }
 
+  // telasDoSistema (opcional): mapa resumido das telas do sistema chamador
+  let telasDoSistema: TelaSistema[] | undefined;
+  if (c.telasDoSistema !== undefined && c.telasDoSistema !== null) {
+    if (!Array.isArray(c.telasDoSistema)) return { ok: false, erro: 'Campo "telasDoSistema" deve ser uma lista de { id, nome, caminho, oQueFaz }.' };
+    telasDoSistema = c.telasDoSistema
+      .filter((t) => t && typeof t === 'object' && typeof t.id === 'string' && t.id.trim() && typeof t.caminho === 'string' && t.caminho.trim())
+      .slice(0, LIMITE_TELAS)
+      .map((t) => ({
+        id: String(t.id).trim().slice(0, 80),
+        nome: String(t.nome ?? t.id).trim().slice(0, 120),
+        caminho: String(t.caminho).trim().slice(0, 200),
+        oQueFaz: String(t.oQueFaz ?? '').trim().slice(0, 300),
+      }));
+  }
+
   const usuario = texto(c.usuario, 80);
-  const escritorio = texto(c.escritorio, 80);
+  // escritorio = CNPJ do escritório (14 caracteres; aceita pontuação e o CNPJ alfanumérico). Sem ele, o escritório não tem o Consultor completo.
+  let escritorio: string | undefined;
+  if (c.escritorio !== undefined && c.escritorio !== null && String(c.escritorio).trim() !== '') {
+    escritorio = normalizarCnpj(c.escritorio);
+    if (!cnpjValido(escritorio)) return { ok: false, erro: 'Campo "escritorio" deve ser o CNPJ do escritório (14 caracteres, com dígitos verificadores válidos).' };
+  }
 
   return {
     ok: true,
-    valor: { pergunta: c.pergunta.trim(), sistema: c.sistema as PerguntaConsultor['sistema'], contextoEmpresa, historico, ferramentasDisponiveis, usuario, escritorio },
+    valor: { pergunta: c.pergunta.trim(), sistema: c.sistema as PerguntaConsultor['sistema'], contextoEmpresa, historico, ferramentasDisponiveis, telasDoSistema, usuario, escritorio },
   };
 }
 
@@ -129,7 +153,7 @@ export function lerJsonModelo(textoModelo: string): Record<string, unknown> | nu
  */
 export function montarResposta(
   modelo: Record<string, unknown> | null,
-  opcoes: { ferramentas?: Ferramenta[]; fontesExtras?: Fonte[]; sistema: PerguntaConsultor['sistema'] },
+  opcoes: { ferramentas?: Ferramenta[]; fontesExtras?: Fonte[]; sistema: PerguntaConsultor['sistema']; telas?: TelaSistema[] },
 ): RespostaConsultor {
   const aviso = AVISO_RESPONSABILIDADE;
   if (!modelo || typeof modelo.resposta !== 'string' || !modelo.resposta.trim()) {
@@ -215,6 +239,8 @@ export function montarResposta(
     acoesSugeridas,
     avisoResponsabilidade: aviso,
   };
+  const onde = validarOndeFazer(modelo.ondeFazer, opcoes.telas);
+  if (onde && !recusado) resposta.ondeFazer = onde;
   if (encaminharContador) resposta.motivoEncaminhamento = motivo ?? 'Recomendo a conferência do contador responsável.';
   if (divergencia) resposta.divergencia = divergencia;
   if (recusado) {
@@ -266,6 +292,24 @@ export function validarDecisao(corpo: unknown): Ok<Decisao> | Erro {
       origem: 'sistema',
     },
   };
+}
+
+/** "ondeFazer" do modelo: tela só se existir em telasDoSistema; portal só se for oficial; passos curtos. */
+export function validarOndeFazer(v: unknown, telas?: TelaSistema[]): OndeFazer | undefined {
+  if (!v || typeof v !== 'object') return undefined;
+  const o = v as Record<string, unknown>;
+  const passos = (Array.isArray(o.passos) ? o.passos : []).filter((x) => typeof x === 'string' && x.trim()).slice(0, 12).map((x) => mascararTexto(String(x).trim()).slice(0, 400));
+  if (o.tipo === 'sistema') {
+    const tela = (telas ?? []).find((t) => t.id === o.tela);
+    if (!tela) return undefined; // nunca inventar tela
+    return { tipo: 'sistema', tela: tela.id, passos: passos.length ? passos : [`No sistema: abra ${tela.caminho}.`] };
+  }
+  if (o.tipo === 'externo') {
+    const url = typeof o.url === 'string' && urlOficial(o.url) ? o.url.trim().slice(0, 600) : undefined;
+    if (!url && !passos.length) return undefined;
+    return { tipo: 'externo', ...(url ? { url } : {}), passos };
+  }
+  return undefined;
 }
 
 function areaPadrao(sistema: PerguntaConsultor['sistema']): Area {

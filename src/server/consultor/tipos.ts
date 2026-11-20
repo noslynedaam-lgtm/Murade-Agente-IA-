@@ -29,6 +29,12 @@ export type ContextoEmpresa = {
   outros?: Record<string, string | number | boolean>;
 };
 
+/** Tela do sistema chamador (mapa resumido): o consultor prefere mandar a pessoa para a tela do próprio sistema. */
+export type TelaSistema = { id: string; nome: string; caminho: string; oQueFaz: string };
+
+/** Onde a pessoa faz o procedimento: numa tela do sistema chamador ou num portal oficial. */
+export type OndeFazer = { tipo: 'sistema' | 'externo'; tela?: string; url?: string; passos: string[] };
+
 export type MensagemHistorico = { papel: 'usuario' | 'consultor'; texto: string };
 export type Ferramenta = { nome: string; descricao: string };
 
@@ -38,6 +44,8 @@ export type PerguntaConsultor = {
   contextoEmpresa?: ContextoEmpresa;
   historico?: MensagemHistorico[];
   ferramentasDisponiveis?: Ferramenta[];
+  /** Mapa resumido das telas do sistema chamador (para responder "no sistema: abra <caminho>"). */
+  telasDoSistema?: TelaSistema[];
   /** Identificação (login/ID, não nome nem CPF) de quem pergunta e do escritório: usada no registro de decisões. */
   usuario?: string;
   escritorio?: string;
@@ -63,7 +71,22 @@ export type RespostaConsultor = {
   divergencia?: Divergencia;
   /** true quando o pedido do contador é claramente ilegal/fraude: o consultor recusa e explica. */
   recusado?: boolean;
+  /** De onde veio a resposta: 'pronta' (banco conferido), 'cache' (IA guardada), 'ia' (Gemini agora) ou 'bloqueado' (precisava de IA e o escritório não tem o adicional). */
+  origem?: Origem;
+  /** true quando a resposta gastou (ou pode ter gastado) crédito do Gemini. */
+  custoIA?: boolean;
+  /** Se o escritório tem o Consultor completo (adicional pago) liberado. */
+  liberado?: boolean;
+  /** Onde fazer (procedimentos "como faço…"): tela do sistema chamador ou portal oficial, com os passos. */
+  ondeFazer?: OndeFazer;
+  /** Resposta pronta: id e data em que foi conferida na fonte oficial. */
+  respostaProntaId?: string;
+  conferidoEm?: string;
 };
+
+export const ORIGENS = ['pronta', 'cache', 'ia', 'bloqueado'] as const;
+export type Origem = (typeof ORIGENS)[number];
+export type UsoTokens = { entrada: number; saida: number; total: number };
 
 export type Decisao = {
   id?: string;
@@ -84,6 +107,8 @@ export type RespostaBruta = {
   texto: string; // JSON gerado pelo modelo
   fontesPesquisa: Fonte[]; // fontes da pesquisa Google (groundingChunks)
   modelo?: string;
+  /** Tokens informados pelo SDK (usageMetadata), quando vierem. */
+  uso?: UsoTokens;
 };
 
 /** Erro que indica que o Gemini está fora/indisponível (não é erro do consultor). */

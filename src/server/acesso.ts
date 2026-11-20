@@ -68,6 +68,26 @@ export async function exigirAcesso(req: Request, res: Response, next: NextFuncti
   next();
 }
 
+/** Só o dono do sistema (conta própria com donoSistema, ou sessão do DP com dono=true ainda ativa). Escritórios clientes recebem 403. */
+export async function exigirDono(req: Request, res: Response, next: NextFunction) {
+  res.setHeader('Cache-Control', 'no-store');
+  const s = ler(req);
+  let dono = false;
+  let login = '';
+  if (s?.uid) {
+    const u = await contaDaRequisicao(req);
+    dono = u?.donoSistema === true;
+    login = u?.login ?? '';
+  } else if (s) {
+    dono = Boolean(s.dono && s.sid && sessoesDP.has(s.sid));
+    login = s.usuario;
+  }
+  if (!s) { res.status(401).json({ sucesso: false, motivo: 'Entre com seu usuário para continuar.', codigo: 'NAO_AUTENTICADO' }); return; }
+  if (!dono) { res.status(403).json({ sucesso: false, motivo: 'Somente o dono do sistema pode fazer isto.' }); return; }
+  (req as any).donoLogin = login;
+  next();
+}
+
 async function entrarPeloDP(login: string, senha: string): Promise<{ ok: true; sessao: Sessao } | { ok: false; status: number; motivo: string }> {
   try {
     const r = await fetch(`${dpBase()}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ login, senha }), signal: AbortSignal.timeout(10000) });

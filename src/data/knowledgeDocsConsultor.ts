@@ -550,4 +550,84 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
 9. **Deferimento:** seguir nos demais órgãos da REDESIM (Prefeitura, Bombeiros, Vigilância Sanitária etc.).
 - O sistema (em 2019) não atendia eletronicamente o caso de várias procurações.`,
   },
+{
+    id: 'reforma-tributaria-ibs-cbs-lc214-conferido',
+    category: 'fiscal',
+    categoryLabel: 'Fiscal / Tributário',
+    filePath: 'fiscal/reforma-tributaria-ibs-cbs-lc214-conferido.md',
+    title: 'Reforma Tributária explicada: IBS, CBS e Imposto Seletivo, ano-teste 2026, 2027-2033, Simples, crédito, split payment, reduções, cashback, destino e notas fiscais',
+    summary: 'Guia didático conferido na EC 132/2023 (ADCT arts. 125 a 129; CF arts. 153, VIII, e 156-A) e na LC 214/2025 com as alterações da LC 227/2026 (Planalto): o que são IBS, CBS e IS; 2026 com 0,1% e 0,9% compensáveis e dispensa para quem cumpre obrigações acessórias (art. 348); Simples fora do teste de 2026; 2027 CBS e IS, extinção de PIS/Cofins (art. 542) e IPI zero; 2029-2032 ICMS/ISS em 9/10 a 6/10; Simples com opção semestral pelo regime regular (LC 123, art. 13, §§ 9º a 11) e crédito ao cliente (art. 23, § 1º-A); crédito (art. 47), split payment (arts. 31 a 35), reduções de 30% e 60% e cesta básica zero (arts. 125 a 128), cashback (arts. 112 a 124), destino (art. 11) e grupo IBSCBS na NFS-e.',
+    tags: ['Reforma Tributária', 'IBS', 'CBS', 'Imposto Seletivo', 'LC 214/2025', 'LC 227/2026', 'EC 132/2023', 'ano-teste 2026', 'split payment', 'cashback', 'cesta básica', 'redução de 60%', 'redução de 30%', 'IBSCBS', 'cClassTrib', 'regime regular', 'crédito IBS CBS', 'transição ICMS ISS'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://planalto.gov.br/ccivil_03/leis/lcp/lcp214compilado.htm',
+    officialLinkLabel: 'LC 214/2025, texto compilado (Planalto)',
+    content: `# Reforma Tributária do consumo: IBS, CBS e Imposto Seletivo (explicado do zero)
+
+> **Fontes oficiais (conferidas em 20/11/2026):**
+> - [LC 214/2025, texto compilado com as alterações da LC 227/2026 (Planalto)](https://planalto.gov.br/ccivil_03/leis/lcp/lcp214compilado.htm): arts. 1º, 4º a 12, 14 a 18, 27, 29, 31 a 36, 41, 47 a 57, 112 a 128, 343 a 348, 409, 474, 517, 542 e 544
+> - [Emenda Constitucional 132/2023 (Planalto)](https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc132.htm): CF arts. 153, VIII, e 156-A, § 1º; ADCT arts. 125 a 129
+> - [NFS-e Nacional, Nota Técnica SE/CGNFS-e 004 v2.00, de 10/12/2025 (gov.br/nfse)](https://www.gov.br/nfse/pt-br/biblioteca/documentacao-tecnica/rtc-producao-restrita-piloto/nt-004-se-cgnfse-novo-layout-rtc-v2-00-20251210.pdf)
+> **Não conferido nesta revisão (não afirmar):** os valores das alíquotas de referência da CBS e do IBS (dependem de resolução do Senado, LC 214 art. 18); a lista de produtos dos anexos (cesta básica, 60%); o regulamento da CBS e os atos do Comitê Gestor do IBS; a Nota Técnica 2025.002 da NF-e/NFC-e no Portal Nacional da NF-e (não aberta) e versões da NT da NFS-e posteriores à 004; a data de início do split payment; a resolução do CGSN sobre a opção do Simples pelo regime regular. **Diante de pergunta sobre esses pontos: "preciso confirmar".**
+
+## 1. O que muda, em uma frase
+Cinco tributos sobre o consumo (PIS, Cofins, IPI, ICMS e ISS) vão sendo trocados por três: **CBS** (federal, no lugar de PIS e Cofins), **IBS** (de Estados e Municípios, no lugar de ICMS e ISS) e **Imposto Seletivo – IS** (federal, sobre o que faz mal à saúde ou ao meio ambiente). IBS e CBS funcionam como um **IVA**: cada etapa paga sobre o que vende e **desconta como crédito** o que foi pago nas compras.
+
+## 2. Os três tributos
+- **IBS e CBS (LC 214, art. 1º; CF, art. 156-A):** incidem sobre **operações onerosas com bens (materiais ou imateriais) e serviços** (art. 4º), inclusive importação. Não incidem, por exemplo, sobre salários, transferências entre estabelecimentos do mesmo contribuinte, dividendos e rendimentos financeiros (art. 6º). Princípio da **neutralidade** (art. 2º).
+- **Alíquota do IBS = alíquota estadual + alíquota municipal do destino** (art. 15); a CBS é fixada pela União; cada ente fixa a sua por lei e, sem lei, vale a **alíquota de referência** fixada por **resolução do Senado** (arts. 14 e 18). Mesma alíquota para todas as operações, salvo exceções da lei (art. 16).
+- **Imposto Seletivo (CF, art. 153, VIII; LC 214, art. 409):** sobre produção, extração, comercialização ou importação de bens e serviços prejudiciais à saúde ou ao meio ambiente; a lei lista veículos, embarcações e aeronaves, produtos fumígenos, bebidas alcoólicas, bebidas açucaradas, bens minerais e concursos de prognósticos (art. 409, § 1º). **Não incide** sobre exportações, energia elétrica e telecomunicações (CF, art. 153, § 6º, I). Incidência única; na extração, alíquota máxima de 1% do valor de mercado.
+
+## 3. Cronograma (EC 132, ADCT arts. 125 a 129; LC 214, arts. 343 a 348, 474, 542 e 544)
+| Ano | O que acontece |
+| :--- | :--- |
+| **2026** | **IBS 0,1%** (estadual) e **CBS 0,9%** (LC 214, arts. 343 e 346). O valor é **compensado com PIS/Cofins** (e, se faltar débito, com outro tributo federal ou ressarcido em até 60 dias) (art. 348, I e II). **Fica dispensado o recolhimento** para quem **cumprir as obrigações acessórias** (art. 348, § 1º). As alíquotas de 2026 **não se aplicam aos optantes do Simples Nacional** (art. 348, III, "c"). PIS e Cofins continuam devidos integralmente (art. 348, § 2º). Auto de infração por falta de obrigação acessória: intimação para regularizar em 60 dias e, atendida, a penalidade é extinta (art. 348, §§ 3º e 4º, LC 227/2026). |
+| **2027 e 2028** | Começam a ser cobrados a **CBS** e o **Imposto Seletivo**; **extintos o PIS e a Cofins** (ADCT, art. 126; LC 214, art. 542, revogação a partir de 1º/1/2027). **IPI com alíquota zero**, salvo produtos com industrialização incentivada na Zona Franca de Manaus. **IBS 0,05% estadual + 0,05% municipal** e CBS **reduzida em 0,1 ponto percentual** (ADCT, art. 127; LC 214, arts. 344 e 347). |
+| **2029 a 2032** | ICMS e ISS cobrados a **9/10 (2029), 8/10 (2030), 7/10 (2031) e 6/10 (2032)** das alíquotas atuais; benefícios fiscais reduzidos na mesma proporção (ADCT, art. 128; LC 214, arts. 501 e 508). O IBS cresce na transição. |
+| **2033** | **ICMS e ISS extintos** (ADCT, art. 129). |
+
+## 4. Base de cálculo e "por fora" (LC 214, art. 12; CF, art. 156-A, § 1º, IX)
+- Base = valor total cobrado (acréscimos, juros, multas, descontos condicionados, frete, seguros, taxas).
+- **Não entram:** o **próprio IBS e a CBS** (cálculo "por fora"), o IPI, os **descontos incondicionais**, reembolsos por conta e ordem e, **de 2026 a 2032, o ICMS, o ISS e o PIS/Cofins** (art. 12, § 2º).
+
+## 5. Crédito: não cumulatividade (LC 214, arts. 47 a 57)
+- O contribuinte do **regime regular** se credita do IBS/CBS das compras **quando o débito do fornecedor foi extinto** (pago, compensado, retido no split payment ou recolhido pelo adquirente) (art. 47). Exige **documento fiscal eletrônico idôneo** e **destaque correto** (art. 47, § 1º; art. 48, parágrafo único). IBS e CBS **não se compensam entre si**.
+- **Sem crédito:** bens e serviços de **uso ou consumo pessoal** (art. 57) e compras imunes, isentas ou com alíquota zero (art. 49), salvo crédito presumido.
+- Crédito perde o direito de uso em **5 anos** (art. 54); não pode ser transferido, salvo fusão, cisão ou incorporação (art. 55).
+
+## 6. Split payment (LC 214, arts. 31 a 36)
+- No pagamento eletrônico (cartão, Pix, boleto etc.), o **prestador de pagamento separa o IBS/CBS e recolhe no momento da liquidação financeira**; o fornecedor recebe o líquido. **Padrão** (art. 32): consulta o sistema da Receita/Comitê Gestor e recolhe a diferença ainda não extinta. **Simplificado** (art. 33): percentual pré-fixado, opcional; **não gera crédito ao adquirente contribuinte** e o excedente volta ao fornecedor em até 3 dias úteis.
+- **Recolhimento pelo adquirente** (art. 36): o comprador do regime regular pode recolher ele mesmo quando o meio de pagamento não permite a separação.
+- Implantação **gradual**; a data não foi conferida.
+
+## 7. Simples Nacional e MEI
+- Continuam existindo; recolhem IBS/CBS **dentro do DAS** (LC 214, art. 41, § 2º).
+- **Opção pelo regime regular do IBS/CBS (LC 123, art. 13, §§ 9º a 11, redação da LC 227/2026, efeitos a partir de 1º/1/2027):** o optante pode apurar IBS e CBS **por fora do DAS**, pelo regime regular. A opção vale por **semestre** (janeiro e julho), é **irretratável** no semestre e é feita em **setembro** (para o semestre de janeiro) e **março** (para o de julho), na forma do CGSN.
+- **Crédito para o cliente:** quem compra de optante que recolhe **pelo DAS** e está no regime regular se credita do IBS/CBS **no montante equivalente ao cobrado no Simples** (LC 123, art. 23, § 1º-A; LC 214, art. 47, § 9º). No regime regular, o optante gera o crédito cheio destacado na nota, como qualquer contribuinte.
+- Quem recebeu ressarcimento no ano corrente ou anterior não pode sair do regime regular (LC 214, art. 41, § 5º).
+
+## 8. Reduções e alíquota zero (LC 214, arts. 125 a 128)
+- **Alíquota zero:** **Cesta Básica Nacional** (Anexo I, art. 125).
+- **Redução de 30%:** serviços de **profissões intelectuais regulamentadas**, entre elas **contabilistas**, advogados, administradores, engenheiros, economistas, arquitetos (art. 127), com requisitos para a pessoa jurídica (sócios habilitados, sem sócio PJ, serviços prestados pelos sócios).
+- **Redução de 60%:** educação, saúde, dispositivos médicos e de acessibilidade, medicamentos, alimentos destinados ao consumo humano, higiene pessoal e limpeza de baixa renda, produtos agropecuários in natura, insumos agropecuários, produções artísticas e culturais, comunicação institucional, atividades desportivas e segurança nacional/cibernética (art. 128), com listas em anexos.
+
+## 9. Cashback: devolução personalizada (LC 214, arts. 112 a 124)
+- Para famílias do **CadÚnico** com renda **per capita até meio salário mínimo**, residentes no País e com CPF regular (art. 113).
+- **100% da CBS e 20% do IBS** em botijão de GLP até 13 kg, energia elétrica, água, esgoto, gás canalizado e telecomunicações; **20% da CBS e 20% do IBS** nos demais casos (art. 118). Estados e Municípios podem aumentar o percentual do IBS.
+- Começa sobre o consumo de **janeiro de 2027 (CBS)** e **janeiro de 2029 (IBS)** (art. 123).
+
+## 10. Destino: onde o imposto fica (LC 214, art. 11)
+- Bem móvel: **local da entrega**; imóvel e serviços sobre imóvel: onde está o imóvel; serviço presencial: onde é prestado; transporte de passageiros: início; carga: entrega; **demais serviços e bens imateriais: domicílio principal do adquirente** (inciso X, redação da LC 227/2026).
+
+## 11. Notas fiscais (NFS-e Nacional, NT 004 de 10/12/2025)
+- A NFS-e ganhou o grupo **IBSCBS** (com **CST**, **cClassTrib**, destinatário, valores, diferimento etc.), em produção desde **5/1/2026**. Pela NT 004, **o preenchimento não era obrigatório em 2026** (regras suspensas "temporariamente"), mas, se informado, é validado. Conferir a versão mais recente da NT antes de orientar o emissor.
+- NF-e/NFC-e: a NT 2025.002 cria os grupos de IBS, CBS e IS, **não conferida aqui**.
+
+## 12. O que o contador faz agora (com base nos artigos acima)
+1. Emitir as notas com os campos de IBS/CBS (CST e cClassTrib) assim que o emissor permitir e cumprir as obrigações acessórias: é isso que **dispensa o recolhimento de 2026** (art. 348, § 1º).
+2. Continuar apurando e pagando **PIS/Cofins, ICMS e ISS normalmente** em 2026.
+3. Para cada cliente do Simples que vende para empresas, simular se vale optar pelo **regime regular do IBS/CBS** — a primeira janela para 2027 é **setembro** do ano anterior, conforme regulamentação do CGSN.
+4. Revisar cadastros (NCM/NBS) para identificar **cesta básica, reduções de 30%/60%** e produtos sujeitos ao **Imposto Seletivo**.
+5. Revisar contratos e preços: o IBS/CBS é **por fora** e o crédito depende do **pagamento** do débito na etapa anterior.`,
+  },
 ];
+

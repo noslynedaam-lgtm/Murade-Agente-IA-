@@ -69,6 +69,9 @@ export function montarInstrucao(p: PerguntaConsultor, blocos: KnowledgeDoc[]): s
   const ferramentas = p.ferramentasDisponiveis?.length
     ? p.ferramentasDisponiveis.map((f) => `- ${f.nome}: ${f.descricao}`).join('\n')
     : '(nenhuma: deixe "acoesSugeridas" vazio)';
+  const telas = p.telasDoSistema?.length
+    ? p.telasDoSistema.map((t) => `- id "${t.id}": ${t.nome} — caminho: ${t.caminho} — faz: ${t.oQueFaz}`).join('\n')
+    : '(nenhuma informada)';
   const base = blocos.length
     ? blocos.map((d) => `### ${d.title}\nLink oficial: ${d.officialLink ?? '-'}\nConferido em: ${d.lastUpdated}\n\n${d.content}`).join('\n\n---\n\n')
     : '(nenhum bloco da base corresponde; pesquise em fonte oficial ou encaminhe ao contador)';
@@ -95,6 +98,10 @@ REGRAS DE VERDADE (acima de tudo):
 - "confianca": "alta" só quando a regra está na base conferida ou em fonte oficial lida agora e se aplica sem dúvida ao caso; "media" quando depende de algum dado não informado; "baixa" quando não conseguiu confirmar.
 - "acoesSugeridas": SOMENTE ferramentas da lista FERRAMENTAS DISPONÍVEIS, com o nome exatamente igual. Os "argumentos" vão como texto JSON (ex.: "{\\"competencia\\":\\"2026-10\\"}").
 - "resposta": direta, primeiro a conclusão ("O certo é ..., porque a lei diz ..."), depois o que fazer e os riscos. Sem markdown pesado; pode usar listas curtas.
+PERGUNTAS DE "COMO FAZER" (cancelar, emitir, retificar, parcelar, dar baixa, gerar guia...):
+- Responda com passo a passo prático e preencha "ondeFazer".
+- Se uma das TELAS DO SISTEMA abaixo faz isso, PREFIRA o sistema: comece com "No sistema: abra <caminho> e ..." e use "ondeFazer": {"tipo": "sistema", "tela": "<id exato da tela>", "passos": [...]}. Nunca invente tela nem botão que não esteja na lista.
+- Se o sistema não faz, use o portal oficial: "ondeFazer": {"tipo": "externo", "url": "<link oficial>", "passos": [...]}, e diga as regras e prazos oficiais (com fonte).
 QUANDO O CONTADOR QUESTIONAR OU QUISER FAZER DIFERENTE da sua orientação (olhe o histórico da conversa):
 1. Explique de novo, curto e firme: "Pela lei X, art. Y, o certo é assim" + link oficial.
 2. Aceite fazer do jeito dele e diga exatamente: "${FRASE_ACEITE}"
@@ -109,6 +116,9 @@ ${descreverEmpresa(p.contextoEmpresa)}
 
 FERRAMENTAS DISPONÍVEIS NO SISTEMA:
 ${ferramentas}
+
+TELAS DO SISTEMA (onde a pessoa faz as coisas):
+${telas}
 
 BLOCOS DA BASE DE CONHECIMENTO MURADE:
 ${base}`;
@@ -138,6 +148,17 @@ export const ESQUEMA_RESPOSTA = {
       required: ['orientacao', 'escolhaDoContador'],
     },
     recusado: { type: Type.BOOLEAN, description: 'true só para pedido claramente ilegal ou fraude.' },
+    ondeFazer: {
+      type: Type.OBJECT,
+      description: 'Para perguntas de "como fazer": tela do sistema (tipo "sistema", tela = id da lista) ou portal oficial (tipo "externo", url), com os passos.',
+      properties: {
+        tipo: { type: Type.STRING, enum: ['sistema', 'externo'] },
+        tela: { type: Type.STRING },
+        url: { type: Type.STRING },
+        passos: { type: Type.ARRAY, items: { type: Type.STRING } },
+      },
+      required: ['tipo', 'passos'],
+    },
     acoesSugeridas: {
       type: Type.ARRAY,
       items: {
@@ -191,7 +212,15 @@ export function criarGerador(ai: GoogleGenAI | null) {
         const texto = r.text ?? '';
         if (!texto.trim()) throw new Error('Resposta vazia do modelo.');
         const chunks = (r as any).candidates?.[0]?.groundingMetadata?.groundingChunks;
-        return { texto, fontesPesquisa: fontesDaPesquisa(chunks).fontes, modelo: t.modelo };
+        const u = (r as any).usageMetadata;
+        const uso = u
+          ? {
+              entrada: Number(u.promptTokenCount) || 0,
+              saida: (Number(u.candidatesTokenCount) || 0) + (Number(u.thoughtsTokenCount) || 0),
+              total: Number(u.totalTokenCount) || 0,
+            }
+          : undefined;
+        return { texto, fontesPesquisa: fontesDaPesquisa(chunks).fontes, modelo: t.modelo, uso };
       } catch (e) {
         ultimoErro = e;
       }
