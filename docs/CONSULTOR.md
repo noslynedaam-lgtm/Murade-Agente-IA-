@@ -30,7 +30,9 @@ Corpo (JSON):
     "pendencias": ["PGDAS-D 10/2026 não transmitido"], "outros": { "chave": "valor" }
   },
   "historico": [{ "papel": "usuario", "texto": "..." }, { "papel": "consultor", "texto": "..." }],   // usa só os 8 últimos
-  "ferramentasDisponiveis": [{ "nome": "gerar_das", "descricao": "Gera o DAS da competência" }]
+  "ferramentasDisponiveis": [{ "nome": "gerar_das", "descricao": "Gera o DAS da competência" }],
+  "usuario": "contadora.ana",                          // opcional: login/ID (não nome, não CPF) — vai para o registro de decisões
+  "escritorio": "esc-001"                              // opcional: ID do escritório — vai para o registro de decisões
 }
 ```
 
@@ -45,7 +47,13 @@ Resposta **200**:
   "encaminharContador": false,
   "motivoEncaminhamento": "...",          // presente quando encaminharContador = true
   "acoesSugeridas": [{ "ferramenta": "gerar_das", "descricao": "...", "argumentos": { "competencia": "2026-10" } }],
-  "avisoResponsabilidade": "Orientação do Consultor Murade com base na legislação citada. A decisão final é do contador responsável (CRC)."
+  "avisoResponsabilidade": "Orientação do Consultor Murade com base na legislação citada. A decisão final é do contador responsável (CRC).",
+  "divergencia": {                        // só quando o contador questiona ou quer fazer diferente
+    "orientacao": "Pagar a rescisão em até 10 dias (CLT, art. 477, § 6º).",
+    "fonte": { "titulo": "CLT (Câmara)", "url": "https://www2.camara.leg.br/..." },
+    "escolhaDoContador": "Pagar no 12º dia, junto com a folha."
+  },
+  "recusado": true                        // só quando o pedido é claramente ilegal/fraude
 }
 ```
 
@@ -59,6 +67,15 @@ Outros códigos: **400** corpo inválido (`{ erro }`), **401** token, **429** ma
 - **Aviso de responsabilidade** fixo em toda resposta.
 - **Dados pessoais:** CPF, PIS/NIT, e-mail e telefone são mascarados antes de ir ao modelo e antes de gravar. CNPJ de empresa é mantido.
 
+### Quando o contador discorda (regra do dono)
+
+1. O Consultor **explica de novo, curto e firme**: "pela lei X, art. Y, o certo é assim (link)".
+2. **Aceita fazer do jeito do contador**, sempre com a frase: *"Posso fazer do seu jeito. Fica registrado que a orientação foi outra e que a decisão é sua."* (o servidor acrescenta a frase se o modelo esquecer).
+3. Devolve `divergencia` e **registra a decisão** automaticamente (origem `consultor`): pergunta, orientação, fonte oficial, escolha do contador, data, `usuario` e `escritorio` — com CPF/e-mail/telefone mascarados.
+4. **Nunca recusa a decisão do contador**, exceto pedido **claramente ilegal ou fraude** (ex.: omitir receita, nota fria): aí `recusado: true`, explica a base legal, **sem** `divergencia`, **sem** ações e **sem** registrar decisão.
+
+A fonte da divergência também precisa ser oficial; se não for, o servidor usa a primeira fonte oficial da resposta (ou marca "Fonte oficial não confirmada", com `url` vazia, e a resposta fica com confiança baixa).
+
 ### Como o "cérebro" funciona
 
 1. Escolhe até 6 blocos da base (`src/data/knowledgeDocs.ts`) por relevância (área do sistema, tags, título, palavras) dentro de ~45 mil caracteres.
@@ -66,18 +83,38 @@ Outros códigos: **400** corpo inválido (`{ erro }`), **401** token, **429** ma
 3. Gemini com `responseSchema` (JSON), `temperature 0.1`, mesmos modelos do `/api/chat` (`gemini-3.1-flash-lite` → `gemini-3.8-flash` → `gemini-3.1-flash-lite` sem pesquisa, caso o modelo recuse pesquisa junto com JSON).
 4. Validação no servidor (regras acima).
 
+## `POST /api/consultor/registrar-decisao`
+
+Para o sistema chamador registrar a decisão final do contador (origem `sistema`), por exemplo depois que ele confirma "fazer do meu jeito" na tela.
+
+```json
+{
+  "escritorio": "esc-001", "usuario": "contadora.ana", "sistema": "dp",
+  "pergunta": "...", "orientacao": "Pagar em até 10 dias (CLT, art. 477, § 6º).",
+  "fonte": { "titulo": "CLT", "url": "https://www2.camara.leg.br/..." },   // opcional; se vier, tem de ser oficial
+  "escolhaDoContador": "Pagar no 12º dia.",
+  "data": "2026-11-20T10:00:00-03:00"                                         // opcional (padrão: agora)
+}
+```
+
+Resposta **201** `{ ok: true, decisao }`; **400** campo faltando, fonte não oficial ou data inválida. `usuario` deve ser login/ID (e-mail e CPF são mascarados). Decisões **não são apagadas** (servem de prova de que a orientação foi dada).
+
+## `GET /api/consultor/decisoes?escritorio=esc-001&limite=100`
+
+Lista as decisões (mais recentes primeiro, até 500). Sem `escritorio`, lista todas (uso do dono). Campos: `id, criadoEm, data, escritorio, usuario, sistema, pergunta, orientacao, fonte, escolhaDoContador, origem`. Tabela `consultor_decisoes` no Postgres (ou memória, até 500).
+
 ## `GET /api/consultor/nao-respondidas?limite=100`
 
 Lista (mais recentes primeiro, até 500) as consultas com confiança baixa, encaminhadas ao contador, com erro ou com o Gemini fora — para o dono completar a base. Campos: `id, criadoEm, sistema, pergunta, resposta, area, confianca, encaminharContador, motivoEncaminhamento, fontes, regime, modelo, situacao` (`respondida`|`gemini_indisponivel`|`erro`). Também informa `armazenamento` (`postgres` ou `memoria`).
 
 ## `GET /api/consultor/saude`
 
-Resultado do **robô conferidor**: 28 perguntas-teste com resposta-chave conferida em fonte oficial (lista em `src/server/consultor/conferidor.ts`, cada uma com a fonte). Roda 10 minutos após subir o serviço (se a última conferência tiver mais de 20 horas) e depois a cada 24 horas.
+Resultado do **robô conferidor**: 36 perguntas-teste com resposta-chave conferida em fonte oficial (lista em `src/server/consultor/conferidor.ts`, cada uma com a fonte). Roda 10 minutos após subir o serviço (se a última conferência tiver mais de 20 horas) e depois a cada 24 horas.
 
 ```json
 {
-  "armazenamento": "postgres", "perguntasTeste": 28, "situacao": "ok",
-  "ultimaConferencia": { "quando": "...", "situacao": "ok", "total": 28, "acertos": 28, "erros": 0, "naoTestados": 0,
+  "armazenamento": "postgres", "perguntasTeste": 36, "situacao": "ok",
+  "ultimaConferencia": { "quando": "...", "situacao": "ok", "total": 36, "acertos": 36, "erros": 0, "naoTestados": 0,
     "resultados": [{ "id": "rescisao-prazo", "pergunta": "...", "situacao": "acertou" }] }
 }
 ```
@@ -86,8 +123,8 @@ Resultado do **robô conferidor**: 28 perguntas-teste com resposta-chave conferi
 
 ## Testes
 
-`npm run test:consultor` (node:test com tsx): autenticação, validação do corpo, filtro de fontes, ações só de ferramentas recebidas, mascaramento/registro, Gemini fora e conferidor sem Gemini.
+`npm run test:consultor` (node:test com tsx): autenticação, validação do corpo, filtro de fontes, ações só de ferramentas recebidas, mascaramento/registro, Gemini fora, conferidor sem Gemini, divergência (aceite, recusa de pedido ilegal, registro e listagem de decisões por escritório) e escolha dos blocos da base.
 
 ## Base de conhecimento acrescentada (conferida em 20/11/2026)
 
-`src/data/knowledgeDocsConsultor.ts`: Simples (limites, PGDAS-D/DAS, MAED, DEFIS, Fator R, livros), MEI, Lucro Presumido (presunções e LC 224/2025), retenções (CSRF, INSS 11%, encargos patronais), DCTFWeb/EFD-Reinf/eSocial periódico, CLT (jornada, adicionais, férias, 13º, faltas, contratos, rescisão), contabilidade de ME/EPP (NBC TG 1001/1002, ITG 2000), ICMS-GO 19% e ISS de Goiânia (SGISS). Cada bloco lista as fontes lidas e o que **não** foi conferido.
+`src/data/knowledgeDocsConsultor.ts`: Simples (limites, PGDAS-D/DAS, MAED, DEFIS, Fator R, livros), MEI, Lucro Presumido (presunções e LC 224/2025), retenções (CSRF, INSS 11%, encargos patronais), DCTFWeb/EFD-Reinf/eSocial periódico, CLT (jornada, adicionais, férias, 13º, faltas, contratos, rescisão), contabilidade de ME/EPP (NBC TG 1001/1002, ITG 2000), ICMS-GO 19% e ISS de Goiânia (SGISS), LC 238/2026 (MEI), licença-paternidade (Lei 15.371/2026), prazos do eSocial não periódicos (S-2200/S-2299), PLR, seguro-desemprego, consignado (Lei 15.179/2025), ECD/ECF/DIRBI/certidões/parcelamento do Simples, calendário do ICMS-GO/ST/DIFAL e PIS/Cofins monofásico, abertura de empresa na JUCEG. Cada bloco lista as fontes lidas e o que **não** foi conferido.

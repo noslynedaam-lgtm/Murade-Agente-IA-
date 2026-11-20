@@ -65,8 +65,8 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
     categoryLabel: 'Fiscal / Tributário',
     filePath: 'fiscal/mei-limites-obrigacoes-conferido.md',
     title: 'MEI: limite de R$ 81 mil, excesso de 20%, empregado único, DAS-MEI e DASN-SIMEI (31 de maio)',
-    summary: 'Limite anual do MEI (R$ 81.000, proporcional R$ 6.750 por mês no início), desenquadramento por excesso até e acima de 20%, contratação de um único empregado, composição do DAS-MEI e DASN-SIMEI até o último dia de maio.',
-    tags: ['MEI', 'SIMEI', 'DASN-SIMEI', 'DAS-MEI', 'limite MEI', 'empregado do MEI', 'desenquadramento'],
+    summary: 'Limite anual do MEI (R$ 81.000 em 2026, R$ 110.000 em 2027 e R$ 140.000 a partir de 2028 pela LC 238/2026; proporcional R$ 6.750 por mês no início), desenquadramento por excesso até e acima de 20%, contratação de um único empregado, composição do DAS-MEI e DASN-SIMEI até o último dia de maio.',
+    tags: ['MEI', 'SIMEI', 'LC 238/2026', 'remissão MEI', 'DASN-SIMEI', 'DAS-MEI', 'limite MEI', 'empregado do MEI', 'desenquadramento'],
     lastUpdated: CONFERIDO,
     officialLink: 'https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/PerguntaoMEI.pdf',
     officialLinkLabel: 'Perguntas e Respostas MEI e Simei (CGSN)',
@@ -75,10 +75,18 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
 > **Fontes oficiais (conferidas em 20/11/2026):**
 > - [Perguntas e Respostas MEI e Simei (CGSN, atualizado em 29/04/2025)](https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/PerguntaoMEI.pdf): perguntas 1.2, 3.1, 3.6, 3.9, 6.3, 6.4 e 6.8
 > - [LC 123/2006, compilação no Senado](https://legis.senado.leg.br/norma/572878/publicacao/34621013): art. 18-A, § 1º
-> **ATENÇÃO:** a compilação da LC 123 traz a marca "vide LC 238/2026" no art. 18-A, §§ 1º e 2º, e no art. 18-C (limite e empregado do MEI). **O conteúdo da LC 238/2026 não foi lido: preciso confirmar se o limite ou as regras do empregado mudaram e desde quando.** Também não foi conferido o dia de vencimento do DAS-MEI.
+> - [LC 238/2026, de 21/10/2026 (Senado)](https://legis.senado.leg.br/norma/44276013/publicacao/44280206)
+> **Não conferido nesta revisão:** o dia de vencimento do DAS-MEI e o percentual da CPP do MEI com empregado.
+
+## 0. LC 238/2026: o que muda (texto lido no Senado)
+- **2026:** continua o limite de **R$ 81.000,00**.
+- **2027:** limite anual de **R$ 110.000,00** (art. 2º); no início de atividade, **R$ 9.166,67 por mês**.
+- **A partir de 1º/1/2028:** limite de **R$ 140.000,00** (novo § 1º do art. 18-A); no início de atividade, **R$ 11.666,67 por mês**. A ampliação depende de a renúncia constar nas leis orçamentárias de 2027 a 2029 (art. 3º).
+- **Empregados (art. 18-C, a partir de 1º/1/2027):** o **MEI rural** pode ter até **2 empregados** com 1 salário mínimo ou piso; em afastamento legal de empregado, pode contratar substituto pelo tempo do afastamento.
+- **Remissão (arts. 5º a 7º, a partir de 1º/1/2027):** perdão integral das dívidas do MEI com a União de fatos geradores **até 13/10/2026** (inclusive parceladas), com a condição de manter em dia as contribuições dos **6 meses seguintes**; não dá restituição; regulamentação pela PGFN.
 
 ## 1. Limite de receita (LC 123, art. 18-A, § 1º; Perguntão MEI 1.2 e 6.4)
-- **R$ 81.000,00** por ano-calendário (texto lido; ver alerta da LC 238/2026).
+- **R$ 81.000,00** por ano-calendário em 2026 (para 2027 e 2028, ver item 0).
 - **Ano de início:** R$ 6.750,00 multiplicados pelo número de meses entre o início e o fim do ano, contando fração de mês como mês inteiro.
 - **Excesso de até 20%:** desenquadramento a partir de **1º de janeiro do ano seguinte**; comunicar até o último dia útil do mês seguinte ao excesso; o excesso é pago em "DAS de excesso" gerado na DASN-SIMEI, no vencimento do DAS de janeiro do ano seguinte (Perguntas 6.4 e 6.8).
 - **Excesso acima de 20%:** o desenquadramento **retroage a 1º de janeiro** do ano do excesso (ou ao início da atividade).
@@ -228,7 +236,7 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
 > - [CLT (Decreto-Lei 5.452/1943), texto atualizado na Câmara, atualizado em 06/04/2026](https://www2.camara.leg.br/legin/fed/declei/1940-1949/decreto-lei-5452-1-maio-1943-415500-normaatualizada-pe.html)
 > - [Lei 4.749/1965 (13º salário), Senado](https://legis.senado.leg.br/norma/546602/publicacao/15810446)
 > - [eSocial, notícia sobre a 1ª parcela do 13º](https://www.gov.br/esocial/pt-br/noticias/prazo-para-pagamento-da-primeira-parcela-do-13o-salario-encerra-se-dia-30-de-novembro-fique-atento-programe-se-evite-deixar-para-a-ultima-hora)
-> **ATENÇÃO, mudanças de 2026:** (1) a **EC 141/2026** muda a jornada constitucional para 40 horas semanais com transição (ver bloco próprio desta base); os artigos da CLT abaixo ainda trazem a redação antiga. (2) Os arts. 391-A, 392, 392-A, 393 e 473, III, trazem a marca **"vide Lei 15.371, de 31/3/2026"** (licença-maternidade/paternidade e afins): **o conteúdo dessa lei não foi lido, preciso confirmar** antes de afirmar prazos de licença. O adicional de 100% em domingos e feriados não está na CLT lida.
+> **ATENÇÃO, mudanças de 2026:** (1) a **EC 141/2026** muda a jornada constitucional para 40 horas semanais com transição (ver bloco próprio desta base); os artigos da CLT abaixo ainda trazem a redação antiga. (2) A **Lei 15.371/2026** (licença-paternidade) **entra em vigor em 1º/1/2027**: até lá valem os 5 dias do art. 473, III; ver o bloco próprio desta base. O adicional de 100% em domingos e feriados não está na CLT lida.
 
 ## 1. Jornada e horas extras
 - **Art. 58:** até **8 horas diárias**. **Art. 58-A (tempo parcial):** até 30h semanais sem extras, ou até 26h com até 6 extras (pagas com 50%).
@@ -258,8 +266,8 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
 - Rescisão antes do pagamento: o adiantamento pode ser compensado com o 13º devido e, se não bastar, com outro crédito trabalhista (art. 3º).
 
 ## 5. Faltas justificadas (art. 473)
-- Falecimento de cônjuge, ascendente, descendente, irmão ou dependente: até **2 dias**; casamento: até **3 dias**; nascimento de filho, adoção ou guarda: **5 dias** (inciso III, ver alerta da Lei 15.371/2026); doação de sangue: 1 dia por ano; alistamento eleitoral: até 2 dias; vestibular; comparecimento a juízo; até 6 consultas da esposa/companheira na gravidez; 1 dia por ano para acompanhar filho de até 6 anos ao médico; até 3 dias por ano para exames preventivos de câncer.
-- **Licença-maternidade (art. 392):** 120 dias, sem prejuízo do emprego e do salário (ver alerta da Lei 15.371/2026). **Gestante no aviso prévio (art. 391-A):** a gravidez confirmada durante o aviso, trabalhado ou indenizado, garante a estabilidade provisória.
+- Falecimento de cônjuge, ascendente, descendente, irmão ou dependente: até **2 dias**; casamento: até **3 dias**; nascimento de filho, adoção ou guarda: **5 dias** em 2026 (inciso III; a partir de 2027, Lei 15.371/2026); doação de sangue: 1 dia por ano; alistamento eleitoral: até 2 dias; vestibular; comparecimento a juízo; até 6 consultas da esposa/companheira na gravidez; 1 dia por ano para acompanhar filho de até 6 anos ao médico; até 3 dias por ano para exames preventivos de câncer.
+- **Licença-maternidade (art. 392):** 120 dias, sem prejuízo do emprego e do salário. **Gestante no aviso prévio (art. 391-A):** a gravidez confirmada durante o aviso, trabalhado ou indenizado, garante a estabilidade provisória.
 
 ## 6. Contratos
 - **Experiência:** no máximo **90 dias** (art. 445, parágrafo único). Prazo determinado prorrogado **mais de uma vez** vira indeterminado (art. 451).
@@ -336,5 +344,210 @@ export const BLOCOS_CONSULTOR_2026_11: KnowledgeDoc[] = [
 - **Competência:** encerramento espontâneo até o **dia 5** de cada mês; a guia (**DUAM**) pode ser gerada a qualquer momento.
 - **Simples Nacional:** se o ISS **não for retido**, informar a alíquota na NFS-e é facultativo e o ISS é pago no **DAS**; se for retido, a alíquota é **obrigatória** na nota.
 - **Reforma Tributária:** a NFS-e de padrão nacional passa a ser exigida no cronograma do Ato Conjunto RFB/CGIBS 4/2026 (ver bloco "Novidades de 2026"); confirmar a adesão de Goiânia.`,
+  },
+  {
+    id: 'licenca-paternidade-lei-15371',
+    category: 'dp-trabalhista',
+    categoryLabel: 'DP / Trabalhista',
+    filePath: 'dp-trabalhista/licenca-paternidade-lei-15371.md',
+    title: 'Licença-paternidade (Lei 15.371/2026): 10 dias em 2027, 15 em 2028, salário-paternidade e estabilidade do pai',
+    summary: 'Lei 15.371/2026, em vigor em 1º/1/2027: licença-paternidade e salário-paternidade de 10 dias (2027), 15 dias (2028) e 20 dias (2029, condicionado à meta fiscal); empresa paga e é reembolsada; MEI e avulso recebem direto da Previdência; estabilidade do pai até 1 mês após a licença.',
+    tags: ['licença-paternidade', 'salário-paternidade', 'Lei 15.371/2026', 'estabilidade do pai', 'art. 473 CLT', 'Empresa Cidadã'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://legis.senado.leg.br/norma/42975603/publicacao/42998279',
+    officialLinkLabel: 'Lei 15.371/2026 (Senado)',
+    content: `# Licença-paternidade: Lei 15.371/2026
+
+> **Fonte oficial (conferida em 20/11/2026):** [Lei 15.371, de 31/03/2026 (Senado Federal)](https://legis.senado.leg.br/norma/42975603/publicacao/42998279)
+> **Não conferido:** regulamento do INSS sobre o reembolso à empresa e os eventos do eSocial para o salário-paternidade. **Preciso confirmar** antes de orientar a rotina de folha.
+
+## 1. Vigência
+- A lei **entra em vigor em 1º/1/2027** (art. 14). **Em 2026 continua valendo a licença de 5 dias** do art. 473, III, da CLT.
+
+## 2. Duração (art. 11)
+- **10 dias** a partir de 1º/1/2027; **15 dias** a partir de 1º/1/2028; **20 dias** a partir de 1º/1/2029, **se cumprida a meta fiscal** (senão, só a partir do segundo exercício seguinte ao cumprimento).
+- Filho com deficiência: período **acrescido de 1/3** (art. 12).
+- Empresa Cidadã (Lei 11.770/2008): prorrogação de **15 dias** além do período obrigatório (art. 10).
+- Internação da mãe ou do recém-nascido: licença prorrogada pelo tempo da internação (CLT, art. 392, § 8º).
+
+## 3. Quem paga (Lei 8.213, arts. 73-D e 73-E)
+- **Empregado:** a **empresa paga** o salário-paternidade (remuneração integral, proporcional aos dias) e é **reembolsada** pela Previdência; ME e EPP têm direito a reembolso em prazo razoável.
+- **Empregado de MEI e avulso:** pagamento **direto pela Previdência Social**; também doméstico, contribuinte individual, facultativo e segurado especial.
+- O salário-paternidade **integra o salário de contribuição** (como o salário-maternidade).
+
+## 4. Estabilidade e férias
+- **Proibida a dispensa sem justa causa** do pai entre o início da licença e **1 mês após o término** (art. 4º). Rescisão depois da comunicação e antes da licença, que impeça o gozo: período **indenizado em dobro**.
+- O empregado pode emendar **férias logo após a licença**, avisando com 30 dias de antecedência (CLT, art. 134, §§ 4º e 5º).
+- Ausência da mãe no registro ou adoção só pelo pai: a licença-paternidade **equivale à licença-maternidade** (CLT, art. 392-D).`,
+  },
+  {
+    id: 'esocial-prazos-nao-periodicos-mos',
+    category: 'dp-trabalhista',
+    categoryLabel: 'DP / Trabalhista',
+    filePath: 'dp-trabalhista/esocial-prazos-nao-periodicos-mos.md',
+    title: 'eSocial: prazos de admissão (S-2200/S-2190), alterações (S-2205/S-2206), afastamento (S-2230), reintegração e desligamento (S-2299 em 10 dias)',
+    summary: 'Prazos do Manual de Orientação do eSocial S-1.3 (consolidado até a NO S-1.3 12.2026): S-2190 e S-2200 até o dia anterior ao início do trabalho; S-2205 e S-2206 até o dia 15 do mês seguinte; S-2230 de até 15 dias até o dia 15; S-2298 até o dia 15; S-2299 em até 10 dias do desligamento, antecipando se não for dia útil.',
+    tags: ['eSocial', 'S-2200', 'S-2190', 'S-2205', 'S-2206', 'S-2230', 'S-2298', 'S-2299', 'prazo admissão eSocial', 'prazo desligamento eSocial'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-s-1-3-consolidada-ate-a-no-s-1-3-12-2026.pdf/@@download/file',
+    officialLinkLabel: 'Manual de Orientação do eSocial S-1.3',
+    content: `# eSocial: prazos dos eventos não periódicos (MOS S-1.3)
+
+> **Fonte oficial (conferida em 20/11/2026):** [Manual de Orientação do eSocial S-1.3, consolidado até a NO S-1.3 12.2026](https://www.gov.br/esocial/pt-br/documentacao-tecnica/manuais/mos-s-1-3-consolidada-ate-a-no-s-1-3-12-2026.pdf/@@download/file), item "Prazo de envio" de cada evento.
+> **Não conferido nesta revisão:** prazos de S-2210 (CAT), S-2220, S-2240 e do S-2230 acima de 15 dias. **Preciso confirmar.**
+
+| Evento | Prazo de envio (MOS) |
+| :--- | :--- |
+| **S-2190** Registro preliminar | até o final do **dia imediatamente anterior** ao início da prestação do serviço |
+| **S-2200** Admissão | empregados: até o **dia imediatamente anterior** ao início da prestação dos serviços |
+| **S-2205** Alteração cadastral | até o **dia 15 do mês seguinte** ao mês de referência |
+| **S-2206** Alteração contratual | até o **dia 15 do mês seguinte** ao da competência informada |
+| **S-2230** Afastamento de até 15 dias | até o **dia 15 do mês seguinte** ao da ocorrência |
+| **S-2298** Reintegração | até o **dia 15 do mês seguinte** ao da reintegração (dia não útil: primeiro dia útil seguinte) |
+| **S-2299** Desligamento | **até 10 dias** contados da data do desligamento (exclui-se o dia do desligamento); **se cair em dia não útil, antecipa para o dia útil anterior** |
+
+- **S-2299, exceções:** desligamento por transferência ou mudança de CPF, e estatutários: até o **dia 15 do mês seguinte** (dia não útil: posterga).
+- **S-1200 de quem saiu entre os dias 1 e 4 do mês:** a remuneração do mês anterior vai até o **décimo dia** seguinte ao desligamento (ver bloco DCTFWeb/Reinf/eSocial).`,
+  },
+  {
+    id: 'plr-seguro-desemprego-consignado',
+    category: 'dp-trabalhista',
+    categoryLabel: 'DP / Trabalhista',
+    filePath: 'dp-trabalhista/plr-seguro-desemprego-consignado.md',
+    title: 'PLR (Lei 10.101/2000), seguro-desemprego (requisitos) e consignado Crédito do Trabalhador (Lei 15.179/2025)',
+    summary: 'PLR negociada por comissão com sindicato ou acordo coletivo, até 2 pagamentos por ano com intervalo mínimo de um trimestre, sem encargos trabalhistas e com IR exclusivo na fonte por tabela própria; seguro-desemprego: 12 de 18 meses na 1ª vez, 9 de 12 na 2ª, 6 meses nas demais; consignado privado: empregador desconta e repassa, inclusive na rescisão, com multa de 30% por retenção sem repasse.',
+    tags: ['PLR', 'participação nos lucros', 'Lei 10.101', 'seguro-desemprego', 'consignado', 'Crédito do Trabalhador', 'Lei 15.179/2025', 'empréstimo consignado'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://www2.camara.leg.br/legin/fed/lei/2000/lei-10101-19-dezembro-2000-353953-normaatualizada-pl.html',
+    officialLinkLabel: 'Lei 10.101/2000 (texto atualizado, Câmara)',
+    content: `# PLR, seguro-desemprego e consignado do trabalhador
+
+> **Fontes oficiais (conferidas em 20/11/2026):**
+> - [Lei 10.101/2000, texto atualizado (Câmara)](https://www2.camara.leg.br/legin/fed/lei/2000/lei-10101-19-dezembro-2000-353953-normaatualizada-pl.html)
+> - [gov.br, "Solicitar o Seguro-Desemprego" (modificado em 25/09/2026)](https://www.gov.br/pt-br/servicos/solicitar-o-seguro-desemprego): Lei 7.998/1990 e Resolução Codefat 957/2022
+> - [Lei 15.179/2025 (Senado)](https://legis.senado.leg.br/norma/41160586/publicacao/41164746)
+> **Não conferido:** número de parcelas e prazo para pedir o seguro-desemprego; valores da tabela anual do IR sobre PLR; margem consignável do empregado CLT (a Lei 15.179 não fixa percentual geral) e o prazo de repasse do consignado. **Preciso confirmar.**
+
+## 1. PLR (Lei 10.101/2000)
+- **Negociação (art. 2º):** por **comissão paritária** com representante indicado pelo sindicato **ou** por **convenção/acordo coletivo**, com **regras claras e objetivas**.
+- **Natureza (art. 3º):** não substitui nem complementa a remuneração e **não é base de encargo trabalhista**. Também não integra o salário de contribuição do INSS (Lei 8.212, art. 28, § 9º, j).
+- **Periodicidade (art. 3º, § 2º):** **no máximo 2 pagamentos no mesmo ano civil**, com intervalo **mínimo de um trimestre civil**.
+- **IR (art. 3º, § 5º):** **exclusivo na fonte**, separado dos demais rendimentos, pela **tabela anual própria** do Anexo (faixas de 0% a 27,5%); não entra no ajuste anual.
+- **Lucro Real (art. 3º, § 1º):** dedutível como despesa operacional no exercício.
+
+## 2. Seguro-desemprego (gov.br)
+- Para quem foi **dispensado sem justa causa** e não tem renda própria suficiente nem benefício de prestação continuada (salvo auxílio-acidente, auxílio suplementar e abono de permanência).
+- **Tempo de trabalho:** **1ª solicitação: 12 meses nos últimos 18**; **2ª: 9 meses nos últimos 12**; **demais: cada um dos 6 meses** anteriores à dispensa.
+- O empregador entrega o **Requerimento do Seguro-Desemprego** na dispensa sem justa causa.
+- **Acordo do art. 484-A da CLT não dá direito** ao seguro-desemprego (CLT, art. 484-A; ver bloco CLT).
+
+## 3. Consignado "Crédito do Trabalhador" (Lei 15.179/2025, que altera a Lei 10.820/2003)
+- **Obrigações do empregador (art. 2º-A, § 2º, I):** fazer o desconto das prestações, **inclusive nas verbas rescisórias**; prestar informações fiéis da folha; disponibilizar o termo de rescisão. O recolhimento pode ser por documento de arrecadação gerado no sistema; eSocial é condição para formalizar e averbar.
+- **Rescisão ou suspensão:** a consignação é **redirecionada automaticamente** (art. 1º, § 9º).
+- **Reter e não repassar (art. 3º):** **multa administrativa de 30%** do valor retido e não repassado, Termo de Débito Salarial (título executivo), pagamento atualizado com juros, além de sanções civis e penais em caso de apropriação. O empregador responde pelas informações, pelo desconto e pelo recolhimento (art. 5º).`,
+  },
+  {
+    id: 'obrigacoes-federais-ecd-ecf-dirbi-certidoes-parcelamento',
+    category: 'fiscal',
+    categoryLabel: 'Fiscal / Tributário',
+    filePath: 'fiscal/obrigacoes-federais-ecd-ecf-dirbi-certidoes-parcelamento.md',
+    title: 'ECD (junho), ECF (julho), DIRBI (dia 20 do 2º mês), certidões federais (CND/CPEND) e parcelamento do Simples (60x, mínimo R$ 300)',
+    summary: 'Prazos da ECD (último dia útil de junho) e da ECF (último dia útil de julho) no gov.br; DIRBI até o dia 20 do segundo mês seguinte, com dispensa para Simples (exceto CPRB) e MEI; tipos de certidão federal (Portaria Conjunta RFB/PGFN 1.751/2014); parcelamento ordinário do Simples em até 60 parcelas de no mínimo R$ 300, rescisão com 3 parcelas em atraso e reparcelamento com entrada de 10% ou 20%.',
+    tags: ['ECD', 'ECF', 'DIRBI', 'certidão negativa', 'CND', 'CPEND', 'parcelamento Simples', 'PARCSN', 'reparcelamento', 'dívida ativa'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://www.gov.br/pt-br/servicos/parcelar-imposto-simples',
+    officialLinkLabel: 'gov.br: Parcelar débitos do Simples Nacional',
+    content: `# Obrigações federais do escritório: ECD, ECF, DIRBI, certidões e parcelamento
+
+> **Fontes oficiais (conferidas em 20/11/2026):**
+> - [gov.br, Entregar ECD (modificado em 29/07/2026)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-digital) e [Entregar ECF (29/07/2026)](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-fiscal)
+> - [Receita Federal, DIRBI (modificado em 28/07/2026)](https://www.gov.br/receitafederal/pt-br/assuntos/orientacao-tributaria/declaracoes-e-demonstrativos/dirbi-declaracao-de-incentivos-renuncias-beneficios-e-imunidades-de-natureza-tributaria)
+> - [gov.br, Emitir certidão de regularidade fiscal (15/12/2025)](https://www.gov.br/pt-br/servicos/emitir-certidao-de-regularidade-fiscal-perante-a-fazenda-nacional)
+> - [gov.br, Parcelar débitos do Simples Nacional (08/09/2026)](https://www.gov.br/pt-br/servicos/parcelar-imposto-simples)
+> **Não conferido:** a lista de obrigados e dispensados da ECD e da ECF (IN RFB 2.003/2021 e 2.004/2021; o site normas.receita não abriu), as multas, o **prazo de validade** da certidão federal, a correção das parcelas (Selic), PERT e transação da PGFN. **Preciso confirmar.**
+
+## 1. ECD e ECF
+- **ECD:** pessoas jurídicas (inclusive equiparadas, imunes e isentas) obrigadas a manter escrituração contábil pela legislação comercial transmitem até o **último dia útil de junho** do ano seguinte (IN RFB 2.003/2021).
+- **ECF:** pessoas jurídicas, inclusive equiparadas, de forma centralizada pela matriz, até o **último dia útil de julho** do ano seguinte (IN RFB 2.004/2021).
+- Quem é dispensado (por exemplo, optante do Simples) **não consta nas páginas lidas**: preciso confirmar na IN antes de afirmar.
+
+## 2. DIRBI (IN RFB 2.198/2024; Lei 14.973/2024)
+- Obrigadas: PJ de direito privado em geral (inclusive equiparadas, imunes e isentas) e consórcios, **que usufruam de incentivos, renúncias, benefícios ou imunidades** tributárias; entrega **centralizada pela matriz**.
+- **Dispensados:** **ME/EPP do Simples Nacional** (salvo as sujeitas à CPRB, no período em que estiverem no Simples), **MEI** e PJ em início de atividade (até o mês anterior à inscrição no CNPJ).
+- **Prazo:** até o **dia 20 do segundo mês seguinte** ao do período de apuração.
+
+## 3. Certidão de regularidade fiscal federal (CTN, arts. 205 e 206; Portaria Conjunta RFB/PGFN 1.751/2014)
+- Emitida em conjunto pela **Receita Federal e PGFN**.
+- **CND:** sem pendências; **CPEND (positiva com efeitos de negativa):** dívidas com exigibilidade suspensa ou garantidas; **CPD (positiva):** dívidas ou declarações não entregues.
+- **Falta de declaração também impede a CND.**
+
+## 4. Parcelamento ordinário do Simples Nacional (IN RFB 1.508/2014)
+- Débitos do Simples (PGDAS-D) **ainda não enviados à Dívida Ativa**: até **60 parcelas**, mínimo de **R$ 300,00**. Depois de enviados à Dívida Ativa, o pedido é na **PGFN**.
+- **Rescisão:** falta de pagamento de **3 parcelas, seguidas ou não**, ou da última; os débitos vão para a Dívida Ativa.
+- **Reparcelamento:** permitido, incluindo novos débitos; primeira parcela de **10%** do total, ou **20%** se já houve reparcelamento.`,
+  },
+  {
+    id: 'icms-go-st-difal-monofasico',
+    category: 'fiscal',
+    categoryLabel: 'Fiscal / Tributário',
+    filePath: 'fiscal/icms-go-st-difal-monofasico.md',
+    title: 'Goiás: calendário do ICMS (próprio, ST, DIFAL), DIFAL do Simples, e PIS/Cofins monofásico no Simples',
+    summary: 'Prazos do ICMS em Goiás (IN 155/94-GSF consolidada até a IN 1613/2025): próprio até o dia 20 após a apuração, ST com remetente do Simples até o dia 2 do 2º mês, DIFAL do Simples para comercialização até o dia 10 do 2º mês; manual da SEFAZ sobre DIFAL do Simples; PIS/Cofins monofásico (Lei 10.147/2000) e segregação no PGDAS-D (Perguntão 7.2 a 7.4), ICMS-ST no PGDAS-D (7.1, 7.6, 7.9).',
+    tags: ['ICMS Goiás', 'calendário ICMS', 'substituição tributária', 'ICMS-ST', 'DIFAL', 'diferencial de alíquotas', 'monofásico', 'PIS Cofins monofásico', 'Lei 10.147', 'segregação PGDAS-D', 'RCTE'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://goias.gov.br/economia/wp-content/uploads/sites/45/2026/01/Calendario_de_Recolhimento_de_ICMS_20250401-9.pdf',
+    officialLinkLabel: 'SEFAZ-GO: Calendário de recolhimento do ICMS',
+    content: `# ICMS em Goiás (prazos, ST, DIFAL) e PIS/Cofins monofásico
+
+> **Fontes oficiais (conferidas em 20/11/2026):**
+> - [Secretaria da Economia de Goiás, Calendário de Recolhimento do ICMS (IN 155/94-GSF consolidada até a IN 1613/2025-GSE)](https://goias.gov.br/economia/wp-content/uploads/sites/45/2026/01/Calendario_de_Recolhimento_de_ICMS_20250401-9.pdf)
+> - [Secretaria da Economia de Goiás, manual sobre DIFAL do Simples Nacional (vigência 01/03/2018)](https://goias.gov.br/economia/wp-content/uploads/sites/45/2018/02/manual-sobre-difal-simples-nacional-6cc.pdf)
+> - [Lei 10.147/2000, texto atualizado (Câmara)](https://www2.camara.leg.br/legin/fed/lei/2000/lei-10147-21-dezembro-2000-377630-normaatualizada-pl.html) e [Perguntão do Simples Nacional, perguntas 7.1 a 7.9](https://www8.receita.fazenda.gov.br/SimplesNacional/Arquivos/manual/PerguntaoSN.pdf)
+> **Não conferido:** lista de mercadorias sujeitas à ST em Goiás (Anexo VIII do RCTE), MVA, os coeficientes do DIFAL após a alíquota interna de 19% (o manual é de 2018 e usa coeficientes fixos), tabelas de CFOP, CST e CSOSN, e outras leis monofásicas (autopeças, bebidas, combustíveis). **Preciso confirmar.**
+
+## 1. Prazos do ICMS em Goiás (calendário oficial)
+- **ICMS próprio** (comércio, serviços, indústria): até o **20º dia após o fim do período de apuração**.
+- **ST, substituto inscrito no CCE-GO:** remetente do regime normal: até o **dia 9 do mês seguinte** à saída; remetente **do Simples**: até o **dia 2 do segundo mês** seguinte; cimento: dia 10 do mês seguinte; **substituto não inscrito: no momento da saída**.
+- **Complemento de ICMS-ST do optante do Simples:** até o **dia 10 do segundo mês** seguinte à saída.
+- **DIFAL — Simples, aquisição para comercialização, produção rural ou industrialização:** até o **dia 10 do segundo mês** seguinte ao período de apuração.
+- **DIFAL — remetente de outro Estado para consumidor final não contribuinte em GO:** inscrito no CCE-GO: até o **dia 15 do mês seguinte**; não inscrito: no momento da saída.
+- **Vencimento em dia não útil:** paga **sem acréscimos no primeiro dia útil seguinte** (RCTE, art. 75, § 3º).
+
+## 2. DIFAL do optante do Simples em Goiás (manual SEFAZ-GO de 2018; LC 123, art. 13, § 1º, XIII, h)
+- Devido na **aquisição interestadual para comercialização ou produção rural** (inclusive MEI); fora: mercadoria com ST/antecipação e matéria-prima para indústria optante (isenta, RCTE, Anexo IX, art. 6º, CXXIV).
+- Apurado por operação e somado no mês; pago em **DARE 5.1 distinto, código 4502**. O manual usa redução de base (RCTE, Anexo IX, art. 8º, VIII) com carga de 11%; **os coeficientes devem ser reconferidos** depois da alíquota interna de 19%.
+
+## 3. PIS/Cofins monofásico
+- **Lei 10.147/2000, art. 1º:** o **fabricante ou importador** de produtos farmacêuticos (2,1% PIS e 9,9% Cofins) e de perfumaria, toucador e higiene pessoal (2,2% e 10,3%) recolhe a contribuição concentrada; **art. 2º:** **alíquota zero** na revenda por quem não é industrial nem importador (**não vale para optante do Simples**, que trata pela segregação).
+- **No Simples (Perguntão 7.2 a 7.4; LC 123, art. 18, § 4º-A, I, e § 12; CGSN 140, art. 25, § 6º):** a receita de produto monofásico deve ser **segregada** no PGDAS-D para **não pagar PIS e Cofins no DAS**; quem comercializa usa o Anexo I, quem industrializa ou importa usa o Anexo II.
+- **ICMS-ST no PGDAS-D:** o substituído informa a receita com ST para não pagar o ICMS no DAS (7.1); o ICMS-ST devido pelo optante substituto é recolhido **fora do DAS** (7.6; CGSN 140, arts. 25, § 8º, II, e 28) e **não integra a receita bruta** (7.9; art. 28, § 4º).`,
+  },
+  {
+    id: 'abertura-empresa-goias-juceg',
+    category: 'contabil',
+    categoryLabel: 'Contabilidade',
+    filePath: 'contabil/abertura-empresa-goias-juceg.md',
+    title: 'Abertura de empresa em Goiás (JUCEG/REDESIM): viabilidade, DBE, FCN, taxas, contrato, assinatura digital e órgãos municipais',
+    summary: 'Passo a passo oficial da JUCEG para abrir LTDA pelo Portal do Empreendedor Goiano e gov.br: consulta de viabilidade (protocolo GOP), DBE da Receita, FCN, taxas, contrato eletrônico, anexos, assinatura digital, protocolo e trâmites posteriores na REDESIM.',
+    tags: ['abertura de empresa', 'JUCEG', 'REDESIM', 'viabilidade', 'DBE', 'FCN', 'contrato social', 'Portal do Empreendedor Goiano', 'baixa de empresa'],
+    lastUpdated: CONFERIDO,
+    officialLink: 'https://goias.gov.br/juceg/passo-a-passo-sociedade-empresaria-limitada-ltda-abertura/',
+    officialLinkLabel: 'JUCEG: passo a passo LTDA (abertura)',
+    content: `# Abertura de empresa em Goiás (JUCEG / REDESIM)
+
+> **Fonte oficial (conferida em 20/11/2026):** [JUCEG, passo a passo LTDA, abertura](https://goias.gov.br/juceg/passo-a-passo-sociedade-empresaria-limitada-ltda-abertura/) — **a página é de 12/08/2019**; a JUCEG publicou manuais de 2026 (abertura LTDA e EI, baixa de EI) que **não foram lidos**. Confira o manual mais recente antes de orientar.
+> **Não conferido:** valores das taxas, prazos de análise, inscrição estadual e municipal, alteração contratual e baixa. **Preciso confirmar.**
+
+## Passos (processo digital)
+1. **Viabilidade:** Portal do Empreendedor Goiano → Matriz → Abertura (redireciona ao gov.br); confere atividade no endereço e nome empresarial; gera o **protocolo GOP**; órgão de registro: Junta Comercial. Precisa de conta gov.br.
+2. **DBE:** após a aprovação pela JUCEG e Prefeitura, preencher e transmitir o **DBE** da Receita Federal com o GOP.
+3. **Acompanhar** pelo GOP no Portal do Empreendedor Goiano.
+4. **FCN:** preencher e transmitir a Ficha de Cadastro Nacional.
+5. **Taxas:** gerar e pagar.
+6. **Contrato social:** Contrato Eletrônico → Contrato Próprio.
+7. **Anexar** contrato e documentos (DARE, DARF, DBE etc.) e só então **assinar digitalmente**; o bloco "Documentos" recebe chancela, o bloco "Demais Documentos" não.
+8. **Protocolar** após a assinatura de todos os sócios.
+9. **Deferimento:** seguir nos demais órgãos da REDESIM (Prefeitura, Bombeiros, Vigilância Sanitária etc.).
+- O sistema (em 2019) não atendia eletronicamente o caso de várias procurações.`,
   },
 ];

@@ -43,6 +43,14 @@ export const PERGUNTAS_TESTE: PerguntaTeste[] = [
   { id: 'esocial-folha', sistema: 'dp', pergunta: 'Até que dia tenho que enviar a folha (S-1200) e o fechamento (S-1299) no eSocial?', chaves: [['15', 'quinze']], fonte: 'MOS S-1.3' },
   { id: 'dctfweb-prazo', sistema: 'dp', pergunta: 'Qual o prazo de entrega da DCTFWeb mensal hoje?', chaves: [['ultimo dia util']], fonte: 'gov.br DCTFWeb; IN RFB 2.237/2024' },
   { id: 'icms-go', sistema: 'fiscal', pergunta: 'Qual a alíquota interna geral do ICMS em Goiás?', chaves: [['19%', '19 %', 'dezenove por cento']], fonte: 'Lei GO 22.460/2023; CTE-GO art. 27, I' },
+  { id: 'esocial-s2299', sistema: 'dp', pergunta: 'Qual o prazo para enviar o desligamento (S-2299) no eSocial?', chaves: [['10 dias', 'dez dias']], fonte: 'MOS S-1.3, S-2299' },
+  { id: 'esocial-s2200', sistema: 'dp', pergunta: 'Até quando tenho que enviar a admissão do empregado (S-2200) no eSocial?', chaves: [['dia anterior', 'dia imediatamente anterior', 'vespera']], fonte: 'MOS S-1.3, S-2200' },
+  { id: 'parcsn', sistema: 'fiscal', pergunta: 'Em quantas parcelas posso parcelar débitos do Simples Nacional no parcelamento ordinário da Receita e qual a parcela mínima?', chaves: [['60', 'sessenta'], ['300']], fonte: 'gov.br Parcelar débitos do Simples Nacional; IN RFB 1.508/2014' },
+  { id: 'dirbi-prazo', sistema: 'fiscal', pergunta: 'Qual o prazo de entrega da DIRBI?', chaves: [['20', 'vinte'], ['segundo mes', '2º mes', '2o mes']], fonte: 'Receita Federal, DIRBI' },
+  { id: 'ecf-prazo', sistema: 'contabil', pergunta: 'Qual o prazo de entrega da ECF?', chaves: [['julho']], fonte: 'gov.br Entregar ECF; IN RFB 2.004/2021' },
+  { id: 'ecd-prazo', sistema: 'contabil', pergunta: 'Qual o prazo de entrega da ECD?', chaves: [['junho']], fonte: 'gov.br Entregar ECD; IN RFB 2.003/2021' },
+  { id: 'plr-pagamentos', sistema: 'dp', pergunta: 'Quantas vezes por ano posso pagar PLR aos empregados?', chaves: [['2', 'duas', 'dois']], fonte: 'Lei 10.101/2000, art. 3º, § 2º' },
+  { id: 'mei-limite-2027', sistema: 'fiscal', pergunta: 'Qual será o limite de faturamento do MEI em 2027?', chaves: [['110']], fonte: 'LC 238/2026, art. 2º' },
   { id: 'cpp-patronal', sistema: 'dp', pergunta: 'Qual a contribuição patronal do INSS sobre a folha de empregados de empresa do Lucro Presumido (sem contar RAT e terceiros)?', chaves: [['20%', '20 %', 'vinte por cento']], fonte: 'Lei 8.212 art. 22, I' },
 ];
 

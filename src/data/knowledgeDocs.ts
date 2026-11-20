@@ -158,7 +158,7 @@ Em seguida, aplicam-se os percentuais de repartição dos tributos (IRPJ, CSLL, 
 > **Não conferido nesta revisão:** texto integral dos arts. 18-A, 29 e 30 da LC 123 (o Planalto trunca a página); os itens abaixo vêm dos manuais da Receita. Confirme no Portal do Simples Nacional antes de aplicar.
 
 ## 1. MEI: limite e requisitos
-- Limite de receita bruta: **R$ 81.000,00 por ano-calendário** (Perguntas e Respostas MEI, item 1.2). No ano de início de atividade é proporcional: **R$ 6.750,00 por mês**, contando fração de mês como mês inteiro. Não existe limite maior para exportação.
+- Limite de receita bruta: **R$ 81.000,00 por ano-calendário** (Perguntas e Respostas MEI, item 1.2). **Atenção (LC 238/2026, conferida em 20/11/2026):** o limite passa a **R$ 110.000,00 em 2027** e **R$ 140.000,00 a partir de 1º/1/2028**; ver o bloco "MEI: limite..." conferido. No ano de início de atividade é proporcional: **R$ 6.750,00 por mês**, contando fração de mês como mês inteiro. Não existe limite maior para exportação.
 - Requisitos: ser empresário individual (sociedade não pode ser MEI); um único estabelecimento; não ser titular, sócio ou administrador de outra empresa; não ser startup; no máximo **um empregado**, que receba até um salário mínimo ou o piso da categoria; não prestar serviço por cessão ou locação de mão de obra; exercer só ocupações do Anexo XI da Resolução CGSN nº 140/2018.
 
 ## 2. DAS-MEI em 2026 (salário mínimo R$ 1.621,00, Decreto nº 12.797/2025)
@@ -1324,7 +1324,7 @@ $$\\text{Alíquota Efetiva} = \\frac{(\\text{RBT12} \\times \\text{Alíquota Nom
 ---
 
 ## 4. SPED Contábil — ECD e ECF (Instruções Normativas RFB nº 2.003 e 2.004)
-- **ECD (Escrituração Contábil Digital):** Transmissão anual até o **último dia útil de maio** do ano subsequente. Obrigatória para empresas do Lucro Real e empresas do Lucro Presumido que distribuam lucros superiores à presunção do IRPJ.
+- **ECD (Escrituração Contábil Digital):** Transmissão anual até o **último dia útil de junho** do ano subsequente (corrigido em 20/11/2026 conforme o [serviço oficial do gov.br](https://www.gov.br/pt-br/servicos/entregar-escrituracao-contabil-digital), IN RFB 2.003/2021; versões anteriores diziam maio). Obrigatória para empresas do Lucro Real e empresas do Lucro Presumido que distribuam lucros superiores à presunção do IRPJ.
 - **ECF (Escrituração Contábil Fiscal):** Transmissão anual até o **último dia útil de julho** do ano seguinte. Vincula o resultado contábil da ECD com a apuração fiscal do IRPJ (e-LALUR) e da CSLL (e-LACS).`
   },
   {

@@ -372,3 +372,17 @@ test('registrar-decisao: valida, exige fonte oficial, mascara e lista por escrit
     await s.fechar();
   }
 });
+
+test('base: blocos novos são escolhidos para as perguntas da área', () => {
+  const casos: [string, string, string][] = [
+    ['Qual o prazo do S-2299 de desligamento no eSocial?', 'dp', 'esocial-prazos-nao-periodicos-mos'],
+    ['Como funciona a licença-paternidade da Lei 15.371?', 'dp', 'licenca-paternidade-lei-15371'],
+    ['Posso parcelar o Simples em quantas parcelas?', 'fiscal', 'obrigacoes-federais-ecd-ecf-dirbi-certidoes-parcelamento'],
+    ['Prazo do DIFAL do Simples em Goiás?', 'fiscal', 'icms-go-st-difal-monofasico'],
+    ['Como pagar PLR sem encargos?', 'dp', 'plr-seguro-desemprego-consignado'],
+  ];
+  for (const [pergunta, sistema, id] of casos) {
+    const ids = escolherBlocos(pergunta, sistema).map((b) => b.id);
+    assert.ok(ids.includes(id), `${pergunta} → esperava ${id}, veio ${ids.join(', ')}`);
+  }
+});
