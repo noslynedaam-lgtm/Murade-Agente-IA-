@@ -1,3 +1,5 @@
+import { BLOCOS_CONSULTOR_2026_11 } from './knowledgeDocsConsultor';
+
 export interface OfficialSource {
   name: string;
   url: string;
@@ -1702,5 +1704,7 @@ Datas de **início da obrigatoriedade** (as datas são "previsões para planejam
 - **01/01/2027:** documentos fiscais do **Simples Nacional** (NF-e, NFC-e, CT-e, NFS-e e outros), Duimp, NF-e de Importação, DeRE (3ª fase) e NF-e de Combustíveis (tributação monofásica).
 - O ato prevê um **programa de orientação** e prazo adicional de regularização para contribuintes que demonstrem cooperação; a página afirma que **não é uma prorrogação geral**.
 - **Preciso confirmar:** quem deve destacar CBS e IBS nas notas, as penalidades e a aplicação ao seu cliente, no Ato Conjunto e nas notas técnicas.`
-  }
+  },
+  // Blocos conferidos para o Consultor Murade (20/11/2026).
+  ...BLOCOS_CONSULTOR_2026_11,
 ];
