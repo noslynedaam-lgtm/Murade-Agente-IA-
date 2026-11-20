@@ -1,13 +1,17 @@
 // Validação do corpo da pergunta e da resposta do modelo.
-import { filtrarFontesOficiais } from './fontes';
+import { filtrarFontesOficiais, urlOficial } from './fontes';
+import { mascararTexto } from './mascarar';
 import {
   AREAS,
   AVISO_RESPONSABILIDADE,
   CONFIANCAS,
   REGIMES,
   SISTEMAS,
+  FRASE_ACEITE,
   type AcaoSugerida,
   type Area,
+  type Decisao,
+  type Divergencia,
   type Confianca,
   type ContextoEmpresa,
   type Ferramenta,
@@ -89,9 +93,12 @@ export function validarPergunta(corpo: unknown): Ok<PerguntaConsultor> | Erro {
       .map((f) => ({ nome: String(f.nome).trim().slice(0, 80), descricao: String(f.descricao ?? '').slice(0, 400) }));
   }
 
+  const usuario = texto(c.usuario, 80);
+  const escritorio = texto(c.escritorio, 80);
+
   return {
     ok: true,
-    valor: { pergunta: c.pergunta.trim(), sistema: c.sistema as PerguntaConsultor['sistema'], contextoEmpresa, historico, ferramentasDisponiveis },
+    valor: { pergunta: c.pergunta.trim(), sistema: c.sistema as PerguntaConsultor['sistema'], contextoEmpresa, historico, ferramentasDisponiveis, usuario, escritorio },
   };
 }
 
@@ -178,8 +185,29 @@ export function montarResposta(
     }
   }
 
+  const recusado = modelo.recusado === true;
+  let textoResposta = modelo.resposta.trim().slice(0, 12000);
+  let divergencia: Divergencia | undefined;
+  const d = modelo.divergencia as Record<string, unknown> | undefined;
+  if (!recusado && d && typeof d === 'object' && typeof d.orientacao === 'string' && d.orientacao.trim() && typeof d.escolhaDoContador === 'string' && d.escolhaDoContador.trim()) {
+    // A fonte da divergência também precisa ser oficial; senão usa a primeira fonte oficial da resposta.
+    const fd = (d.fonte ?? { titulo: d.fonteTitulo, url: d.fonteUrl }) as Record<string, unknown>;
+    const fonteDiv = filtrarFontesOficiais([fd])[0] ?? fontes[0];
+    divergencia = {
+      orientacao: d.orientacao.trim().slice(0, 2000),
+      fonte: fonteDiv ?? { titulo: 'Fonte oficial não confirmada: conferir com o contador responsável', url: '' },
+      escolhaDoContador: d.escolhaDoContador.trim().slice(0, 2000),
+    };
+    // Regra do dono: aceita do jeito do contador, deixando claro que a decisão é dele.
+    if (!textoResposta.includes(FRASE_ACEITE)) textoResposta = `${textoResposta}\n\n${FRASE_ACEITE}`;
+  }
+  if (recusado) {
+    encaminharContador = true;
+    motivo = motivo ?? 'Pedido recusado: contraria a lei (ilegal ou fraude).';
+  }
+
   const resposta: RespostaConsultor = {
-    resposta: modelo.resposta.trim().slice(0, 12000),
+    resposta: textoResposta,
     area,
     fontes,
     confianca,
@@ -188,7 +216,56 @@ export function montarResposta(
     avisoResponsabilidade: aviso,
   };
   if (encaminharContador) resposta.motivoEncaminhamento = motivo ?? 'Recomendo a conferência do contador responsável.';
+  if (divergencia) resposta.divergencia = divergencia;
+  if (recusado) {
+    resposta.recusado = true;
+    resposta.acoesSugeridas = []; // nada a executar num pedido recusado
+  }
   return resposta;
+}
+
+/** Corpo de POST /api/consultor/registrar-decisao. Dados pessoais são mascarados. */
+export function validarDecisao(corpo: unknown): Ok<Decisao> | Erro {
+  if (!corpo || typeof corpo !== 'object' || Array.isArray(corpo)) return { ok: false, erro: 'Corpo da requisição deve ser um objeto JSON.' };
+  const c = corpo as Record<string, unknown>;
+  const escritorio = texto(c.escritorio, 80);
+  const usuario = texto(c.usuario, 80);
+  const orientacao = texto(c.orientacao, 4000);
+  const escolhaDoContador = texto(c.escolhaDoContador, 4000);
+  const pergunta = texto(c.pergunta, 30000);
+  if (!escritorio) return { ok: false, erro: 'Campo "escritorio" é obrigatório.' };
+  if (!usuario) return { ok: false, erro: 'Campo "usuario" é obrigatório (login ou ID, não nome nem CPF).' };
+  if (!pergunta) return { ok: false, erro: 'Campo "pergunta" é obrigatório.' };
+  if (!orientacao) return { ok: false, erro: 'Campo "orientacao" é obrigatório.' };
+  if (!escolhaDoContador) return { ok: false, erro: 'Campo "escolhaDoContador" é obrigatório.' };
+  if (typeof c.sistema !== 'string' || !(SISTEMAS as readonly string[]).includes(c.sistema)) return { ok: false, erro: `Campo "sistema" deve ser um destes: ${SISTEMAS.join(', ')}.` };
+  let fonte: Fonte | null = null;
+  if (c.fonte !== undefined && c.fonte !== null) {
+    const f = c.fonte as Record<string, unknown>;
+    if (typeof f !== 'object' || typeof f.url !== 'string') return { ok: false, erro: 'Campo "fonte" deve ser { titulo, url }.' };
+    if (f.url && !urlOficial(f.url)) return { ok: false, erro: 'A fonte da orientação deve ser de site oficial.' };
+    fonte = f.url ? { titulo: String(f.titulo ?? '').slice(0, 200), url: f.url.slice(0, 600) } : null;
+  }
+  let data = new Date().toISOString();
+  if (typeof c.data === 'string' && c.data.trim()) {
+    const t = Date.parse(c.data);
+    if (Number.isNaN(t)) return { ok: false, erro: 'Campo "data" inválido (use ISO 8601).' };
+    data = new Date(t).toISOString();
+  }
+  return {
+    ok: true,
+    valor: {
+      data,
+      escritorio: mascararTexto(escritorio),
+      usuario: mascararTexto(usuario),
+      sistema: c.sistema as Decisao['sistema'],
+      pergunta: mascararTexto(pergunta),
+      orientacao: mascararTexto(orientacao),
+      fonte,
+      escolhaDoContador: mascararTexto(escolhaDoContador),
+      origem: 'sistema',
+    },
+  };
 }
 
 function areaPadrao(sistema: PerguntaConsultor['sistema']): Area {

@@ -9,7 +9,7 @@ import { mascararObjeto, mascararTexto } from './mascarar';
 import { criarArmazemMemoria } from './registro';
 import { registrarRotasConsultor, tokenConfere } from './rotas';
 import { criarConsultor } from './servico';
-import { AVISO_RESPONSABILIDADE, GeminiIndisponivel, type PerguntaConsultor, type RespostaBruta } from './tipos';
+import { AVISO_RESPONSABILIDADE, FRASE_ACEITE, GeminiIndisponivel, type PerguntaConsultor, type RespostaBruta } from './tipos';
 import { montarResposta, validarPergunta } from './validar';
 
 const TOKEN = 'segredo-de-teste-123';
@@ -283,4 +283,92 @@ test('cérebro: escolhe blocos conferidos e põe contexto, ferramentas e aviso d
   assert.match(instr, /Anexo do Simples: III/);
   assert.match(instr, /gerar_das/);
   assert.match(instr, /planalto\.gov\.br/);
+});
+
+// ── Divergência: o contador decide diferente ────────────────────
+const RESPOSTA_DIVERGENCIA = respostaModelo({
+  resposta: 'Pela CLT, art. 477, § 6º, o certo é pagar a rescisão em até 10 dias (link oficial).',
+  area: 'dp',
+  fontes: [{ titulo: 'CLT (Câmara)', url: 'https://www2.camara.leg.br/legin/fed/declei/1940-1949/decreto-lei-5452-1-maio-1943-415500-normaatualizada-pe.html' }],
+  divergencia: {
+    orientacao: 'Pagar as verbas rescisórias em até 10 dias do término do contrato (CLT, art. 477, § 6º).',
+    fonteTitulo: 'Blog',
+    fonteUrl: 'https://blog.com/rescisao',
+    escolhaDoContador: 'Pagar no 12º dia, junto com a folha.',
+  },
+});
+
+test('divergência: reexplica, aceita com a frase do dono, fonte oficial e registra a decisão sem dados pessoais', async () => {
+  const s = await subir(geradorFixo(RESPOSTA_DIVERGENCIA));
+  try {
+    const r = await s.chamar('/api/consultor/perguntar', {
+      corpo: {
+        pergunta: 'Não concordo, vou pagar a rescisão do funcionário CPF 123.456.789-09 junto com a folha.',
+        sistema: 'dp',
+        usuario: 'contadora.ana',
+        escritorio: 'esc-001',
+        historico: [{ papel: 'consultor', texto: 'O prazo é de 10 dias.' }],
+      },
+    });
+    assert.equal(r.status, 200);
+    const j = await r.json();
+    assert.ok(j.resposta.includes(FRASE_ACEITE), 'frase de aceite garantida pelo servidor');
+    assert.equal(j.divergencia.escolhaDoContador, 'Pagar no 12º dia, junto com a folha.');
+    assert.match(j.divergencia.fonte.url, /camara\.leg\.br/, 'fonte não oficial da divergência é trocada pela oficial');
+    assert.equal(j.recusado, undefined);
+
+    const d = await (await s.chamar('/api/consultor/decisoes?escritorio=esc-001')).json();
+    assert.equal(d.total, 1);
+    assert.equal(d.itens[0].usuario, 'contadora.ana');
+    assert.equal(d.itens[0].origem, 'consultor');
+    assert.ok(!d.itens[0].pergunta.includes('123.456.789-09'));
+    const outro = await (await s.chamar('/api/consultor/decisoes?escritorio=esc-999')).json();
+    assert.equal(outro.total, 0, 'decisões separadas por escritório');
+  } finally {
+    await s.fechar();
+  }
+});
+
+test('divergência: pedido claramente ilegal é recusado, sem aceite, sem ação e sem decisão registrada', async () => {
+  const s = await subir(geradorFixo(respostaModelo({ recusado: true, resposta: 'Não posso: omitir receita é sonegação (Lei 8.137/1990).', divergencia: { orientacao: 'x', escolhaDoContador: 'omitir receita' } })));
+  try {
+    const j = await (await s.chamar('/api/consultor/perguntar', {
+      corpo: { pergunta: 'Tira essas notas do PGDAS para pagar menos.', sistema: 'fiscal', escritorio: 'esc-001', ferramentasDisponiveis: [{ nome: 'gerar_das', descricao: 'x' }] },
+    })).json();
+    assert.equal(j.recusado, true);
+    assert.equal(j.divergencia, undefined);
+    assert.ok(!j.resposta.includes(FRASE_ACEITE));
+    assert.deepEqual(j.acoesSugeridas, []);
+    assert.equal(j.encaminharContador, true);
+    assert.equal((await (await s.chamar('/api/consultor/decisoes')).json()).total, 0);
+  } finally {
+    await s.fechar();
+  }
+});
+
+test('registrar-decisao: valida, exige fonte oficial, mascara e lista por escritório; exige token', async () => {
+  const s = await subir(geradorFixo());
+  try {
+    const base = {
+      escritorio: 'esc-002', usuario: 'joao@escritorio.com', sistema: 'fiscal',
+      pergunta: 'DAS do cliente 12345678909', orientacao: 'Pagar até o dia 20.',
+      fonte: { titulo: 'gov.br', url: 'https://www.gov.br/pt-br/servicos/declarar-apuracoes-mensais-do-simples-nacional' },
+      escolhaDoContador: 'Pagar dia 25 com juros.', data: '2026-11-20T10:00:00-03:00',
+    };
+    assert.equal((await s.chamar('/api/consultor/registrar-decisao', { corpo: base, token: 'errado' })).status, 401);
+    assert.equal((await s.chamar('/api/consultor/registrar-decisao', { corpo: { ...base, escolhaDoContador: '' } })).status, 400);
+    assert.equal((await s.chamar('/api/consultor/registrar-decisao', { corpo: { ...base, fonte: { titulo: 'blog', url: 'https://blog.com' } } })).status, 400);
+    assert.equal((await s.chamar('/api/consultor/registrar-decisao', { corpo: { ...base, data: 'ontem' } })).status, 400);
+    const r = await s.chamar('/api/consultor/registrar-decisao', { corpo: base });
+    assert.equal(r.status, 201);
+    const d = await (await s.chamar('/api/consultor/decisoes?escritorio=esc-002')).json();
+    assert.equal(d.total, 1);
+    assert.equal(d.itens[0].usuario, '[e-mail]');
+    assert.ok(!d.itens[0].pergunta.includes('12345678909'));
+    assert.equal(d.itens[0].data, '2026-11-20T13:00:00.000Z');
+    assert.equal(d.itens[0].origem, 'sistema');
+    assert.equal((await s.chamar('/api/consultor/decisoes', { token: null })).status, 401);
+  } finally {
+    await s.fechar();
+  }
 });

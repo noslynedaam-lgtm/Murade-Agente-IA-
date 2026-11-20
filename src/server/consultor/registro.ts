@@ -3,7 +3,7 @@
 // Sem DATABASE_URL, guarda em memória com limite (some quando o serviço reinicia).
 import pg from 'pg';
 import { mascararObjeto, mascararTexto } from './mascarar';
-import type { Area, Confianca, Fonte, Sistema } from './tipos';
+import type { Area, Confianca, Decisao, Fonte, Sistema } from './tipos';
 
 export type RegistroConsulta = {
   id?: string;
@@ -38,6 +38,20 @@ export interface Armazem {
   naoRespondidas(limite: number): Promise<RegistroConsulta[]>;
   salvarSaude(s: SaudeConsultor): Promise<void>;
   ultimaSaude(): Promise<SaudeConsultor | null>;
+  salvarDecisao(d: Decisao): Promise<Decisao>;
+  decisoes(escritorio: string | undefined, limite: number): Promise<Decisao[]>;
+}
+
+/** Remove dados pessoais da decisão antes de gravar. */
+export function limparDecisao(d: Decisao): Decisao {
+  return {
+    ...d,
+    escritorio: mascararTexto(d.escritorio).slice(0, 80),
+    usuario: mascararTexto(d.usuario).slice(0, 80),
+    pergunta: mascararTexto(d.pergunta).slice(0, 30000),
+    orientacao: mascararTexto(d.orientacao).slice(0, 4000),
+    escolhaDoContador: mascararTexto(d.escolhaDoContador).slice(0, 4000),
+  };
 }
 
 /** Remove dados pessoais antes de gravar. */
@@ -57,6 +71,7 @@ export function criarArmazemMemoria(limite = 500): Armazem {
   const registros: RegistroConsulta[] = [];
   let saude: SaudeConsultor | null = null;
   let seq = 0;
+  const decisoes: Decisao[] = [];
   return {
     tipo: 'memoria',
     async salvar(r) {
@@ -71,6 +86,15 @@ export function criarArmazemMemoria(limite = 500): Armazem {
     },
     async ultimaSaude() {
       return saude;
+    },
+    async salvarDecisao(d) {
+      const x = { ...limparDecisao(d), id: String(++seq), criadoEm: new Date().toISOString() };
+      decisoes.push(x);
+      if (decisoes.length > limite) decisoes.splice(0, decisoes.length - limite);
+      return x;
+    },
+    async decisoes(escritorio, n) {
+      return decisoes.filter((d) => !escritorio || d.escritorio === escritorio).slice(-n).reverse();
     },
   };
 }
@@ -95,6 +119,19 @@ export function criarArmazemPostgres(url: string): Armazem {
         modelo text,
         situacao text NOT NULL)`);
       await pool.query('CREATE INDEX IF NOT EXISTS consultor_registros_pendentes ON consultor_registros(criado_em DESC) WHERE confianca = \'baixa\' OR encaminhar OR situacao <> \'respondida\'');
+      await pool.query(`CREATE TABLE IF NOT EXISTS consultor_decisoes(
+        id bigserial PRIMARY KEY,
+        criado_em timestamptz NOT NULL DEFAULT now(),
+        data timestamptz NOT NULL,
+        escritorio text NOT NULL,
+        usuario text NOT NULL,
+        sistema text NOT NULL,
+        pergunta text NOT NULL,
+        orientacao text NOT NULL,
+        fonte jsonb,
+        escolha text NOT NULL,
+        origem text NOT NULL)`);
+      await pool.query('CREATE INDEX IF NOT EXISTS consultor_decisoes_escritorio ON consultor_decisoes(escritorio, criado_em DESC)');
       await pool.query('CREATE TABLE IF NOT EXISTS consultor_saude(id bigserial PRIMARY KEY, criado_em timestamptz NOT NULL DEFAULT now(), resultado jsonb NOT NULL)');
     })().catch((e) => {
       pronto = null;
@@ -145,6 +182,34 @@ export function criarArmazemPostgres(url: string): Armazem {
       const { rows } = await pool.query('SELECT resultado FROM consultor_saude ORDER BY criado_em DESC LIMIT 1');
       return rows[0]?.resultado ?? null;
     },
+    async salvarDecisao(d) {
+      await preparar();
+      const x = limparDecisao(d);
+      const { rows } = await pool.query(
+        'INSERT INTO consultor_decisoes(data, escritorio, usuario, sistema, pergunta, orientacao, fonte, escolha, origem) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id, criado_em',
+        [x.data, x.escritorio, x.usuario, x.sistema, x.pergunta, x.orientacao, x.fonte ? JSON.stringify(x.fonte) : null, x.escolhaDoContador, x.origem],
+      );
+      return { ...x, id: String(rows[0].id), criadoEm: new Date(rows[0].criado_em).toISOString() };
+    },
+    async decisoes(escritorio, n) {
+      await preparar();
+      const { rows } = escritorio
+        ? await pool.query('SELECT * FROM consultor_decisoes WHERE escritorio = $1 ORDER BY criado_em DESC LIMIT $2', [escritorio, n])
+        : await pool.query('SELECT * FROM consultor_decisoes ORDER BY criado_em DESC LIMIT $1', [n]);
+      return rows.map((l: any) => ({
+        id: String(l.id),
+        criadoEm: new Date(l.criado_em).toISOString(),
+        data: new Date(l.data).toISOString(),
+        escritorio: l.escritorio,
+        usuario: l.usuario,
+        sistema: l.sistema,
+        pergunta: l.pergunta,
+        orientacao: l.orientacao,
+        fonte: l.fonte ?? null,
+        escolhaDoContador: l.escolha,
+        origem: l.origem,
+      }));
+    },
   };
 }
 
@@ -169,5 +234,7 @@ export function criarArmazem(): Armazem {
     naoRespondidas: comReserva(banco.naoRespondidas, memoria.naoRespondidas),
     salvarSaude: comReserva(banco.salvarSaude, memoria.salvarSaude),
     ultimaSaude: comReserva(banco.ultimaSaude, memoria.ultimaSaude),
+    salvarDecisao: comReserva(banco.salvarDecisao, memoria.salvarDecisao),
+    decisoes: comReserva(banco.decisoes, memoria.decisoes),
   };
 }

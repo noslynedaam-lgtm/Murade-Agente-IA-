@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import type { Armazem } from './registro';
 import type { Consultor } from './servico';
-import { LIMITE_PERGUNTA, validarPergunta } from './validar';
+import { LIMITE_PERGUNTA, validarDecisao, validarPergunta } from './validar';
 import { PERGUNTAS_TESTE } from './conferidor';
 
 export function tokenConfere(recebido: string, esperado: string): boolean {
@@ -68,6 +68,31 @@ export function registrarRotasConsultor(
     } catch (e) {
       console.error('[consultor] erro na rota perguntar:', (e as Error)?.message);
       res.status(500).json({ erro: 'Erro interno no Consultor Murade.' });
+    }
+  });
+
+  app.post('/api/consultor/registrar-decisao', auth, json, async (req, res) => {
+    const v = validarDecisao(req.body);
+    if (!v.ok) {
+      res.status(400).json({ erro: v.erro });
+      return;
+    }
+    try {
+      const salva = await deps.armazem.salvarDecisao(v.valor);
+      res.status(201).json({ ok: true, decisao: salva });
+    } catch {
+      res.status(500).json({ erro: 'Não consegui registrar a decisão.' });
+    }
+  });
+
+  app.get('/api/consultor/decisoes', auth, async (req, res) => {
+    const escritorio = typeof req.query.escritorio === 'string' && req.query.escritorio.trim() ? req.query.escritorio.trim().slice(0, 80) : undefined;
+    const limite = Math.min(Math.max(parseInt(String(req.query.limite ?? '100'), 10) || 100, 1), 500);
+    try {
+      const itens = await deps.armazem.decisoes(escritorio, limite);
+      res.json({ armazenamento: deps.armazem.tipo, escritorio: escritorio ?? null, total: itens.length, itens });
+    } catch {
+      res.status(500).json({ erro: 'Não consegui ler as decisões.' });
     }
   });
 

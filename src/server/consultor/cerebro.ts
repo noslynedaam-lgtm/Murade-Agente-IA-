@@ -3,7 +3,7 @@ import { Type, ThinkingLevel, type GoogleGenAI } from '@google/genai';
 import { KNOWLEDGE_BASE_DOCS, type KnowledgeDoc } from '../../data/knowledgeDocs';
 import { DOMINIOS_OFICIAIS, fontesDaPesquisa } from './fontes';
 import { mascararObjeto, mascararTexto } from './mascarar';
-import { GeminiIndisponivel, type ContextoEmpresa, type PerguntaConsultor, type RespostaBruta } from './tipos';
+import { FRASE_ACEITE, GeminiIndisponivel, type ContextoEmpresa, type PerguntaConsultor, type RespostaBruta } from './tipos';
 
 // Mesmos modelos já usados no server.ts (/api/chat), na mesma ordem de fallback.
 export const MODELOS = ['gemini-3.1-flash-lite', 'gemini-3.8-flash'] as const;
@@ -95,6 +95,13 @@ REGRAS DE VERDADE (acima de tudo):
 - "confianca": "alta" só quando a regra está na base conferida ou em fonte oficial lida agora e se aplica sem dúvida ao caso; "media" quando depende de algum dado não informado; "baixa" quando não conseguiu confirmar.
 - "acoesSugeridas": SOMENTE ferramentas da lista FERRAMENTAS DISPONÍVEIS, com o nome exatamente igual. Os "argumentos" vão como texto JSON (ex.: "{\\"competencia\\":\\"2026-10\\"}").
 - "resposta": direta, primeiro a conclusão ("O certo é ..., porque a lei diz ..."), depois o que fazer e os riscos. Sem markdown pesado; pode usar listas curtas.
+QUANDO O CONTADOR QUESTIONAR OU QUISER FAZER DIFERENTE da sua orientação (olhe o histórico da conversa):
+1. Explique de novo, curto e firme: "Pela lei X, art. Y, o certo é assim" + link oficial.
+2. Aceite fazer do jeito dele e diga exatamente: "${FRASE_ACEITE}"
+3. Preencha "divergencia": "orientacao" (o que a lei manda, em uma frase), "fonteTitulo" e "fonteUrl" (fonte oficial da orientação) e "escolhaDoContador" (o que ele decidiu fazer).
+4. Nunca recuse a decisão do contador. A ÚNICA exceção é pedido claramente ilegal ou fraude (ex.: sonegar, esconder receita, emitir nota fria, registrar empregado com data falsa para fraudar benefício): aí "recusado": true, explique por que é ilegal com a base legal, não preencha "divergencia" e não sugira ação.
+Divergência de interpretação, escolha entre opções legais ou prazo/forma diferente NÃO é fraude: aceite e registre.
+
 - Responda APENAS com o JSON no formato pedido.
 
 DADOS DA EMPRESA:
@@ -119,6 +126,18 @@ export const ESQUEMA_RESPOSTA = {
     confianca: { type: Type.STRING, enum: ['alta', 'media', 'baixa'] },
     encaminharContador: { type: Type.BOOLEAN },
     motivoEncaminhamento: { type: Type.STRING },
+    divergencia: {
+      type: Type.OBJECT,
+      description: 'Só quando o contador questiona ou quer fazer diferente da orientação.',
+      properties: {
+        orientacao: { type: Type.STRING },
+        fonteTitulo: { type: Type.STRING },
+        fonteUrl: { type: Type.STRING },
+        escolhaDoContador: { type: Type.STRING },
+      },
+      required: ['orientacao', 'escolhaDoContador'],
+    },
+    recusado: { type: Type.BOOLEAN, description: 'true só para pedido claramente ilegal ou fraude.' },
     acoesSugeridas: {
       type: Type.ARRAY,
       items: {

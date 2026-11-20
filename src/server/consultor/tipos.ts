@@ -38,10 +38,18 @@ export type PerguntaConsultor = {
   contextoEmpresa?: ContextoEmpresa;
   historico?: MensagemHistorico[];
   ferramentasDisponiveis?: Ferramenta[];
+  /** Identificação (login/ID, não nome nem CPF) de quem pergunta e do escritório: usada no registro de decisões. */
+  usuario?: string;
+  escritorio?: string;
 };
 
 export type Fonte = { titulo: string; url: string };
 export type AcaoSugerida = { ferramenta: string; descricao: string; argumentos?: Record<string, unknown> };
+
+export const FRASE_ACEITE = 'Posso fazer do seu jeito. Fica registrado que a orientação foi outra e que a decisão é sua.';
+
+/** Quando o contador questiona ou quer fazer diferente da orientação. */
+export type Divergencia = { orientacao: string; fonte: Fonte; escolhaDoContador: string };
 
 export type RespostaConsultor = {
   resposta: string;
@@ -52,6 +60,23 @@ export type RespostaConsultor = {
   motivoEncaminhamento?: string;
   acoesSugeridas: AcaoSugerida[];
   avisoResponsabilidade: string;
+  divergencia?: Divergencia;
+  /** true quando o pedido do contador é claramente ilegal/fraude: o consultor recusa e explica. */
+  recusado?: boolean;
+};
+
+export type Decisao = {
+  id?: string;
+  criadoEm?: string;
+  data: string; // ISO
+  escritorio: string;
+  usuario: string;
+  sistema: Sistema;
+  pergunta: string;
+  orientacao: string;
+  fonte: Fonte | null;
+  escolhaDoContador: string;
+  origem: 'consultor' | 'sistema';
 };
 
 /** O que o modelo devolve antes da validação do servidor (pode vir incompleto ou errado). */

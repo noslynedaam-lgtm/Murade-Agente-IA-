@@ -45,6 +45,23 @@ export function criarConsultor(deps: { gerar: Gerador; armazem: Armazem }) {
         resultado = { resposta: montarResposta(null, { sistema: p.sistema }), indisponivel: false };
       }
     }
+    if (registrar && resultado.resposta.divergencia) {
+      // Regra do dono: registra a decisão do contador (sem dados pessoais) quando ele escolhe fazer diferente.
+      const d = resultado.resposta.divergencia;
+      await deps.armazem
+        .salvarDecisao({
+          data: new Date().toISOString(),
+          escritorio: p.escritorio ?? 'nao-informado',
+          usuario: p.usuario ?? 'nao-informado',
+          sistema: p.sistema,
+          pergunta: p.pergunta,
+          orientacao: d.orientacao,
+          fonte: d.fonte.url ? d.fonte : null,
+          escolhaDoContador: d.escolhaDoContador,
+          origem: 'consultor',
+        })
+        .catch((e) => console.error('[consultor] não registrou a decisão:', (e as Error)?.message));
+    }
     if (registrar) {
       const r = resultado.resposta;
       await deps.armazem
