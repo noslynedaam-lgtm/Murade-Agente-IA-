@@ -9,6 +9,7 @@ import { Header } from './components/Header.tsx';
 import { DisclaimerBanner } from './components/DisclaimerBanner.tsx';
 import { ChatConsultant } from './components/ChatConsultant.tsx';
 import ChamadaPorVozAgente from './components/ChamadaPorVozAgente';
+import { BotaoPararAgente } from './components/BotaoPararAgente';
 import { KnowledgeBaseExplorer } from './components/KnowledgeBaseExplorer.tsx';
 import { SimulatorsHub } from './components/SimulatorsHub.tsx';
 import { FiscalCalendar } from './components/FiscalCalendar.tsx';
@@ -112,6 +113,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 selection:bg-blue-100 selection:text-blue-900 relative">
       <ChamadaPorVozAgente />
+      {/* Botão PARAR da Agente: só aparece enquanto ela fala e quando não há outro PARAR à vista (Esc também para). */}
+      <BotaoPararAgente variante="flutuante" />
       {/* Regulatory Disclaimer Banner */}
       <DisclaimerBanner onOpenLegal={() => navigateTo('legal')} />
 

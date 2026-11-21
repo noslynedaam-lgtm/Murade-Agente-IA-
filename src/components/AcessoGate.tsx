@@ -1,4 +1,5 @@
 import { EsqueciSenha } from './EsqueciSenha';
+import { definirUsuarioDaVoz } from '../utils/agenteParar';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { PainelContas } from './PainelContas';
 
@@ -33,6 +34,7 @@ export const AcessoGate: React.FC<{ children: React.ReactNode }> = ({ children }
   const aplicar = (d: { usuario: string; empresas: Empresa[]; ehEscritorio?: boolean; donoSistema?: boolean; contasProprias?: boolean; podeGerenciar?: boolean }) => {
     setFlags({ ehEscritorio: d.ehEscritorio === true, donoSistema: d.donoSistema === true, contasProprias: d.contasProprias === true, podeGerenciar: d.podeGerenciar === true || d.ehEscritorio === true || d.donoSistema === true });
     setSessao({ usuario: d.usuario, empresas: d.empresas || [] });
+    definirUsuarioDaVoz(d.usuario); // "Falar as respostas" da Agente fica guardado por usuário
     let salvo: string | null = null;
     try { salvo = localStorage.getItem(CHAVE_EMPRESA); } catch { /* sem storage */ }
     const lista = d.empresas || [];

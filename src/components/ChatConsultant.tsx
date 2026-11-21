@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { falarHumana, pararHumana } from '../utils/vozHumana';
+import { EVENTO_AGENTE_PAROU, ehComandoParar, pararTudo } from '../utils/agenteParar';
+import { OpcaoFalarRespostas } from './OpcaoFalarRespostas';
 import {
   Send,
   Sparkles,
@@ -300,6 +302,14 @@ Como posso orientar sua demanda hoje?
     }
   }, [initialQuery]);
 
+  // Conta os "para" (dito, digitado, botão PARAR ou Esc): resposta que chega depois não é falada.
+  const paradasRef = useRef(0);
+  useEffect(() => {
+    const aoParar = () => { paradasRef.current += 1; setSpeakingId(null); };
+    window.addEventListener(EVENTO_AGENTE_PAROU, aoParar);
+    return () => window.removeEventListener(EVENTO_AGENTE_PAROU, aoParar);
+  }, []);
+
   // Helper to cleanly stop any playing audio (both HTML5 Audio and SpeechSynthesis)
   const stopAudioPlayback = () => {
     pararHumana();
@@ -380,7 +390,21 @@ Como posso orientar sua demanda hoje?
 
   const handleSend = async (textToSend?: string, shouldSpeak = false) => {
     const queryText = (textToSend || input).trim();
-    if (!queryText || isLoading) return;
+    if (!queryText) return;
+    // "Para" (falado ou digitado): para tudo NA HORA, aqui no navegador, sem ir ao servidor nem à IA. Responde só "Ok, parei." (texto).
+    if (ehComandoParar(queryText, ['agente', 'murade', 'murad', 'consultor', 'consultora'])) {
+      const hora = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      stopAudioPlayback();
+      const r = pararTudo('texto');
+      setMessages((prev) => [...prev,
+        { id: 'user-' + Date.now(), role: 'user', category: selectedCategory, content: queryText, timestamp: hora },
+        { id: 'assistant-parei-' + Date.now(), role: 'assistant', category: selectedCategory, content: r.frase, timestamp: hora },
+      ]);
+      setInput('');
+      return;
+    }
+    if (isLoading) return;
+    const minhaParada = paradasRef.current;
 
     // Stop speaking previous response when asking a new question
     stopAudioPlayback();
@@ -433,9 +457,10 @@ Como posso orientar sua demanda hoje?
         setMessages((prev) => [...prev, assistantMsg]);
 
         // Auto speak if requested by voice conversation or if autoSpeak is active
-        if (shouldSpeak || autoSpeakReply) {
+        // Resposta que chega depois de um "para" aparece só por escrito.
+        if ((shouldSpeak || autoSpeakReply) && minhaParada === paradasRef.current) {
           setTimeout(() => {
-            handleSpeak(assistantMsgId, data.reply);
+            if (minhaParada === paradasRef.current) handleSpeak(assistantMsgId, data.reply);
           }, 200);
         }
       } else {
@@ -1531,6 +1556,12 @@ Como posso orientar sua demanda hoje?
               <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
               Canal ativo: <strong className="text-slate-700">{activeConfig.title}</strong>
             </span>
+
+            {/* Configuração da Agente: falar ou só escrever (guardado por usuário) */}
+            <details className="text-[11px] text-slate-600">
+              <summary className="cursor-pointer select-none font-semibold">⚙️ Configurações da Agente</summary>
+              <OpcaoFalarRespostas className="text-xs" />
+            </details>
 
             {/* Toggle Audio Auto-Play for Assistant Responses */}
             <button
