@@ -15,6 +15,7 @@ import { SimulatorsHub } from './components/SimulatorsHub.tsx';
 import { FiscalCalendar } from './components/FiscalCalendar.tsx';
 import { LegalDisclaimerView } from './components/LegalDisclaimerView.tsx';
 import { OfficialLegislationPortal } from './components/OfficialLegislationPortal.tsx';
+import { useVoltarCelular } from './hooks/useVoltarCelular';
 
 type TabType = 'legislacao' | 'chat' | 'knowledge' | 'simulators' | 'calendar' | 'legal';
 
@@ -93,6 +94,21 @@ export default function App() {
       setCurrentTab(nextTab);
     }
   }, [pointer, history, currentTab]);
+
+  // Botão VOLTAR do celular/navegador: volta para a tela anterior (como no aplicativo do cliente) em vez de fechar o app.
+  // Cada aba (e cada documento aberto na Base de Conhecimento) entra no histórico; na tela inicial o voltar sai do app.
+  const telaVoltar = currentTab === 'knowledge' ? `knowledge:${selectedDocId}` : currentTab;
+  useVoltarCelular({
+    telaAtual: telaVoltar,
+    telaInicial: 'legislacao',
+    irParaTela: (tela) => {
+      const [aba, doc] = tela.split(':') as [TabType, string | undefined];
+      if (!TABS.includes(aba)) return;
+      const anterior = pointer > 0 ? history[pointer - 1] : null;
+      if (anterior && anterior.tab === aba && (aba !== 'knowledge' || !doc || anterior.docId === doc || (!anterior.docId && selectedDocId === doc))) { handleBack(); return; }
+      navigateTo(aba, doc);
+    },
+  });
 
   // Keyboard shortcut listener: Alt + ArrowLeft / Alt + ArrowRight
   useEffect(() => {
