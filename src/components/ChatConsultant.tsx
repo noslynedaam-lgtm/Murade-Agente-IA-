@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { falarHumana, pararHumana } from '../utils/vozHumana';
 import { EVENTO_AGENTE_PAROU, ehComandoParar, pararTudo } from '../utils/agenteParar';
 import { OpcaoFalarRespostas } from './OpcaoFalarRespostas';
+import { OpcaoVozAssistente } from './OpcaoVozAssistente';
+import { useMicrofoneChat } from '../utils/useMicrofoneChat';
+import { microfoneSuportado } from '../utils/microfoneChat';
 import {
   Send,
   Sparkles,
@@ -513,8 +516,32 @@ Como posso orientar sua demanda hoje?
     setAudioLevel(0);
   };
 
+  // Microfone (igual nos 5 sistemas): um clique liga, o texto aparece na caixa enquanto fala, o silêncio
+  // (Configurações de voz, padrão 2,5 s) desliga e envia; clicar de novo envia na hora; religa se o navegador cortar
+  // antes; a voz da Agente para antes de ouvir (sem eco). Sem reconhecimento de fala no navegador (ex.: Firefox),
+  // continua a gravação com transcrição no servidor, como antes.
+  const microfone = useMicrofoneChat({
+    aoMudarEstado: (ouvindo) => {
+      setIsListening(ouvindo);
+      if (ouvindo) setVoiceNotice('🎙️ Ouvindo… fale. Quando você parar de falar, a pergunta é enviada.');
+    },
+    aoParcial: (texto) => { latestTranscriptRef.current = texto; hasVoiceInputRef.current = true; setInput(texto); },
+    aoEnviar: (texto) => {
+      latestTranscriptRef.current = '';
+      setVoiceNotice('Enviando sua pergunta falada...');
+      setTimeout(() => setVoiceNotice(null), 2500);
+      handleSend(texto, true);
+    },
+    aoErro: (mensagem, codigo) => {
+      setVoiceNotice(mensagem);
+      setTimeout(() => setVoiceNotice(null), codigo === 'sem-fala' ? 4000 : 30000);
+    },
+    antesDeOuvir: () => { stopAudioPlayback(); setIsScreenExpanded(true); },
+  });
+
   // Stop listening and immediately send what was transcribed or recorded
   const stopListeningAndSend = async () => {
+    if (microfone.ouvindo) { microfone.parar(true); return; }
     const currentTyped = (latestTranscriptRef.current || input).trim();
     const recorder = mediaRecorderRef.current;
     const hadVoice = hasVoiceInputRef.current;
@@ -585,6 +612,14 @@ Como posso orientar sua demanda hoje?
 
   // Cancel listening without sending
   const cancelListening = () => {
+    if (microfone.ouvindo) {
+      microfone.parar(false);
+      latestTranscriptRef.current = '';
+      setInput('');
+      setVoiceNotice('Gravação cancelada.');
+      setTimeout(() => setVoiceNotice(null), 2000);
+      return;
+    }
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       try {
         mediaRecorderRef.current.stop();
@@ -602,6 +637,9 @@ Como posso orientar sua demanda hoje?
 
   // Start speech recognition & microphone capture
   const startListening = async () => {
+    // Navegador com reconhecimento de fala: o microfone compartilhado (sem gravar áudio ao mesmo tempo, que disputava o
+    // microfone no celular e às vezes não captava nada).
+    if (microfoneSuportado()) { microfone.ligar(); return; }
     // Stop any ongoing speech playback
     stopAudioPlayback();
 
@@ -1483,19 +1521,20 @@ Como posso orientar sua demanda hoje?
             disabled={isLoading || isTranscribing}
             className={`px-4 py-3 rounded-xl transition-all flex items-center justify-center shrink-0 cursor-pointer shadow-xs font-semibold text-xs gap-2 ${
               isListening
-                ? 'bg-rose-600 hover:bg-rose-700 text-white ring-2 ring-rose-400 animate-pulse'
+                ? 'bg-red-600 hover:bg-red-700 text-white ring-2 ring-red-400 animate-pulse'
                 : 'bg-[#eef2f6] hover:bg-blue-100 text-blue-900 border border-blue-200/90'
             }`}
+            aria-pressed={isListening}
             title={
               isListening
-                ? 'Clique para encerrar a fala e enviar agora (ou apenas pare de falar)'
+                ? 'Ouvindo… clique para enviar agora (ou apenas pare de falar)'
                 : 'Falar com o Agente por microfone (voz como em uma ligação)'
             }
           >
             {isListening ? (
               <>
-                <PhoneOff className="w-4 h-4 text-white" />
-                <span className="font-bold">Encerrar & Enviar</span>
+                <Mic className="w-4 h-4 text-white" />
+                <span className="font-bold">Ouvindo… fale</span>
               </>
             ) : isTranscribing ? (
               <>
@@ -1561,6 +1600,8 @@ Como posso orientar sua demanda hoje?
             <details className="text-[11px] text-slate-600">
               <summary className="cursor-pointer select-none font-semibold">⚙️ Configurações da Agente</summary>
               <OpcaoFalarRespostas className="text-xs" />
+              {/* Voz da assistente: grátis, do próprio aparelho; automática = a mais natural. Guardada por usuário. */}
+              <OpcaoVozAssistente className="mt-2 text-xs" />
             </details>
 
             {/* Toggle Audio Auto-Play for Assistant Responses */}
